@@ -66,13 +66,19 @@ class InitFieldPar():
                 self.init_no_restart(user_input)
 
 
+
+
+
     def init_no_restart(self, user_input):
+        read_output = ReadOutputGaussian()
         self.field_parameters.field_type = user_input.field.par['field_type']
         self.field_parameters.fi = user_input.field.par['fi']
         self.field_parameters.fi_cos = user_input.field.par['fi_cos']
         self.field_parameters.sigma = float(user_input.field.par['sigma'])
         self.field_parameters.omega = user_input.field.par['omega']
         self.field_parameters.t0 = float(user_input.field.par['t0'])
+        self.field_parameters.omega_max = read_output.read_en_ci0(user_input.sys.par['folder'] +
+                                                            user_input.wf.par['name_ei'])[-1]
 
 
     def init_restart(self, user_input):
@@ -83,7 +89,9 @@ class InitFieldPar():
             self.field_parameters.field = self.read_restart.read_file(user_input.sys.par['folder'],
                                                                       user_input.sys.par['name_field_file'] )
 
-        self.init_no_restart(self.read_restart)
+        self.field_parameters = self.read_restart.field_par
+
+
 
 class InitPCMPar():
     def __init__(self):

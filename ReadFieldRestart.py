@@ -1,10 +1,11 @@
 import numpy as np
 import NameListSections as sec
+from FieldParameters import FieldParameters
 import configparser
 
 class ReadFieldRestart():
     def __init__(self):
-        self.field = sec.SectionField()
+        self.field_par = sec.SectionField()
 
     def read_file(self, folder, namefile):
         pass
@@ -41,19 +42,16 @@ class ReadFieldRestartGenetic(ReadFieldRestart):
 class ReadFieldRestartRabitz(ReadFieldRestart):
     def __init__(self):
         super().__init__()
-        self.field = sec.SectionField()
+        self.field_par = FieldParameters
 
 
     def read_file(self, folder, namefile):
-        user_input = configparser.ConfigParser()
-        user_input.read_dict({'field_type': 'optimizedRabitz', #serve per la creazione del campo in field, non fa niente
-                              'fi': '0 0 0',
-                              'fi_cos':'0 0 0',
-                              'omega': '0 0 0',
-                              'sigma': '0',
-                              't0': '0',
-                              'name_field_file': 'false'})
-
-        self.field.par = dict(user_input)
-        field = np.loadtxt(folder + namefile, usecols=(0, 1, 2))
-        return field
+        self.field_par.field = np.loadtxt(folder + namefile, usecols=(0, 1, 2))
+        self.field_par. field_type = 'optimizedRabitz'
+        self.field_par.fi = np.array([0, 0, 0])
+        self.field_par.fi_cos = np.array([0, 0, 0])
+        self.field_par.omega = np.array([0, 0, 0])
+        self.field_par.sigma = 0
+        self.field_par.t0 = 0
+        self.field_par.namefile = 'false'
+        self.field_par.omega_max = 0
