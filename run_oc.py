@@ -15,7 +15,7 @@ import time as time
 #    folder = split[0]+"/"
 #    namefile = split[1]
 
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/vac/26-9/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/read_input/OC_input/"
 namefile = "input_nuovo.dat"
 
 

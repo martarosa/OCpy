@@ -5,7 +5,7 @@ import configparser
 
 class ReadFieldRestart():
     def __init__(self):
-        self.field_par = sec.SectionField()
+        self.field_par = FieldParameters()
 
     def read_file(self, folder, namefile):
         pass
@@ -42,7 +42,7 @@ class ReadFieldRestartGenetic(ReadFieldRestart):
 class ReadFieldRestartRabitz(ReadFieldRestart):
     def __init__(self):
         super().__init__()
-        self.field_par = FieldParameters
+        self.field_par = FieldParameters()
 
 
     def read_file(self, folder, namefile):

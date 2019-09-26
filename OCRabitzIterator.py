@@ -44,37 +44,37 @@ class OCRabitzIterator(OCIterator):
                 for i in range(self.nstep, 0, -1):
                     if i == self.nstep:
                         if self.rabitz_iterator == 'rabitzi':
-                            self.prop_chi.mol.wf.set_wf(af.apply_projection(self.prop_psi.mol.wf.ci,
+                            self.prop_chi.propagator_terms.mol.wf.set_wf(af.apply_projection(self.prop_psi.propagator_terms.mol.wf.ci,
                                                                             self.target_state),
                                                         0)
                         elif self.rabitz_iterator == 'rabitzii':
-                            self.prop_chi.mol.wf.set_wf(self.target_state, 0)
+                            self.prop_chi.propagator_terms.mol.wf.set_wf(self.target_state, 0)
 
 
-                        self.chi_coeff_t[i] = self.prop_chi.mol.wf.ci
+                        self.chi_coeff_t[i] = self.prop_chi.propagator_terms.mol.wf.ci
                     self.field_chi_vector_t[i - 1] = self.prop_field.propagate_field_OC_Rabitz(
                         self.psi_coeff_t[i],
-                        self.prop_chi.mol.wf.ci,
-                        self.prop_psi.mol.muT + self.prop_psi.pcm.muLF,
+                        self.prop_chi.propagator_terms.mol.wf.ci,
+                        self.prop_psi.propagator_terms.mol.muT + self.prop_psi.propagator_terms.pcm.muLF,
                         self.alpha_t[i - 1])
                     self.prop_chi.propagate_one_step(self.prop_field.field_dt,
                                                      self.psi_coeff_t[i])
 
-                    self.chi_coeff_t[i - 1] = self.prop_chi.mol.wf.ci
+                    self.chi_coeff_t[i - 1] = self.prop_chi.propagator_terms.mol.wf.ci
 
                 for i in range(self.nstep):
                     if i == 0:
-                        self.prop_psi.mol.wf.set_wf(self.initial_c0, 0)
-                        self.psi_coeff_t[i] = self.prop_psi.mol.wf.ci
+                        self.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 0)
+                        self.psi_coeff_t[i] = self.prop_psi.propagator_terms.mol.wf.ci
 
                     self.field_psi_matrix[i] = self.prop_field.propagate_field_OC_Rabitz(
-                        self.prop_psi.mol.wf.ci,
+                        self.prop_psi.propagator_terms.mol.wf.ci,
                         self.chi_coeff_t[i],
-                        self.prop_psi.mol.muT + self.prop_psi.pcm.muLF,
+                        self.prop_psi.propagator_terms.mol.muT + self.prop_psi.propagator_terms.pcm.muLF,
                         self.alpha_t[i])
                         # qui invece scorre
                     self.prop_psi.propagate_one_step(self.prop_field.field_dt)
-                    self.psi_coeff_t[i + 1] = self.prop_psi.mol.wf.ci  # coefficients are stored
+                    self.psi_coeff_t[i + 1] = self.prop_psi.propagator_terms.mol.wf.ci  # coefficients are stored
 
                 self.check_convergence( )
 
@@ -91,10 +91,10 @@ class OCRabitzIterator(OCIterator):
 
     def calc_J(self):
         if self.rabitz_iterator == "rabitzi":
-            self.J = np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.target_state) \
+            self.J = np.real(af.projector_mean_value(self.prop_psi.propagator_terms.mol.wf.ci, self.target_state) \
                              - af.alpha_field_J_integral(self.field_psi_matrix, self.alpha_t, self.dt))
         elif self.rabitz_iterator == "rabitzii":
-            self.J = np.real(2 * np.real(np.dot(self.target_state, self.prop_psi.mol.wf.ci) \
+            self.J = np.real(2 * np.real(np.dot(self.target_state, self.prop_psi.propagator_terms.mol.wf.ci) \
                                          - af.alpha_field_J_integral(self.field_psi_matrix, self.alpha_t, self.dt)))
 
     def init_output_dictionary(self):
@@ -115,11 +115,11 @@ class OCRabitzIterator(OCIterator):
 
         self.field_psi_matrix = np.copy(starting_field.field)
 
-        self.psi_coeff_t = np.zeros([self.nstep + 1, self.prop_psi.mol.wf.n_ci], dtype=complex)
-        self.chi_coeff_t = np.zeros([self.nstep + 1, self.prop_psi.mol.wf.n_ci], dtype=complex)
+        self.psi_coeff_t = np.zeros([self.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
+        self.chi_coeff_t = np.zeros([self.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
         self.field_chi_vector_t = np.zeros([self.nstep, 3], dtype=complex)
 
-        self.initial_c0 = self.prop_psi.mol.wf.ci
+        self.initial_c0 = self.prop_psi.propagator_terms.mol.wf.ci
         self.psi_coeff_t[0] =  self.initial_c0
         self.init_output_dictionary()
 
@@ -128,11 +128,12 @@ class OCRabitzIterator(OCIterator):
 # methods inside dictionary return things to be saved
     def get_log_file_out(self):
         integral_field = np.real(af.field_J_integral(self.field_psi_matrix, self.dt))
-        norm_proj = np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.target_state)/(np.dot(self.prop_psi.mol.wf.ci, np.conj(self.prop_psi.mol.wf.ci))))
+        norm_proj = np.real(af.projector_mean_value(self.prop_psi.propagator_terms.mol.wf.ci, self.target_state)
+                            /(np.dot(self.prop_psi.propagator_terms.mol.wf.ci, np.conj(self.prop_psi.propagator_terms.mol.wf.ci))))
         return np.array([self.convergence_t, self.J, norm_proj, integral_field])
 
     def get_final_pop(self):
-        final_pop = np.real(af.population_from_wf_vector(self.prop_psi.mol.wf.ci))
+        final_pop = np.real(af.population_from_wf_vector(self.prop_psi.propagator_terms.mol.wf.ci))
         return final_pop
 
     def get_pop_t(self):

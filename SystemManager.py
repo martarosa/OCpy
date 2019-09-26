@@ -56,16 +56,16 @@ class InitFieldPar():
         if (user_input.oc.par['restart'] == 'false'):
                 self.init_no_restart(user_input)
         else:
-            try:
-                self.init_restart(user_input)
-                if (self.field_parameters.field.shape[0] != int(self.field_parameters.nstep)):
-                    user_input.oc.par["restart"] = 'norestart'
-                    self.init_no_restart(user_input)
-            except IOError:
-                user_input.oc.par["restart"] = 'norestart'
-                self.init_no_restart(user_input)
-
-
+            if user_input.field.par['name_field_file'] == 'false':
+                self.init_restart(user_input, user_input.sys.par['name'] + "_field_bkp.dat")
+            else:
+                self.init_restart(user_input, user_input.sys.par['name_field_file'])
+            #if (self.field_parameters.field.shape[0] != int(self.field_parameters.nstep)):
+            #    user_input.oc.par["restart"] = 'norestart'
+            #    self.init_no_restart(user_input)
+            #except IOError:
+            #    user_input.oc.par["restart"] = 'norestart'
+            #    self.init_no_restart(user_input)
 
 
 
@@ -80,15 +80,9 @@ class InitFieldPar():
         self.field_parameters.omega_max = read_output.read_en_ci0(user_input.sys.par['folder'] +
                                                             user_input.wf.par['name_ei'])[-1]
 
-
-    def init_restart(self, user_input):
-        if user_input.field.par['name_field_file'] == False:
-            self.field_parameters.field = self.read_restart.read_file(user_input.sys.par['folder'],
-                                                                      user_input.sys.par['name'] + "_restart_field.dat")
-        else:
-            self.field_parameters.field = self.read_restart.read_file(user_input.sys.par['folder'],
-                                                                      user_input.sys.par['name_field_file'] )
-
+    def init_restart(self, user_input, name):
+        self.field_parameters.field =   self.read_restart.read_file(user_input.sys.par['folder'],
+                                                                      name)
         self.field_parameters = self.read_restart.field_par
 
 
