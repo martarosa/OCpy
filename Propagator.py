@@ -50,7 +50,7 @@ class PropagatorTerms():
 
     def init_terms_dictionary(self):
         self.dict_terms["eulero1_coeff"] = self.eulero1_coeff_term
-        self.dict_terms["eulero2_coeff"] = self.eulero1_coeff_term
+        self.dict_terms["eulero2_coeff"] = self.eulero2_coeff_term
         self.dict_terms["eulero_energy"] = self.eulero_energy_term
         self.dict_terms["eulero_field"] = self.eulero_field_term
         self.dict_terms["norm"] = self.norm

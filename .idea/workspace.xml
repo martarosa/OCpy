@@ -2,19 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="55efd99c-0da1-4ff7-b8ef-8191bd12be39" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OCEuleroIterator.py" beforeDir="false" afterPath="$PROJECT_DIR$/OCEuleroIterator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Propagator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Propagator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PropagatorOCRabitz.py" beforeDir="false" afterPath="$PROJECT_DIR$/PropagatorOCRabitz.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PropagatorsEulero.py" beforeDir="false" afterPath="$PROJECT_DIR$/PropagatorsEulero.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_oc.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_oc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/2order_prop/vac/26-9/output_nuovo_2order_pop_t.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/2order_prop/vac/26-9/output_nuovo_2order_pop_t.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/2order_prop/vac/26-9/output_nuovo_2order_pop_t.dat.1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/2order_prop/vac/26-9/output_nuovo_2order_pop_t.dat.2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/2order_prop/vac/26-9/output_nuovo_2order_pop_t.dat.3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/2order_prop/vac/26-9/output_nuovo_2order_pop_t.dat.4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/2order_prop/vac/26-9/output_nuovo_2order_pop_t.dat.5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/2order_prop/vac/26-9/output_nuovo_2order_pop_t.dat.6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/2order_prop/vac/26-9/output_nuovo_2order_field_bkp.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/2order_prop/vac/26-9/output_nuovo_2order_pop_t.dat" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,18 +16,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Propagator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="66" column="56" lean-forward="true" selection-start-line="66" selection-start-column="56" selection-end-line="66" selection-end-column="56" />
+            <state relative-caret-position="345">
+              <caret line="68" column="40" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#2054#2159#0" />
-                <element signature="e#2438#2521#0" />
-                <element signature="e#2585#2689#0" />
-                <element signature="e#2751#3013#0" />
-                <element signature="e#3080#4265#0" />
               </folding>
             </state>
           </provider>
@@ -53,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PropagatorsEulero.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="750">
-              <caret line="50" column="30" lean-forward="true" selection-start-line="50" selection-start-column="30" selection-end-line="50" selection-end-column="30" />
+              <caret line="50" column="30" selection-start-line="50" selection-start-column="30" selection-end-line="50" selection-end-column="30" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -68,8 +55,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/run_oc.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="17" column="84" selection-start-line="17" selection-start-column="84" selection-end-line="17" selection-end-column="84" />
+            <state relative-caret-position="428">
+              <caret line="41" selection-start-line="41" selection-end-line="41" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
               </folding>
@@ -189,8 +176,8 @@
         <option value="$PROJECT_DIR$/WaveFunction.py" />
         <option value="$PROJECT_DIR$/PropagatorOCRabitz.py" />
         <option value="$PROJECT_DIR$/PropagatorsEulero.py" />
-        <option value="$PROJECT_DIR$/run_oc.py" />
         <option value="$PROJECT_DIR$/OCEuleroIterator.py" />
+        <option value="$PROJECT_DIR$/run_oc.py" />
         <option value="$PROJECT_DIR$/Propagator.py" />
       </list>
     </option>
@@ -279,8 +266,8 @@
     <frame x="-1" y="24" width="1922" height="1032" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.72425246" visible="true" weight="0.13600422" />
-      <window_info id="Structure" order="1" sideWeight="0.2757475" side_tool="true" visible="true" weight="0.13600422" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.72408295" visible="true" weight="0.13600422" />
+      <window_info id="Structure" order="1" sideWeight="0.27591705" side_tool="true" visible="true" weight="0.13600422" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3145072" />
@@ -292,7 +279,7 @@
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32914287" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.30564785" />
+      <window_info anchor="bottom" id="Python Console" order="10" visible="true" weight="0.30564785" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -644,16 +631,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/run_oc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="17" column="84" selection-start-line="17" selection-start-column="84" selection-end-line="17" selection-end-column="84" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/OCEuleroIterator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="201">
@@ -683,25 +660,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Propagator.py">
+    <entry file="file://$PROJECT_DIR$/PropagatorsEulero.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="66" column="56" lean-forward="true" selection-start-line="66" selection-start-column="56" selection-end-line="66" selection-end-column="56" />
+        <state relative-caret-position="750">
+          <caret line="50" column="30" selection-start-line="50" selection-start-column="30" selection-end-line="50" selection-end-column="30" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#2054#2159#0" />
-            <element signature="e#2438#2521#0" />
-            <element signature="e#2585#2689#0" />
-            <element signature="e#2751#3013#0" />
-            <element signature="e#3080#4265#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PropagatorsEulero.py">
+    <entry file="file://$PROJECT_DIR$/run_oc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="50" column="30" lean-forward="true" selection-start-line="50" selection-start-column="30" selection-end-line="50" selection-end-column="30" />
+        <state relative-caret-position="428">
+          <caret line="41" selection-start-line="41" selection-end-line="41" />
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Propagator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="68" column="40" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
