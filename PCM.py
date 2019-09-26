@@ -9,7 +9,7 @@ class PCM():
         self.cavity = None
         self.q_t = None
 
-        self.muLF = None
+        self.muLF = 0
         self.qijn = None
         self.qijn_lf = None
         self.q00n = None
@@ -32,7 +32,7 @@ class FrozenSolventPCM(PCM):
         self.cavity = None
         self.q_t = None
 
-        self.muLF = None
+        self.muLF = 0
         self.qijn = None
         self.qijn_lf = None
         self.q00n = None
