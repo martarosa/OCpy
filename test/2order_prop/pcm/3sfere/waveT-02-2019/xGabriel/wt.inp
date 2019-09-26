@@ -1,0 +1,37 @@
+&general n_ci=15,n_ci_read=15
+mol_cc= 0. 0. 0.
+medium='sol'
+n_f=1 
+dt=0.01
+n_step=25000
+n_out=1
+propa='n'
+/ 
+
+&field 
+Ffld='pip'
+omega(1)=0.3239892104044628
+sigma(1)=125,
+t_mid=125
+radiative='non'
+npulse=1
+fmax(1,1)= 0.0 
+fmax(2,1)= 0.0 
+fmax(3,1)= 0.5
+/
+
+&sse dissipative='non'
+/
+
+&spectra start=80, 
+tau= 2000.0 2000.0
+dir_ft= 1. 1. 1. 
+/
+
+&pop_coh
+tar = 'all'
+all_pop= 'yes'
+all_coh='yes'
+write_bin='n'
+/
+

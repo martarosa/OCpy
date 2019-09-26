@@ -1,0 +1,10 @@
+#Run started at 10:58:40 29/05/2019
+#Final states populations 
+ #fields: n_iteration, convergence, J, projection on target state, alpha*integral(field^2)
+#dt: 0.01 env: vac alpha: sin alpha value: 1
+#field parameters: 
+ #field: davide f_max: 0.04 0.0 0.0 sigma: 250 omega: 0.0125784 t0: 250
+#target state: 1 0
+
+-1.00000000 99999.00000000 99999.00000000 1.00000000 36996694126105307643904.00000000 0.39961747
+0.00000000 99999.00000000 99999.00000000 0.51089869 36996694126105307643904.00000000 0.39961747
