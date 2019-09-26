@@ -1,0 +1,29 @@
+ Solvent as external medium
+ Medium polarization described by apparent charges
+ Diagonal BEM formulation
+ This is a Classical BEM run
+ This run just writes matrices and boundary
+ Building surface from spheres.
+ Number of spheres           3
+ I_sphere  X     Y   Z   Radius
+     1     -3.9410      0.0000      0.0000      4.1050
+     2     -0.2580      0.0000      0.0000      3.8550
+     3      1.9100      0.0000      0.0000      3.1520
+ Complete output written.
+Done reading input, took     0.000s
+ GEPOL-GB: COUNTING TESSERAE
+ nts_act         136
+ GEPOL-GB: GENERATING TESSERAE
+
+ TOTAL NUMBER OF SPHERES=    4
+ SPHERE             CENTER  (X,Y,Z) (A)               RADIUS (A)      AREA(A*A)
+   1   -2.085487539    0.000000000    0.000000000    2.172272608
+   2   -0.136527730    0.000000000    0.000000000    2.039978296
+   3    1.010728546    0.000000000    0.000000000    1.667966690
+   4   -0.224633979    0.000000000    0.000000000    1.869180240
+
+ TOTAL NUMBER OF TESSERAE=     136
+ SURFACE AREA=         87.79186950(A**2)    CAVITY VOLUME=         69.96904521 (A**3)
+ nts_act         136
+ Created output file with surface points
+ Matrixes S D have been written out

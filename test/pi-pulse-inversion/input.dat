@@ -1,0 +1,41 @@
+[SYSTEM]
+dt=0.01
+nstep=500000
+name = output_davide_3 
+propagation = eulero_2order 
+#folder=/home/mana/Desktop/python/optimal_control/test_funzionamento/
+
+[WAVEFUNCTION]
+name_ci=ci_ini.inp
+name_ei=ci_energy_davide.inp
+name_mut=ci_mut_davide.inp
+
+[FIELD]
+field_type=davide
+#omega=0.2695340923
+omega = 0.0125784 
+sigma=2500
+t0=2500
+f_max=0.011023132117858924 0 0.0
+#f_max= 0.005 0.0 0.0 
+#name_field_file=
+
+[ENVIRON]
+env=vac
+#name_Vij=pot_gamess.inp
+#name_Q_tdplas=np_bem.mat
+#read_qijn=False
+#name_file_qijn=./qijn.dat
+
+[OPTIMALC]
+oc_algorithm=RabitzI
+restart=FALSE
+alpha=sin
+alpha0=1
+n_iterations=10
+state_to_project_on=1 0    
+
+[SAVE]
+#save_restart_step=10
+#save_iteration_pop_step=10
+#save_iteration_field_step=10

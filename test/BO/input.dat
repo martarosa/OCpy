@@ -1,0 +1,11 @@
+[SYSTEM]
+name = test 
+
+[WAVEFUNCTION]
+#name_ei=ci_energy_noSquare.inp
+
+[ENVIRON]
+env=pcm
+#name_Vij=ci_pot_noSquare.inp
+#name_Q_tdplas=np_bem.mdy
+
