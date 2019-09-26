@@ -1,13 +1,16 @@
 import numpy as np
 
 from Propagator import Propagator
-import auxiliary_functions as af
+from PropagatorTerms import PropagatorTerms
+
 
 #import math_functions as mf
 
 class PropagatorOCfwd(Propagator):
     def __init__(self):
         super().__init__()
+        self.propagator_terms = PropagatorTerms()
+        self.propagator = []
 
     def set_propagator(self, dt, molecule, env):
         self.init_propagaror_terms(dt, molecule, env)
@@ -37,6 +40,8 @@ class PropagatorOCfwd(Propagator):
 class PropagatorOCbwd(Propagator):
     def __init__(self):
         super().__init__()
+        self.propagator_terms = PropagatorTerms()
+        self.propagator = []
 
     def set_propagator(self, dt, molecule, env):
         self.init_propagaror_terms(dt, molecule, env)
