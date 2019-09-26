@@ -39,7 +39,7 @@ OC_system.init_system(folder, namefile)
 
 
 #start=time.time()
-#OC_system.oc.iterate()
+OC_system.oc.iterate()
 #end=time.time()
 #print(end-start)
 #import auxiliary_functions as af
