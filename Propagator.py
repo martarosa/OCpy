@@ -29,8 +29,6 @@ class Propagator():
         self.mol = molecule
         self.pcm = pcm
 
-    def test(self):
-        print("manamanamana")
 
 
     def clean_propagator(self):
