@@ -37,7 +37,7 @@ class Eulero1PropagationIterator(OCIterator):
         self.prop_psi.set_propagator(self.dt, molecule, env)
         self.field_psi_matrix = np.copy(starting_field.field)
 
-        self.psi_coeff_t = np.zeros([self.nstep + 1, self.prop_psi.mol.wf.n_ci], dtype=complex)
+        self.psi_coeff_t = np.zeros([self.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
 
 
@@ -78,7 +78,7 @@ class Eulero2PropagationIterator(OCIterator):
         self.prop_psi.set_propagator(self.dt, molecule, env)
         self.field_psi_matrix = np.copy(starting_field.field)
 
-        self.psi_coeff_t = np.zeros([self.nstep + 1, self.prop_psi.mol.wf.n_ci], dtype=complex)
+        self.psi_coeff_t = np.zeros([self.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
 
 
