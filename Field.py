@@ -49,6 +49,7 @@ class Field():
         self.parameters['omega'] = field_parameters.omega
         self.parameters['sigma'] = field_parameters.sigma
         self.parameters['t0'] = field_parameters.t0
+        self.parameters['omega_max'] = field_parameters.omega_max
         self.chose_field(self.field_type)
 
 
@@ -63,7 +64,6 @@ class Field():
             'sum': lambda: self.sum_pulse(),
             'optimizedRabitz' : lambda: self.read_pulse()
              }
-
          return field.get(key, lambda: "Inexistent field type")()
 
 
@@ -77,6 +77,7 @@ class Field():
         self.field[:, 0] = self.parameters['fi'][0]
         self.field[:, 1] = self.parameters['fi'][1]
         self.field[:, 2] = self.parameters['fi'][2]
+
 
 
 
