@@ -33,6 +33,8 @@ class OC_Rabitz(OC):
     def initialize_oc(self, input_par_file, mol, field, env):
         self.initialize_common_oc_parameters(input_par_file)
         self.initialize_propagation_attributes(mol, field, env)
+        print("quiqui")
+        print(input_par_file.sys.pa)
         self.save.creation_save_files(
                                  [".log", "_final_pop.dat", "_pop_t.dat", "_field_t.dat"],
                                  ["#Final states populations \n #fields: n_iteration, convergence, J, projection on target state, alpha*integral(field^2)\n" ,

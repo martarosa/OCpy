@@ -68,9 +68,10 @@ class SaveTools():
 
     def creation_save_files(self, folder_name, save_file, restart):
         name = folder_name + save_file.name
-        if restart == "false" or "norestart":
+        if restart == "false" or restart == "norestart":
             self.create_bkp_file(name)
         self.print_date_header(name, save_file.header)
+
 
     def save_every_n_iterations(self, iteration, folder_name, save_file):
         name = folder_name + save_file.name
