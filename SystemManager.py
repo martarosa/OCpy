@@ -1,4 +1,9 @@
 import numpy as np
+import sys
+
+import os.path
+
+
 
 from ReadOutputGaussian import ReadOutputGaussian
 from ReadNamelistOC import ReadNamelistOC
@@ -51,26 +56,17 @@ class InitFieldPar():
         self.read_restart = ReadFieldRestart()
 
     def init(self, user_input):
-        self.field_parameters.nstep = int(user_input.sys.par['nstep'])
-        self.field_parameters.dt = float(user_input.sys.par['dt'])
         if (user_input.oc.par['restart'] == 'false'):
-                self.init_no_restart(user_input)
+            self.init_no_restart(user_input)
         else:
-            if user_input.field.par['name_field_file'] == 'false':
-                self.init_restart(user_input, user_input.sys.par['name'] + "_field_bkp.dat")
-            else:
-                self.init_restart(user_input, user_input.sys.par['name_field_file'])
-            #if (self.field_parameters.field.shape[0] != int(self.field_parameters.nstep)):
-            #    user_input.oc.par["restart"] = 'norestart'
-            #    self.init_no_restart(user_input)
-            #except IOError:
-            #    user_input.oc.par["restart"] = 'norestart'
-            #    self.init_no_restart(user_input)
+            self.init_restart(user_input)
 
 
 
     def init_no_restart(self, user_input):
         read_output = ReadOutputGaussian()
+        self.field_parameters.dt = float(user_input.sys.par['dt'])
+        self.field_parameters.nstep = int(user_input.sys.par['nstep'])
         self.field_parameters.field_type = user_input.field.par['field_type']
         self.field_parameters.fi = user_input.field.par['fi']
         self.field_parameters.fi_cos = user_input.field.par['fi_cos']
@@ -80,10 +76,19 @@ class InitFieldPar():
         self.field_parameters.omega_max = read_output.read_en_ci0(user_input.sys.par['folder'] +
                                                             user_input.wf.par['name_ei'])[-1]
 
-    def init_restart(self, user_input, name):
-        self.field_parameters.field =   self.read_restart.read_file(user_input.sys.par['folder'],
-                                                                      name)
-        self.field_parameters = self.read_restart.field_par
+
+
+    def init_restart(self, user_input):
+        if os.path.isfile(user_input.sys.par['folder'] + user_input.field.par['name_field_file']):
+            self.read_restart.read_file(user_input.sys.par['folder'], user_input.field.par['name_field_file'])
+            self.field_parameters = self.read_restart.field_par
+        elif os.path.isfile(user_input.sys.par['folder'] + user_input.sys.par['name'] + '_field_bkp.dat'):
+            self.read_restart.read_file(user_input.sys.par['folder'], user_input.sys.par['name'] + '_field_bkp.dat')
+            self.field_parameters = self.read_restart.field_par
+        else:
+            user_input.oc.par['restart'] = 'norestart'
+            self.init_no_restart(user_input)
+
 
 
 
@@ -109,7 +114,9 @@ class InitSavePar():
     def init(self, user_input):
         self.save_parameters.folder = user_input.sys.par['folder']
         self.save_parameters.name = user_input.sys.par['name']
+        self.save_parameters.restart_calculation = user_input.oc.par['restart']
         self.save_parameters.restart_step = int(user_input.save.par['restart_step'])
+
 
 class InitLogPar():
     def __init__(self):
@@ -120,6 +127,7 @@ class InitLogPar():
         self.log_header_parameters.env = user_input.env.par['env']
 
         self.log_header_parameters.restart = user_input.oc.par['restart']
+        print(self.log_header_parameters.restart)
         self.log_header_parameters.target_state = user_input.oc.par["target_state"]
         self.log_header_parameters.alpha = user_input.oc.par['alpha']
         self.log_header_parameters.alpha0 = user_input.oc.par['alpha0']

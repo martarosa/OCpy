@@ -114,7 +114,6 @@ class SaveOCRabitz():
         self.folder = save_parameters.folder
         self.filename = save_parameters.name
         self.restart_calculation = save_parameters.restart_calculation
-
         self.init_save_file_list(oc_iterator, save_parameters.restart_step)
 
         for i in np.arange(len(self.save_files)):
