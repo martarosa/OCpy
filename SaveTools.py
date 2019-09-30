@@ -48,10 +48,10 @@ class SaveTools():
                 " env: " + log_header_par.env +
                 " alpha: " + log_header_par.alpha +
                 " alpha value: " + log_header_par.alpha0 + "\n")
-        if log_header_par.restart == "norestart":
+        if log_header_par.restart == "norestart_found":
             f.write("#WARNING: restart asked but restart file not found. Starting from guess field" + "\n")
             #input_par_file.modify_oc_restart_par("false")
-        if log_header_par.restart != "true":
+        if log_header_par.restart == "norestart_found":
             f.write("#field parameters: \n #field: " + log_header_par.field_type + " fi: " + log_header_par.fi)
             if log_header_par.field_type == "sum":
                 f.write(" fi_cos: " + log_header_par.fi_cos + "\n")
@@ -61,14 +61,14 @@ class SaveTools():
                         " omega: " + log_header_par.omega +
                         " t0: " + log_header_par.t0)
         else:
-            f.write("#Restarted from bkp field ")
+            f.write("#Restarted from bkp field: " + name_file)
         f.write("\n")
         f.write("#target state: " + log_header_par.target_state +"\n")
         f.write("\n")
 
     def creation_save_files(self, folder_name, save_file, restart):
         name = folder_name + save_file.name
-        if restart == "false" or restart == "norestart":
+        if restart == "false" or restart == "norestart_found" or restart == 'restart_from_different_name_field':
             self.create_bkp_file(name)
         self.print_date_header(name, save_file.header)
 

@@ -97,6 +97,10 @@ class OCRabitzIterator(OCIterator):
             self.J = np.real(2 * np.real(np.dot(self.target_state, self.prop_psi.propagator_terms.mol.wf.ci) \
                                          - af.alpha_field_J_integral(self.field_psi_matrix, self.alpha_t, self.dt)))
 
+
+
+
+
     def init_output_dictionary(self):
         self.dict_out['log_file'] = self.get_log_file_out
         self.dict_out['final_pop'] = self.get_final_pop

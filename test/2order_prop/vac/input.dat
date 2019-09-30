@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = output_qt
+name = output_1order
 propagation = eulero_1order 
 #folder=/home/mana/Desktop/python/optimal_control/test_funzionamento/
 
@@ -27,12 +27,11 @@ env=vac
 #name_file_qijn=./qijn.dat
 
 [OPTIMALC]
-oc_algorithm=RabitzI
 restart=FALSE
 alpha=sin
 alpha0=1
 n_iterations=10
-state_to_project_on=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0   
+target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0   
 
 [SAVE]
 #save_restart_step=10

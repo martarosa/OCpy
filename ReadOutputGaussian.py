@@ -47,9 +47,9 @@ class ReadOutputGaussian():
         V = self.convert_fortran_dble(V[0])
         V = V.reshape((n, n_tessere_env))
         V_ijn_el = self.read_half_above_matrix_gaussian(n_en, n_tessere_env, V)
-        V_tot = np.array(V_ijn_el)
+        V_tot = -np.array(V_ijn_el)
         for i in range(n_en):
-            V_tot[i,i,:] = V_tot[i,i,:] + VN
+            V_tot[i,i,:] = -V_tot[i,i,:] + VN
         return V_tot
 
 

@@ -80,13 +80,15 @@ class InitFieldPar():
 
     def init_restart(self, user_input):
         if os.path.isfile(user_input.sys.par['folder'] + user_input.field.par['name_field_file']):
+            if(user_input.sys.par['folder'] + user_input.field.par['name_field_file'] != user_input.sys.par['folder'] + user_input.sys.par['name'] + '_field_bkp.dat'):
+                user_input.oc.par['restart'] = 'restart_from_different_name_field'
             self.read_restart.read_file(user_input.sys.par['folder'], user_input.field.par['name_field_file'])
             self.field_parameters = self.read_restart.field_par
         elif os.path.isfile(user_input.sys.par['folder'] + user_input.sys.par['name'] + '_field_bkp.dat'):
             self.read_restart.read_file(user_input.sys.par['folder'], user_input.sys.par['name'] + '_field_bkp.dat')
             self.field_parameters = self.read_restart.field_par
         else:
-            user_input.oc.par['restart'] = 'norestart'
+            user_input.oc.par['restart'] = 'norestart_found'
             self.init_no_restart(user_input)
 
 
@@ -127,7 +129,6 @@ class InitLogPar():
         self.log_header_parameters.env = user_input.env.par['env']
 
         self.log_header_parameters.restart = user_input.oc.par['restart']
-        print(self.log_header_parameters.restart)
         self.log_header_parameters.target_state = user_input.oc.par["target_state"]
         self.log_header_parameters.alpha = user_input.oc.par['alpha']
         self.log_header_parameters.alpha0 = user_input.oc.par['alpha0']
@@ -156,6 +157,7 @@ class InitOCPar():
         self.oc_parameters.nstep = int(user_input.sys.par['nstep'])
         self.oc_parameters.dt = float(user_input.sys.par['dt'])
         self.oc_parameters.target_state = af.normalize_vector([float(i) for i in user_input.oc.par["target_state"].split(' ')])
+        print(self.oc_parameters.target_state)
         if self.oc_parameters.oc_iterator_name == "genetic":
             self.oc_parameters.iterator_parameters = GeneticParameters()
             init_genetic = InitGeneticPar()

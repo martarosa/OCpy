@@ -26,14 +26,10 @@ class OCParameters:
 
 
 
-
-
 class GeneticParameters:
     def __init__(self):
-        self.delta_omega = None
         self.n_chromosomes = None
         self.genes_amplitude_limits = []
-
 
 
 
@@ -44,36 +40,22 @@ class InitGeneticPar():
     def init(self, user_input):
         self.genetic_parameters.genes_amplitude_limits.append(user_input.chr.par['amplitude_low_limit'])
         self.genetic_parameters.genes_amplitude_limits.append(user_input.chr.par['amplitude_hight_limit'])
-        self.genetic_parameters.delta_omega = user_input.chr.par['delta_omega']
         self.genetic_parameters.n_chromosomes = user_input.chr.par['n_chromosomes']
 
 
 
 class Chromosome():
     def __init__(self):
-        self.n_amplitude_genes = None  # n_ampitudes
-        self.amplitude_genes_vector_cos = None  # amplitudes
-        self.amplitude_genes_vector_sin = None  # amplitudes
-
+        self.ampl_genes = None  # n_ampitudes
+        self.J = None
         self.field = Field()
         self.prop_psi = prop.PropagatorEulero2Order()
 
 
-    def init_chromosome(self, oc_parameters, molecule, starting_field, pcm):
-        self.field = starting_field
-        self.n_amplitude_genes = self.field.parameters['fi'].size()
-        self.amplitude_genes_vector_sin = np.random.uniform(low=oc_parameters.iterator_parameters.genes_amplitude_limits[0],
-                                                        high=oc_parameters.iterator_parameters.genes_amplitude_limits[1],
-                                                        size=(self.n_amplitude_genes))
-        self.amplitude_genes_vector_cos = np.random.uniform(low=oc_parameters.iterator_parameters.genes_amplitude_limits[0],
-                                                            high=oc_parameters.iterator_parameters.genes_amplitude_limits[1],
-                                                            size=(self.n_amplitude_genes))
-
-        self.field.parameters['fi'] = self.amplitude_genes_vector_sin
-        self.field.parameters['fi_cos'] = self.amplitude_genes_vector_cos
-        self.field.chose_field(self.field.field_type)
-        self.prop_psi.set_propagator(oc_parameters.dt, molecule, pcm)
-
+    def init_chromosome(self, dt, molecule, field, pcm):
+        self.field = field
+        self.prop_psi.set_propagator(dt, molecule, pcm)
+        self.ampl_genes = np.concatenate((self.field.parameters['fi'], self.field.parameters['fi_cos']), axis = 1)
 
 
 
@@ -96,20 +78,26 @@ class OCGeneticIterator(OCIterator):
         # genetic
 
         self.n_chromosomes = None
-        self.n_amplitudes_omega_genes = None
-        self.genes_amplitude_limits = []
-        self.omegas_vector = None
-        self.delta = None
+        self.n_genes = None
+        self.ampl_limits = []
+        self.omegas_matrix = None
+
 
         self.chromosomes = []
         self.Js = []
 
 
     def iterate(self, current_iteration):
-        for i in range(self.n_chromosomes):
-            self.chromosomes[i].prop_psi.propagate_n_step(self.nstep, self.chromosomes[i].field.field)
-        self.calc_J()
-        self.check_convergence()
+        if current_iteration != 0:
+            self.evolve()
+            for i in range(self.n_chromosomes):
+                self.chromosomes[i].prop_psi.propagate_n_step(self.nstep, self.chromosomes[i].field.field)
+            self.calc_J()
+            self.check_convergence()
+        else:
+            for i in range(self.n_chromosomes):
+                self.chromosomes[i].prop_psi.propagate_n_step(self.nstep, self.chromosomes[i].field.field)
+
 
 
 
@@ -118,18 +106,39 @@ class OCGeneticIterator(OCIterator):
         self.dt = oc_parameters.dt
         self.alpha_t = alpha_t
         self.target_state = oc_parameters.target_state
-
-        self.delta = oc_parameters.iterator_parameters.delta
+        #genetic
+        self.n_genes = 2* starting_field.parameters['fi'].size()
+        self.omegas_matrix = starting_field.parameters['omega']
         self.n_chromosomes = oc_parameters.iterator_parameters.n_chromosomes
-        self.genes_amplitude_limits = oc_parameters.iterator_parameters.genes_amplitude_limits
-
-
-     #   self.set_omega_vector(molecule)
-
+        self.ampl_limits = oc_parameters.iterator_parameters.genes_amplitude_limits
+        #genero i cromosomi con ampiezze random
         for i in range(self.n_chromosomes):
-            tmp = Chromosome()
-            tmp.init_chromosome(oc_parameters, molecule, starting_field, pcm)
-            self.chromosomes.append(tmp)
+            chromosome = Chromosome()
+            field = self.create_random_field(starting_field)
+            chromosome.init_chromosome(self.dt, molecule, field, pcm)
+            self.chromosomes.append(chromosome)
+
+
+    def evolve(self):
+        pass
+
+    def init_evolutionary_algorithm(self):
+        pass
+
+
+    def create_random_field(self, starting_field):
+        field = starting_field
+        ampl = np.zeros([self.n_genes, 3])
+        ampl[:, 0] = np.random.uniform((self.ampl_limits[0], self.ampl_limits[1], self.n_genes))
+        ampl[:, 1] = np.random.uniform((self.ampl_limits[0], self.ampl_limits[1], self.n_genes))
+        ampl[:, 2] = np.random.uniform((self.ampl_limits[0], self.ampl_limits[1], self.n_genes))
+        field.parameters['fi'] = ampl[:self.n_genes/2]
+        field.parameters['fi_cos'] = ampl[self.n_genes / 2:]
+        #self.field.chose_field(self.field.field_type)
+        field.chose_field('sum')
+        return field
+
+
 
 #    def init_output_dictionary(self):
 #        self.dict_out['log_file'] = self.get_log_file_out
@@ -170,13 +179,16 @@ class OCGeneticIterator(OCIterator):
 
 
     def calc_J(self):
-        self.Js = []
+        #self.Js = []
         for i in range(self.n_chromosomes):
-            self.Js.append(np.real(af.projector_mean_value(self.chromosomes[i].prop_psi.mol.wf.ci, self.target_state) \
-                         - af.alpha_field_J_integral(self.chromosomes[i].field.field, self.alpha_t, self.dt)))
-        self.Js, self.chromosomes = (list(t) for t in zip(*sorted(zip(self.Js, self.chromosomes), reverse = True)))
+            #self.Js.append(
+            self.chromosomes[i].J = np.real(af.projector_mean_value(self.chromosomes[i].prop_psi.mol.wf.ci, self.target_state) \
+                         - af.alpha_field_J_integral(self.chromosomes[i].field.field, self.alpha_t, self.dt))
 
-        self.J = self.J[0]
+        self.chromosomes.sort(key=lambda x: x.J, reverse=True)
+        #self.Js, self.chromosomes = (list(t) for t in zip(*sorted(zip(self.Js, self.chromosomes), reverse = True)))
+        self.J = self.chromosomes[0].J
+
 
 
     def check_convergence(self):
