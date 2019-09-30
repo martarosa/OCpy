@@ -119,7 +119,7 @@ class Field():
                 for j in range(self.parameters['omega'].shape[0]):
                     self.field[i] = self.field[i] \
                                     + self.parameters['fi'][j] * np.sin(self.parameters['omega'][j] * i * self.dt) \
-                                    + self.parameters['fi'][j] * np.cos(self.parameters['omega'][j] * i * self.dt)
+                                    + self.parameters['fi_cos'][j] * np.cos(self.parameters['omega'][j] * i * self.dt)
 
 
     def genetic_pulse(self):
@@ -132,7 +132,6 @@ class Field():
             self.parameters['omega'][i] = [omega_i, omega_i, omega_i]
         self.parameters['sigma'] = 0
         self.parameters['t0'] = 0
-        self.field_type = 'sum'
         self.sum_pulse()
 
 

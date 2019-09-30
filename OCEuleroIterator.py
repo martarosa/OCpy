@@ -29,7 +29,7 @@ class Eulero1PropagationIterator(OCIterator):
         self.psi_coeff_t = self.prop_psi.propagate_n_step(self.nstep, self.field_psi_matrix)
 
 
-    def init_oc_iterator(self, molecule, starting_field, env, oc_parameters, alpha_t):
+    def init_oc_iterator(self, oc_parameters, iterator_parameters, molecule, starting_field, env, alpha_t):
         self.nstep = oc_parameters.nstep
         self.dt = oc_parameters.dt
         self.alpha_t = alpha_t
@@ -71,7 +71,7 @@ class Eulero2PropagationIterator(OCIterator):
     def iterate(self, current_iteration):
         self.psi_coeff_t = self.prop_psi.propagate_n_step(self.nstep, self.field_psi_matrix)
 
-    def init_oc_iterator(self, molecule, starting_field, env, oc_parameters, alpha_t):
+    def init_oc_iterator(self, oc_parameters, iterator_parameters, molecule, starting_field, env,  alpha_t):
         self.nstep = oc_parameters.nstep
         self.dt = oc_parameters.dt
 

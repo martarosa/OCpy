@@ -1,0 +1,36 @@
+[SYSTEM]
+dt=0.01
+nstep=25000
+name = output
+propagation = genetic 
+#folder=
+
+[WAVEFUNCTION]
+name_ci=ci_ini.inp
+name_ei=ci_energy.inp
+name_mut=ci_mut.inp
+
+[FIELD]
+field_type=genetic
+fi=0.01 0.01 0.01
+fi_cos = 0.01 0.01 0.01
+iterator_config_file = genetic.conf
+
+[ENVIRON]
+env=vac
+#name_Vij=pot_gamess.inp
+#name_Q_tdplas=np_bem.mdy
+#read_qijn=False
+#name_file_qijn=./qijn.dat
+
+[OPTIMALC]
+restart=False
+alpha=sin
+alpha0=1
+n_iterations=10
+target_state=0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0          
+
+[SAVE]
+#save_restart_step=10
+#save_iteration_pop_step=10
+#save_iteration_field_step=10
