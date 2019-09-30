@@ -15,8 +15,8 @@ import time as time
 #    folder = split[0]+"/"
 #    namefile = split[1]
 
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/read_input/OC_input/"
-namefile = "input_nuovo.dat"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/pcm/3sfere/"
+namefile = "input.dat"
 
 
 OC_system=ini.SystemManager()

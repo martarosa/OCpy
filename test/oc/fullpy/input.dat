@@ -1,8 +1,8 @@
 [SYSTEM]
-dt=0.1
-nstep=2500
-name = test_qt 
-propagation = optimal_control 
+dt=0.01
+nstep=25000
+name = output
+propagation = rabitzi 
 #folder=
 
 [WAVEFUNCTION]
@@ -12,10 +12,10 @@ name_mut=ci_mut.inp
 
 [FIELD]
 field_type=const
-omega=0.3239892104044628
+omega=0.3239892104044628 0.3239892104044628 0.3239892104044628
 sigma=125
 t0=125
-fi = 0.01 0.01 0.01
+fi=0.01 0.01 0.01
 #f_max= 0.0 0.0038 0.0 
 #name_field_file=
 
@@ -27,12 +27,11 @@ env=sol
 #name_file_qijn=./qijn.dat
 
 [OPTIMALC]
-oc_algorithm=RabitzI
 restart=False
 alpha=sin
 alpha0=1
-n_iterations=10
-state_to_project_on=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0          
+n_iterations=0
+target_state=0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0          
 
 [SAVE]
 #save_restart_step=10

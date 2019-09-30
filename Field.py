@@ -62,6 +62,7 @@ class Field():
             'sin': lambda: self.sin_pulse(),
             'gau': lambda: self.gau_pulse(),
             'sum': lambda: self.sum_pulse(),
+            'genetic' : lambda: self.genetic_pulse(),
             'optimizedRabitz' : lambda: self.read_pulse()
              }
          return field.get(key, lambda: "Inexistent field type")()
@@ -109,15 +110,30 @@ class Field():
     def sum_pulse(self):
         self.field = np.zeros([self.nstep, 3])
         # fi*sin(wi*t + fi_cos(wi*t)
-        for i in range(self.nstep):
-            self.field[i] = self.parameters['fi'] * np.sin(self.parameters['omega'] * i * self.dt) \
-                            + self.parameters['fi_cos'] * np.cos(self.parameters['omega'] * i * self.dt)
+        if self.parameters['omega'].ndim == 1:
+            for i in range(self.nstep):
+                self.field[i] = self.parameters['fi'] * np.sin(self.parameters['omega'] * i * self.dt) \
+                                + self.parameters['fi_cos'] * np.cos(self.parameters['omega'] * i * self.dt)
+        elif self.parameters['omega'].ndim == 2:
+            for i in range(self.nstep):
+                for j in range(self.parameters['omega'].shape[0]):
+                    self.field[i] = self.field[i] \
+                                    + self.parameters['fi'][j] * np.sin(self.parameters['omega'][j] * i * self.dt) \
+                                    + self.parameters['fi'][j] * np.cos(self.parameters['omega'][j] * i * self.dt)
 
 
-
-
-
-
+    def genetic_pulse(self):
+        n_fourier_omega = int(1 + self.parameters['omega_max']*self.dt*self.nstep/(2*np.pi))
+        self.parameters['omega'] = np.zeros([n_fourier_omega, 3])
+        self.parameters['fi'] = np.full([n_fourier_omega, 3], self.parameters['fi'][0])
+        self.parameters['fi_cos'] = np.full([n_fourier_omega, 3], self.parameters['fi'][0])
+        for i in range(n_fourier_omega):
+            omega_i = np.pi*2*i/(self.dt*self.nstep)
+            self.parameters['omega'][i] = [omega_i, omega_i, omega_i]
+        self.parameters['sigma'] = 0
+        self.parameters['t0'] = 0
+        self.field_type = 'sum'
+        self.sum_pulse()
 
 
 
