@@ -51,8 +51,14 @@ class SaveTools():
         if log_header_par.restart == "norestart_found":
             f.write("#WARNING: restart asked but restart file not found. Starting from guess field" + "\n")
             #input_par_file.modify_oc_restart_par("false")
-        if log_header_par.restart == "norestart_found":
-            f.write("#field parameters: \n #field: " + log_header_par.field_type + " fi: " + log_header_par.fi)
+        elif log_header_par.restart == "true" or log_header_par.restart == 'restart_from_different_name_field':
+            f.write("#Restarted from bkp field: " + name_file)
+        elif log_header_par.internal_check_genetic_par == False:
+            f.write("#WARNING: sum field used instead than the requested one, only one implemented for genetic algorithm" + "\n")
+        else:
+            f.write("#field parameters: \n #field: " + log_header_par.field_type)
+            if log_header_par.field_type != "genetic":
+                f.write("fi: " + log_header_par.fi)
             if log_header_par.field_type == "sum":
                 f.write(" fi_cos: " + log_header_par.fi_cos + "\n")
                 f.write("# omega: " + log_header_par.omega)
@@ -60,8 +66,6 @@ class SaveTools():
                 f.write(" sigma: " + log_header_par.sigma +
                         " omega: " + log_header_par.omega +
                         " t0: " + log_header_par.t0)
-        else:
-            f.write("#Restarted from bkp field: " + name_file)
         f.write("\n")
         f.write("#target state: " + log_header_par.target_state +"\n")
         f.write("\n")

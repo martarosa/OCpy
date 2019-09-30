@@ -15,7 +15,7 @@ import time as time
 #    folder = split[0]+"/"
 #    namefile = split[1]
 
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/pcm/3sfere/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/genetic/"
 namefile = "input.dat"
 
 
@@ -39,7 +39,7 @@ OC_system.init_system(folder, namefile)
 
 
 #start=time.time()
-OC_system.oc.iterate()
+#OC_system.oc.iterate()
 #end=time.time()
 #print(end-start)
 #import auxiliary_functions as af

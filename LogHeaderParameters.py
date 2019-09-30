@@ -12,3 +12,4 @@ class LogHeaderParameters():
         self.t0 = None#field
         self.target_state = None#oc
         self.restart = None#oc
+        self.internal_check_genetic_field = True

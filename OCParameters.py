@@ -8,6 +8,8 @@ from OCIterator import OCIterator
 from Field import Field
 from FieldParameters import FieldParameters
 
+from deap import tools
+
 class OCParameters:
     def __init__(self):
         self.oc_iterator_name = None
@@ -15,39 +17,30 @@ class OCParameters:
         self.alpha0 = None
         self.n_iterations = None
         self.convergence_thr = None
-
         self.restart = None
-
         self.nstep = None
         self.dt = None
         self.target_state = None
+        self.iterator_config_file = None
 
-        self.iterator_parameters = None
+
 
 
 
 class GeneticParameters:
     def __init__(self):
         self.n_chromosomes = None
-        self.genes_amplitude_limits = []
-
-
-
-class InitGeneticPar():
-    def __init__(self):
-        self.genetic_parameters = GeneticParameters()
-
-    def init(self, user_input):
-        self.genetic_parameters.genes_amplitude_limits.append(user_input.chr.par['amplitude_low_limit'])
-        self.genetic_parameters.genes_amplitude_limits.append(user_input.chr.par['amplitude_hight_limit'])
-        self.genetic_parameters.n_chromosomes = user_input.chr.par['n_chromosomes']
+        self.n_evolved_chr = None
+        self.amplitude_min = None
+        self.amplitude_max = None
 
 
 
 class Chromosome():
     def __init__(self):
-        self.ampl_genes = None  # n_ampitudes
+        self.ampl_genes = []  # n_ampitudes
         self.J = None
+
         self.field = Field()
         self.prop_psi = prop.PropagatorEulero2Order()
 
@@ -79,7 +72,8 @@ class OCGeneticIterator(OCIterator):
 
         self.n_chromosomes = None
         self.n_genes = None
-        self.ampl_limits = []
+        self.ampl_min = None
+        self.ampl_max = None
         self.omegas_matrix = None
 
 
@@ -99,44 +93,51 @@ class OCGeneticIterator(OCIterator):
                 self.chromosomes[i].prop_psi.propagate_n_step(self.nstep, self.chromosomes[i].field.field)
 
 
-
-
     def init_oc_iterator(self, molecule, starting_field, pcm, oc_parameters, alpha_t):
         self.nstep = oc_parameters.nstep
         self.dt = oc_parameters.dt
         self.alpha_t = alpha_t
         self.target_state = oc_parameters.target_state
+
         #genetic
         self.n_genes = 2* starting_field.parameters['fi'].size()
         self.omegas_matrix = starting_field.parameters['omega']
+
+
+
         self.n_chromosomes = oc_parameters.iterator_parameters.n_chromosomes
-        self.ampl_limits = oc_parameters.iterator_parameters.genes_amplitude_limits
+        self.ampl_min = oc_parameters.iterator_parameters.amplitude_min
+        self.ampl_max = oc_parameters.iterator_parameters.amplitude_max
         #genero i cromosomi con ampiezze random
-        for i in range(self.n_chromosomes):
-            chromosome = Chromosome()
-            field = self.create_random_field(starting_field)
-            chromosome.init_chromosome(self.dt, molecule, field, pcm)
-            self.chromosomes.append(chromosome)
+ #       for i in range(self.n_chromosomes):
+ #           chromosome = Chromosome()
+ #           field = self.create_random_field(starting_field)
+ #           chromosome.init_chromosome(self.dt, molecule, field, pcm)
+ #           self.chromosomes.append(chromosome)
 
 
-    def evolve(self):
+
+
+    def evolve(self, chromosome):
         pass
+
 
     def init_evolutionary_algorithm(self):
         pass
 
 
-    def create_random_field(self, starting_field):
-        field = starting_field
-        ampl = np.zeros([self.n_genes, 3])
-        ampl[:, 0] = np.random.uniform((self.ampl_limits[0], self.ampl_limits[1], self.n_genes))
-        ampl[:, 1] = np.random.uniform((self.ampl_limits[0], self.ampl_limits[1], self.n_genes))
-        ampl[:, 2] = np.random.uniform((self.ampl_limits[0], self.ampl_limits[1], self.n_genes))
-        field.parameters['fi'] = ampl[:self.n_genes/2]
-        field.parameters['fi_cos'] = ampl[self.n_genes / 2:]
-        #self.field.chose_field(self.field.field_type)
-        field.chose_field('sum')
-        return field
+
+#    def create_random_field(self, starting_field):
+#        field = starting_field
+#        ampl = np.zeros([self.n_genes, 3])
+#        ampl[:, 0] = np.random.uniform((self.ampl_limits[0], self.ampl_limits[1], self.n_genes))
+#        ampl[:, 1] = np.random.uniform((self.ampl_limits[0], self.ampl_limits[1], self.n_genes))
+#        ampl[:, 2] = np.random.uniform((self.ampl_limits[0], self.ampl_limits[1], self.n_genes))
+#        field.parameters['fi'] = ampl[:self.n_genes/2]
+#        field.parameters['fi_cos'] = ampl[self.n_genes / 2:]
+#        #self.field.chose_field(self.field.field_type)
+#        field.chose_field('sum')
+#        return field
 
 
 

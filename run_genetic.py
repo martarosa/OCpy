@@ -21,7 +21,7 @@ namefile = "input_nuovo.dat"
 OC_system=ini.SystemManager()
 OC_system.init_system(folder, namefile)
 
-#creo un oggetto di tipo fitness, che è implementato. da solo non faniente, è un attributo assegnato a un individuo
+#creo un oggetto di tipo fitness, che è implementato. da solo non fa niente, è un attributo assegnato a un individuo
 
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 

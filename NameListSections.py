@@ -18,8 +18,6 @@ class Section():
                     sys.exit("Error in input. Wrong \"" + key + "\" value")
 
 
-
-
 class SectionSystem(Section):
     def __init__(self):
         super().__init__()
@@ -30,7 +28,7 @@ class SectionSystem(Section):
 class SectionField(Section):
     def __init__(self):
         super().__init__()
-        self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'read_file', 'sum', 'optimizedRabitz']]]
+        self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'read_file', 'sum', 'optimizedRabitz', 'genetic']]]
         self.case_unsensitive_keys = ['field_type']
 
     def convert_string_coefficients(self, key_string_coeff):
@@ -59,9 +57,16 @@ class SectionSave(Section):
         self.allowed_val = []
         self.case_unsensitive_keys = []
 
+
 class SectionOptimalControl(Section):
     def __init__(self):
         super().__init__()
         self.allowed_val = [['alpha', ['const', 'sin', 'quin']],
                             ['restart', ['true', 'false']]]
         self.case_unsensitive_keys = ['restart', 'alpha']
+
+class SectionGenetic(Section):
+    def __init__(self):
+        super().__init__()
+        self.allowed_val = []
+        self.case_unsensitive_keys = []

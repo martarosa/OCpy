@@ -7,6 +7,7 @@ import os.path
 
 from ReadOutputGaussian import ReadOutputGaussian
 from ReadNamelistOC import ReadNamelistOC
+from ReadNamelistGenetic import ReadNamelistGenetic
 from ReadFieldRestart import ReadFieldRestartGenetic, ReadFieldRestartRabitz, ReadFieldRestart
 
 from Molecule import Molecule
@@ -22,7 +23,7 @@ from FieldParameters import FieldParameters
 from OCParameters import OCParameters
 
 import auxiliary_functions as af
-from OCParameters import GeneticParameters, InitGeneticPar
+from OCParameters import GeneticParameters
 
 
 class InitPar():
@@ -91,9 +92,6 @@ class InitFieldPar():
             user_input.oc.par['restart'] = 'norestart_found'
             self.init_no_restart(user_input)
 
-
-
-
 class InitPCMPar():
     def __init__(self):
         self.pcm_parameters = PCMParameters()
@@ -107,7 +105,6 @@ class InitPCMPar():
                                                                                user_input.env.par['name_q_tdplas'])
              self.pcm_parameters.Qnn_localfield = read_output.read_Q_matrix(user_input.sys.par['folder'] +
                                                                             user_input.env.par['name_q_local_field'])
-
 
 class InitSavePar():
     def __init__(self):
@@ -141,9 +138,11 @@ class InitLogPar():
         self.log_header_parameters.t0 = user_input.field.par['t0']
 
 
+
 class InitOCPar():
     def __init__(self):
         self.oc_parameters = OCParameters()
+        self.iterator_parameters = None
 
     def init(self, user_input):
         self.oc_parameters.oc_iterator_name = user_input.sys.par['propagation']
@@ -157,12 +156,19 @@ class InitOCPar():
         self.oc_parameters.nstep = int(user_input.sys.par['nstep'])
         self.oc_parameters.dt = float(user_input.sys.par['dt'])
         self.oc_parameters.target_state = af.normalize_vector([float(i) for i in user_input.oc.par["target_state"].split(' ')])
-        print(self.oc_parameters.target_state)
+        self.oc_parameters.iterator_config_file = user_input.oc.par['iterator_config_file']
         if self.oc_parameters.oc_iterator_name == "genetic":
-            self.oc_parameters.iterator_parameters = GeneticParameters()
-            init_genetic = InitGeneticPar()
-            init_genetic.init(user_input)
+            self.iterator_parameters = GeneticParameters()
+            genetic_input = ReadNamelistGenetic()
+            genetic_input.read_file(user_input.sys.par['folder'], user_input.oc.par['iterator_config_file'])
+            self.init_genetic(genetic_input)
 
+
+    def init_genetic(self, genetic_input):
+        self.iterator_parameters.amplitude_min = genetic_input.genetic.par['amplitude_min']
+        self.iterator_parameters.amplitude_max = genetic_input.genetic.par['amplitude_max']
+        self.iterator_parameters.n_chromosomes = genetic_input.genetic.par['n_chromosomes']
+        self.iterator_parameters.n_evolved_chr = genetic_input.genetic.par['n_evolved_chr']
 
 
 class SystemManager():
@@ -191,6 +197,9 @@ class SystemManager():
     def init_starting_field(self, user_input):
         init_field = InitFieldPar()
         if user_input.sys.par['propagation'] == 'genetic':
+            if(user_input.field.par['field_type']) != 'genetic':
+                user_input.field.par['internal_check_genetic_field'] = False
+                user_input.field.par['field_type'] = 'genetic'
             init_field.read_restart = ReadFieldRestartGenetic()
         else:
             init_field.read_restart = ReadFieldRestartRabitz()
@@ -211,11 +220,11 @@ class SystemManager():
     def init_optimal_control(self, user_input):
         init_oc = InitOCPar()
         init_oc.init(user_input)
-        init_save = InitSavePar()
-        init_save.init(user_input)
-        init_log_header = InitLogPar()
-        init_log_header.init(user_input)
-        self.oc.init_oc(init_oc.oc_parameters, init_save.save_parameters, init_log_header.log_header_parameters, self.mol, self.starting_field, self.pcm)
+        #init_save = InitSavePar()
+        #init_save.init(user_input)
+        #init_log_header = InitLogPar()
+        #init_log_header.init(user_input)
+        #self.oc.init_oc(init_oc.oc_parameters, init_oc.iterator_parameters, init_save.save_parameters, init_log_header.log_header_parameters, self.mol, self.starting_field, self.pcm)
 
 
 

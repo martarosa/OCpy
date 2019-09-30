@@ -30,7 +30,7 @@ env=sol
 restart=False
 alpha=sin
 alpha0=1
-n_iterations=0
+n_iterations=10
 target_state=0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0          
 
 [SAVE]

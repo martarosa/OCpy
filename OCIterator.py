@@ -6,6 +6,7 @@ class OCIterator():
         self.field_psi_matrix = None
         self.psi_coeff_t = None
 
+
         self.alpha_t = None
         self.convergence_t =  99999
         self.J = 99999
@@ -25,5 +26,5 @@ class OCIterator():
     def init_output_dictionary(self):
         pass
 
-    def init_oc_iterator(self, molecule, starting_field, env, oc_parameters, alpha_t):
+    def init_oc_iterator(self, oc_parameters, iterator_parameters, molecule, starting_field, env, alpha_t):
         pass
