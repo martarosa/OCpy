@@ -1,10 +1,9 @@
 import numpy as np
-import abc
 
-import auxiliary_functions as af
-from Molecule import Molecule
-from PCM import PCM, DinamicPCM, FrozenSolventPCM
-import math_functions as mf
+from read import auxiliary_functions as af
+from molecule.Molecule import Molecule
+from pcm.PCM import PCM
+
 
 class PropagatorTerms():
     def __init__(self):

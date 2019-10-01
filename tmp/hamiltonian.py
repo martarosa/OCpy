@@ -1,5 +1,5 @@
 import numpy as np
-from WaveFunction import WaveFunction
+
 
 class MolecularHamiltonian:
     def __init__(self):

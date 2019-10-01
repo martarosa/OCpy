@@ -1,4 +1,4 @@
-from PropagatorTerms import PropagatorTerms
+from propagator.PropagatorTerms import PropagatorTerms
 
 class Propagator():
     def __init__(self):

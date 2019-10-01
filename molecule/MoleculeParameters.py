@@ -1,5 +1,3 @@
-from WaveFunction import WaveFunction
-
 class MoleculeParameters:
     def __init__(self):
         self.wf_ci = None

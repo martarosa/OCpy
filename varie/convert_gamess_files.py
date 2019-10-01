@@ -1,5 +1,4 @@
-import auxiliary_functions as af
-from ReadOutputGaussian import ReadOutputGaussian
+from read.ReadOutputGaussian import ReadOutputGaussian
 import pandas as pd
 import numpy as np
 

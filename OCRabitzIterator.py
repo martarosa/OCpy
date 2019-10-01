@@ -1,11 +1,9 @@
 import numpy as np
 
+from propagator import PropagatorOCRabitz as rabitzI
+from read import auxiliary_functions as af
 
-import PropagatorOCRabitz as rabitzI
-import auxiliary_functions as af
-
-
-from Field import PropagatorFieldOC
+from field.Field import PropagatorFieldOC
 from OCIterator import OCIterator
 
 
@@ -126,6 +124,9 @@ class OCRabitzIterator(OCIterator):
         self.initial_c0 = self.prop_psi.propagator_terms.mol.wf.ci
         self.psi_coeff_t[0] =  self.initial_c0
         self.init_output_dictionary()
+
+        # iterator_parameters = rabitz EMPTY
+
 
 
 

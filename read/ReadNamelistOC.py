@@ -1,6 +1,7 @@
 import configparser
 import sys
-import NameListSections as sec
+from read import NameListSections as sec
+
 
 class ReadNamelistOC():
     def __init__(self):
@@ -58,6 +59,7 @@ class ReadNamelistOC():
         user_input.read(folder + namefile)
         self.check_input_sections(user_input)
         self.set_dictionaries(user_input)
+
 
 
 

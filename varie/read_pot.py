@@ -1,6 +1,5 @@
 import numpy as np
-import pandas as pd
-import ReadOutputGaussian as rgauss
+from read import ReadOutputGaussian as rgauss
 
 folder="/home/mana/Desktop/python/optimal_control/quinolone/vac/"
 namefile="input.dat"

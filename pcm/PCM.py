@@ -1,6 +1,5 @@
 import numpy as np
-import auxiliary_functions as af
-
+from read import auxiliary_functions as af
 
 
 class PCM():

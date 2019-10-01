@@ -1,5 +1,6 @@
 import numpy as np
-import auxiliary_functions as af
+from read import auxiliary_functions as af
+
 
 #-------------------------------------------
 #Field (x y z) components at time t: 3D vector
