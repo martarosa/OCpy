@@ -1,6 +1,7 @@
 import configparser
 import sys
-import NameListSections as sec
+from read import NameListSections as sec
+
 
 class ReadNamelistGenetic():
     def __init__(self):

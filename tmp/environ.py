@@ -1,8 +1,8 @@
 import numpy as np
-from SaveOC import SaveOC
+from save.SaveOC import SaveOC
 import pandas as pd
-import auxiliary_functions as af
-from PCM import PCM, FrozenSolventPCM, DinamicPCM
+from read import auxiliary_functions as af
+from pcm.PCM import PCM, FrozenSolventPCM, DinamicPCM
 
 class Env():
     def __init__(self):

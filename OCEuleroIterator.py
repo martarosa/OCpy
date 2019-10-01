@@ -1,8 +1,7 @@
 import numpy as np
 
-import PropagatorsEulero as prop
-import auxiliary_functions as af
-
+from propagator import PropagatorsEulero as prop
+from read import auxiliary_functions as af
 
 from OCIterator import OCIterator
 

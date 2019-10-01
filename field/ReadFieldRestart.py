@@ -1,6 +1,6 @@
 import numpy as np
-import NameListSections as sec
-from FieldParameters import FieldParameters
+from read import NameListSections as sec
+from field.FieldParameters import FieldParameters
 import configparser
 
 class ReadFieldRestart():
@@ -35,7 +35,7 @@ class ReadFieldRestartGenetic(ReadFieldRestart):
         self.field.convert_string_coefficients('fi_cos')
         self.field.convert_string_coefficients('omega')
         field = None
-        return field
+        #return field
 
 
 

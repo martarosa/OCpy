@@ -3,10 +3,11 @@ import numpy as np
 from OCIterator import OCIterator
 from OCEuleroIterator import  Eulero1PropagationIterator, Eulero2PropagationIterator
 from OCRabitzIterator import OCRabitzIterator
+#from OCGeneticIterator import OCGeneticIterator
+from save.SaveOC import SaveOC
+from save.SaveOCRabitz import SaveOCRabitz
+from save.SaveEulero import SaveEulero
 from OCGeneticIterator import OCGeneticIterator
-from SaveOC import SaveOC, SaveOCRabitz, SaveEulero
-
-
 
 
 class OCManager:
@@ -22,10 +23,8 @@ class OCManager:
         self.oc_iterator = OCIterator()
         self.save = SaveOC()
 
-
         self.psi_coeff_t = None
         self.field_psi_matrix = None
-
         self.current_iteration = 0
         self.convergence_t = 99999
 
@@ -43,7 +42,6 @@ class OCManager:
             self.n_iterations = 0
             self.convergence_thr = 99999
 
-
         self.init_oc_iterator(oc_parameters,
                               iterator_parameters,
                               molecule,
@@ -51,9 +49,10 @@ class OCManager:
                               pcm,
                               self.set_alpha_t(oc_parameters.nstep, oc_parameters.dt))
 
-
         self.init_save(save_parameters, log_header_parameters)
         self.field_psi_matrix = np.copy(starting_field.field)
+
+
 
 
     def init_oc_iterator(self, oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t):
@@ -65,9 +64,7 @@ class OCManager:
             self.oc_iterator = Eulero1PropagationIterator()
         elif self.oc_iterator_name == "eulero_2order":
             self.oc_iterator = Eulero2PropagationIterator()
-
         self.oc_iterator.init_oc_iterator(oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t)
-
 
     def init_save(self, save_parameters, log_header_parameters):
         if self.oc_iterator_name == "rabitzi" or self.oc_iterator_name == "rabitzii":

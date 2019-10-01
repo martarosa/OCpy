@@ -1,4 +1,4 @@
-from WaveFunction import WaveFunction
+from molecule.WaveFunction import WaveFunction
 
 class Molecule:
     def __init__(self):
