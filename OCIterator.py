@@ -2,14 +2,15 @@ class OCIterator():
     def __init__(self):
         self.nstep = None
         self.dt = None
+        self.target_state = None
+        self.alpha_t = None
+
+        self.convergence_t =  99999
+        self.J = 99999
 
         self.field_psi_matrix = None
         self.psi_coeff_t = None
 
-
-        self.alpha_t = None
-        self.convergence_t =  99999
-        self.J = 99999
         self.dict_out = {}
         self.dict_restart = {}
 
@@ -26,5 +27,5 @@ class OCIterator():
     def init_output_dictionary(self):
         pass
 
-    def init_oc_iterator(self, oc_parameters, iterator_parameters, molecule, starting_field, env, alpha_t):
+    def init(self, oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t):
         pass

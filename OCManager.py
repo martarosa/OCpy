@@ -64,7 +64,8 @@ class OCManager:
             self.oc_iterator = Eulero1PropagationIterator()
         elif self.oc_iterator_name == "eulero_2order":
             self.oc_iterator = Eulero2PropagationIterator()
-        self.oc_iterator.init_oc_iterator(oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t)
+        self.oc_iterator.init(oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t)
+
 
     def init_save(self, save_parameters, log_header_parameters):
         if self.oc_iterator_name == "rabitzi" or self.oc_iterator_name == "rabitzii":

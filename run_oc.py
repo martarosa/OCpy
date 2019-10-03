@@ -1,6 +1,14 @@
 import SystemManager as ini
+from deap import base
+from deap import creator
+from deap import tools
+
+import random
+
 import argparse
 import time as time
+#from DeapWrapper import DeapCreator
+
 
 #python3 run_oc.py -f folder/namefile takes as input the string, cut at the last "/" and split folder and namefile
 #if only the namefile is provided default folder is ./
@@ -19,10 +27,24 @@ folder = "/home/mana/programmi/python/optimal_control/OCpy/test/genetic/"
 namefile = "input.dat"
 
 
+#creator.create("J", base.Fitness, weights=(1.0,))
+#creator.create("Chromosome", list, fitness=creator.J)
+#toolbox = base.Toolbox()
+#toolbox.register("create_random_ampl", random.uniform, -0.001, 0.001)
+#toolbox.register("single_chromosome", tools.initIterate, creator.Chromosome, toolbox.create_random_ampl, n=1)
+
+
+
+
+
+
+
+
 OC_system=ini.SystemManager()
 OC_system.init_system(folder, namefile)
 
-
+#deap_creator = DeapCreator()
+#deap_creator.create()
 
 #psi=system.wavef.propagate_n_step_2order(system.oc.dt,
 #                                         system.oc.nstep,
