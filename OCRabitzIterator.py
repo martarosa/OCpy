@@ -105,7 +105,7 @@ class OCRabitzIterator(OCIterator):
         self.dict_out['pop_t'] = self.get_pop_t
         self.dict_out['field_t'] = self.get_field_t
 
-    def init_oc_iterator(self, oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t):
+    def init(self, oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t):
         self.nstep = oc_parameters.nstep
         self.dt = oc_parameters.dt
         self.target_state = oc_parameters.target_state

@@ -68,5 +68,7 @@ class SectionOptimalControl(Section):
 class SectionGenetic(Section):
     def __init__(self):
         super().__init__()
-        self.allowed_val = []
+        self.allowed_val = [['mate', ['cxUniform']],
+                            ['mutate',['mutGaussian']],
+                            ['select',['selBest']]]
         self.case_unsensitive_keys = []

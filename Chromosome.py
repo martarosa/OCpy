@@ -20,14 +20,17 @@ class Chromosome():
         self.prop_psi.set_propagator(dt, molecule, pcm)
         self.field_to_amplitudes_list()
 
+
     def field_to_amplitudes_list(self):
         self.amplitudes = np.concatenate([self.field.parameters['fi'].ravel(),
+
                                           self.field.parameters['fi_cos'].ravel()]).tolist()
 
     def amplitudes_to_field(self):
         self.field.parameters['fi'] = np.asarray(self.amplitudes[:int(self.size_amplitude_list/2)]).reshape((-1,3))
         self.field.parameters['fi_cos'] = np.asarray(self.amplitudes[:int(self.size_amplitude_list / 2)]).reshape((-1, 3))
         self.field.chose_field('sum')
+
 
 
     def calc_J(self, target_state, alpha_t, dt):
