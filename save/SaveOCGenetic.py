@@ -1,8 +1,8 @@
 import numpy as np
-
+from save.SaveFile import SaveFile
 from save.SaveOC import SaveOC
+from save.SaveRestart import SaveRestart
 from save.SaveTools import SaveTools
-
 
 class SaveOCGenetic(SaveOC):
     def __init__(self):
@@ -10,21 +10,48 @@ class SaveOCGenetic(SaveOC):
         self.folder = None
         self.filename = None
         self.restart_calculation = None
+
         self.save_files = None
         self.restart_file = None
+
         self.save_tools = SaveTools()
 
 
     def init_save_file_list(self, oc_iterator, restart_step):
-        #log = SaveFile(".log",
-        #               "#Final states populations \n #fields: n_iteration, convergence, J, projection on target state, alpha*integral(field^2)\n",
-        #               1,
-        #               'log_file',
-        #               oc_iterator)
+        log = SaveFile(".log",
+                       "#Final states populations \n #fields: n_iteration, convergence, J, projection on target state, alpha*integral(field^2)\n",
+                       1,
+                       'log_file',
+                       oc_iterator)
 
-        #self.save_files = [log, final_pop, pop_t, field_t]
-        #self.restart_file = SaveRestart("_field_bkp.dat", restart_step, oc_iterator)
-        pass
+        final_pop = SaveFile("_final_pop.dat",
+                             "Final states populations \n #fields: n_iteration, states population  \n",
+                             1,
+                             'final_pop',
+                             oc_iterator)
+        pop_t = SaveFile("_pop_t.dat",
+                         "#Final states populations \n #fields: n_iteration, states population  \n",
+                         restart_step,
+                         'pop_t',
+                         oc_iterator)
+
+        field_t = SaveFile("_field_t.dat",
+                           "#Final states populations \n #fields: n_iteration, states population  \n",
+                           restart_step,
+                           'field_t',
+                           oc_iterator)
+
+        field_ampl = SaveFile("_field_ampl.dat",
+                              "#field shape = a0 + sum(ai*sin(wi t)) \n "
+                              +"#omegas = "+np.array_repr(oc_iterator.omegas_matrix[:,0]).replace('\n', ''),
+                              restart_step,
+                              'field_ampl',
+                              oc_iterator)
+
+        self.save_files = [log, final_pop, pop_t, field_t, field_ampl]
+        self.restart_file = SaveRestart("_field_bkp.dat", restart_step, oc_iterator)
+
+
 
 
 

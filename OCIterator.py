@@ -1,4 +1,4 @@
-class OCIterator():
+class OCIteratorAttr():
     def __init__(self):
         self.nstep = None
         self.dt = None
@@ -12,8 +12,14 @@ class OCIterator():
         self.psi_coeff_t = None
 
         self.dict_out = {}
-        self.dict_restart = {}
+#        self.dict_restart = {}
 
+
+
+
+class OCIterator():
+    def __init__(self):
+        self.class_attributes = OCIteratorAttr()
 
     def iterate(self, current_iteration):
         pass

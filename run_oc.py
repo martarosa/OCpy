@@ -27,18 +27,6 @@ folder = "/home/mana/programmi/python/optimal_control/OCpy/test/genetic/"
 namefile = "input.dat"
 
 
-#creator.create("J", base.Fitness, weights=(1.0,))
-#creator.create("Chromosome", list, fitness=creator.J)
-#toolbox = base.Toolbox()
-#toolbox.register("create_random_ampl", random.uniform, -0.001, 0.001)
-#toolbox.register("single_chromosome", tools.initIterate, creator.Chromosome, toolbox.create_random_ampl, n=1)
-
-
-
-
-
-
-
 
 OC_system=ini.SystemManager()
 OC_system.init_system(folder, namefile)

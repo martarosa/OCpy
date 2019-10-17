@@ -1,6 +1,9 @@
-import numpy as np
 import time
 import os
+
+import numpy as np
+
+
 
 class SaveTools():
 
@@ -23,6 +26,7 @@ class SaveTools():
         f.write("#Run started at " + time.strftime("%H:%M:%S") +" " + time.strftime("%d/%m/%Y") +"\n")
         f.write(header)
         f.close()
+
 
     def print_iteration_separator(self, name_file):
         f = open(name_file, 'a')
@@ -53,7 +57,7 @@ class SaveTools():
             #input_par_file.modify_oc_restart_par("false")
         elif log_header_par.restart == "true" or log_header_par.restart == 'restart_from_different_name_field':
             f.write("#Restarted from bkp field: " + name_file)
-        elif log_header_par.internal_check_genetic_par == False:
+        elif log_header_par.internal_check_genetic_field == False:
             f.write("#WARNING: sum field used instead than the requested one, only one implemented for genetic algorithm" + "\n")
         else:
             f.write("#field parameters: \n #field: " + log_header_par.field_type)

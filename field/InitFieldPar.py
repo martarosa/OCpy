@@ -42,7 +42,6 @@ class InitFieldPar(InitPar):
             self.read_restart.read_file(user_input.sys.par['folder'], user_input.field.par['name_field_file'])
             self.parameters = self.read_restart.field_par
         elif os.path.isfile(user_input.sys.par['folder'] + user_input.sys.par['name'] + '_field_bkp.dat'):
-
             self.read_restart.read_file(user_input.sys.par['folder'], user_input.sys.par['name'] + '_field_bkp.dat')
             self.parameters = self.read_restart.field_par
         else:

@@ -10,6 +10,7 @@ class InitOCPar(InitPar):
         self.parameters = OCParameters()
         self.iterator_parameters = None
 
+
     def init(self, user_input):
         self.parameters.oc_iterator_name = user_input.sys.par['propagation']
         self.parameters.alpha = user_input.oc.par['alpha']
@@ -37,3 +38,7 @@ class InitOCPar(InitPar):
         self.iterator_parameters.amplitude_max = float(genetic_input.genetic.par['amplitude_max'])
         self.iterator_parameters.n_chromosomes = int(genetic_input.genetic.par['n_chromosomes'])
         self.iterator_parameters.n_evolved_chr = int(genetic_input.genetic.par['n_evolved_chr'])
+        self.iterator_parameters.DEAP = genetic_input.genetic.par['deap']
+        self.iterator_parameters.mate = genetic_input.genetic.par['mate']
+        self.iterator_parameters.mutate = genetic_input.genetic.par['mutate']
+        self.iterator_parameters.select = genetic_input.genetic.par['select']
