@@ -15,9 +15,10 @@ class ReadNamelistGenetic():
                                   'amplitude_max': '0.01',
                                   'n_chromosomes': '1',
                                   'n_evolved_chr': 1,
-                                  'mate': 'cxUniform',
-                                  'mutate': 'mutGaussian',
-                                  'select':'selBest'}
+                                  'mate': 'DEAP_cxUniform',
+                                  'mutate': 'DEAP_mutGaussian',
+                                  'select':'DEAP_selBest',
+                                  'deap': 'true'}
                               })
         user_input.read(folder + namefile)
         self.check_input_sections(user_input)

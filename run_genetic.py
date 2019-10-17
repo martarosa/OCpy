@@ -1,93 +1,125 @@
-import SystemManager as ini
-import argparse
-import time as time
-from deap import base, creator
 import numpy as np
-
+from copy import deepcopy
 
 import random
 
 from deap import base
 from deap import creator
 from deap import tools
+from deap import algorithms
+
+
+
+###################DEAP INITIALIZATION#################
+#mate
+mate_probability = 1 #given 2 list which is the probability they mate
+#cxUniform
+cx_uniform_probability = 0.5
+#mutate
+mutate_probability = 0.1 # applied to each element of array
+#mutGaussian
+mu = 0.1
+sigma = 0.1
+#######################################################
+
+
+
+target_state = np.array([0,1])
+n_chromosomes = 48
+n_selected_chr = 8
+n_to_generate_from_each = int(n_chromosomes/n_selected_chr) + 1
+
+n_amplitudes = 4
+ampl_min = -2
+ampl_max = 2
 
 
 
 
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/vac/26-9/"
-namefile = "input_nuovo.dat"
+class Chromosome():
+    def __init__(self):
+        self.amplitudes = []  # n_ampitudes
+        self.J = None
+        self.prop_psi = []
 
+def create_chromosomes():
+    chromosomes = []
+    starting_chr = Chromosome()
+    starting_chr.prop_psi = [1, 0]
 
-OC_system=ini.SystemManager()
-OC_system.init_system(folder, namefile)
+    for i in range(n_chromosomes):
+        chromosomes.append(deepcopy(starting_chr))
+        rand = []
+        for j in range(n_amplitudes):
+            rand.append(random.uniform(ampl_min, ampl_max))
+        chromosomes[-1].amplitudes = deepcopy(rand)
+    return chromosomes
 
-#creo un oggetto di tipo fitness, che è implementato. da solo non fa niente, è un attributo assegnato a un individuo
+def evaluate_chromosomes(chro):
+    for i in range(len(chro)):
+        matr = np.asarray(chro[i].amplitudes).reshape(2, 2)
+        chro[i].J = diff(matr)
+    chro.sort(key=lambda x: x.J, reverse=True)
 
-creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+def diff(matr):
+    zz = np.sqrt((0-matr[0][0])*(0-matr[0][0]))
+    zu = np.sqrt((1 - matr[0][1]) * (1 - matr[0][1]))
+    uz = np.sqrt((1 - matr[1][0]) * (1 - matr[1][0]))
+    uu = np.sqrt((0 - matr[1][1]) * (0 - matr[1][1]))
+    return zz+zu+uz+uu
 
-#creo il mio cromosoma. è una lista di numeri.
+def evolve(chro):
+    # Select the next generation individuals
+    selected = toolbox.select(chro,  fit_attr='J')
+    new = []
+    # Clone the selected individuals
+    selected = toolbox.clone(selected)
+    # Apply crossover on the offspring
+    for i in range(n_to_generate_from_each):
+        for first, second in zip(selected[::2], selected[1::2]):
+            if random.random() < mate_probability:
+                a, b = toolbox.mate(deepcopy(first.amplitudes), deepcopy(second.amplitudes))
+                new.append(deepcopy(a))
+                new.append(deepcopy(b))
+        random.shuffle(selected)
+    new = new[:n_chromosomes]
 
-creator.create("Individual", list, fitness=creator.FitnessMax)
-# questa è una classe che si comporta come una lista e ha un atrtibuto fitness di tipo FitnessMax
-# posso anche farlo comportare come un array numpy o un array.array
-# è come dire   class Individual()
-#                  def __init__(self):
-#                      self.fitness = FitnessMax()
-#e poi, visto che è uan lista, una cosa del tipo
-#                      self.nome = []
-#che fa sì che
+    # Apply mutation on the offspring
+    for mutant in new:
+        if random.random() < mutate_probability:
+            toolbox.mutate(mutant)
+    check_bounds(new)
+    return new
 
-i = creator.Individual()
-print(i)
-print("mi ha stampato una lista vuota")
-i.append([1,2,3])
-print(i)
-print("me l'ha riempita")
-i.fitness.values=[40]
-print(i.fitness.values)
-print("mi ha riempito anche la fitness")
+def check_bounds(chro):
+    for i in range(len(chro)):
+        for j in range(n_amplitudes):
+            if chro[i][j] > ampl_max:
+                chro[i][j] = ampl_max
+            elif chro[i][j] < ampl_min:
+                chro[i][j] = ampl_min
 
-size = 10
+def init_DEAP_evolutionary_algorithm():
+    toolbox.register("mate", tools.cxUniform, indpb=cx_uniform_probability)
+    toolbox.register("mutate", tools.mutGaussian, mu = mu, sigma = sigma, indpb = mutate_probability)
+    toolbox.register("select", tools.selWorst, k = n_selected_chr)
+    toolbox.register('evaluate', evaluate_chromosomes)
 
-#per fare le funzioni invece non usiamo creator che va bene per le classi ma toolbox per le funzioni
 toolbox = base.Toolbox()
-toolbox.register("printTB", print)
-toolbox.printTB("mana")
-#mi stampa mana perchè manda alla funzione print
-# è come def printTB(name):
-#               print(name)
-toolbox.register("attr_float", random.random)
-#è come chiamare random
-toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_float, n=size)
-# questa è una funzione individual, che funziona come initRepeat e le dà come argomenti i tre successivi.
-#initrepeat si aspetta 3 argomenti: un container in cui mettere quello che crea, che vuol dire la cosa che ritorna
-#                                   una funzione con cui creare
-#                                   quante volte chiamare questa funzione
+init_DEAP_evolutionary_algorithm()
 
-#quindi se ora dico
-a = toolbox.individual()
-print(a)
-print("a e un Individual riempito")
-print(a.fitness.values)
-print("senza valori di fitness")
+chromosomes = create_chromosomes()
+evaluate_chromosomes(chromosomes)
 
-##############
-#Permutation
-#############
+for i in range(4000):
+    tmp = evolve(chromosomes)
+    for i in range(len(chromosomes)):
+        chromosomes[i].amplitudes = deepcopy(tmp[i])
+    evaluate_chromosomes(chromosomes)
 
-toolbox.register("indices_new_order", range(size), size)
-#random.sample prende una lista e un intero k e restituisce una lista di lughezza k con elementi prsi dalla lista data
-# quindi qui la lista è range(10) [0,1,2,3,4,5,6,7,8,9] e ne sceglie random 10 di questi SENZA ripetizioni quindi
-# indices_new_order mi sta dando un nuovo ordine degli indici. Che mi serve per fare la permutazione!!!
-toolbox.indices_new_order()
 
-toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.indices_new_order)
-#initIterate prende due argomenti. Ritorna il tipo del primo (Individual()) e lo fa con la funzione secondo argomento
-#quindi rispetto alla riga sopra invece di fare una lista e stop la caccia in un tipo Iterator
 
-##########################
-#EvolutionStrategies
-##########################
+
 
 
 

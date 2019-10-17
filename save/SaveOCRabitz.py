@@ -27,7 +27,7 @@ class SaveOCRabitz(SaveOC):
                        oc_iterator)
 
         final_pop = SaveFile("_final_pop.dat",
-                             "Final states populations \n #fields: n_iteration, states population  \n",
+                             "#Final states populations \n #fields: n_iteration, states population  \n",
                              1,
                              'final_pop',
                              oc_iterator)

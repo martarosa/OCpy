@@ -7,6 +7,7 @@ from OCRabitzIterator import OCRabitzIterator
 from save.SaveOC import SaveOC
 from save.SaveOCRabitz import SaveOCRabitz
 from save.SaveEulero import SaveEulero
+from save.SaveOCGenetic import SaveOCGenetic
 from OCGeneticIterator import OCGeneticIterator
 
 
@@ -54,7 +55,6 @@ class OCManager:
 
 
 
-
     def init_oc_iterator(self, oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t):
         if self.oc_iterator_name == "rabitzi" or self.oc_iterator_name == "rabitzii":
             self.oc_iterator = OCRabitzIterator()
@@ -67,6 +67,7 @@ class OCManager:
         self.oc_iterator.init(oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t)
 
 
+
     def init_save(self, save_parameters, log_header_parameters):
         if self.oc_iterator_name == "rabitzi" or self.oc_iterator_name == "rabitzii":
             self.save = SaveOCRabitz()
@@ -75,8 +76,8 @@ class OCManager:
             self.save = SaveEulero()
             self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
         elif self.oc_iterator_name == "genetic":
-            pass
-
+            self.save = SaveOCGenetic()
+            self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
 
 
     def set_alpha_t(self, nstep, dt):
@@ -92,15 +93,17 @@ class OCManager:
         return alpha_t
 
 
+
+
     def iterate(self):
         while (self.current_iteration <= self.n_iterations or self.convergence_thr < self.convergence_t):
             self.oc_iterator.iterate(self.current_iteration)
             self.save.save(self.current_iteration)
-            self.convergence_t = self.oc_iterator.convergence_t
+            self.convergence_t = self.oc_iterator.class_attributes.convergence_t
             self.current_iteration += 1
-        self.psi_coeff_t = self.oc_iterator.psi_coeff_t
-        self.field_psi_matrix = self.oc_iterator.field_psi_matrix
-        self.convergence_t = self.oc_iterator.convergence_t
+        self.psi_coeff_t = self.oc_iterator.class_attributes.psi_coeff_t
+        self.field_psi_matrix = self.oc_iterator.class_attributes.field_psi_matrix
+        self.convergence_t = self.oc_iterator.class_attributes.convergence_t
 
 
 

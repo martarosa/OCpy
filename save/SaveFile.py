@@ -7,5 +7,5 @@ class SaveFile():
         self.header = header
         self.nstep = nstep
         self.dict_flag = dict_flag
-        self.out = oc_iterator.dict_out[self.dict_flag]
+        self.out = oc_iterator.class_attributes.dict_out[self.dict_flag]
 

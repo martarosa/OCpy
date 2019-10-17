@@ -7,3 +7,4 @@ class GeneticParameters:
         self.mate = None
         self.mutate = None
         self.select = None
+        self.DEAP = None

@@ -5,7 +5,8 @@ from InitOCPar import InitOCPar
 from pcm.InitPCMPar import InitPCMPar
 from save.InitSavePar import InitSavePar
 from read.ReadNamelistOC import ReadNamelistOC
-from field.ReadFieldRestart import ReadFieldRestartGenetic, ReadFieldRestartRabitz
+from field.ReadFieldRestartGenetic import ReadFieldRestartGenetic
+from field.ReadFieldRestartRabitz import ReadFieldRestartRabitz
 
 from molecule.Molecule import Molecule
 from field.Field import Field
@@ -37,6 +38,7 @@ class SystemManager():
         init_mol.init(user_input)
         self.mol.init_molecule(init_mol.parameters)
 
+
     def init_starting_field(self, user_input):
         init_field = InitFieldPar()
         if user_input.sys.par['propagation'] == 'genetic':
@@ -48,6 +50,8 @@ class SystemManager():
             init_field.read_restart = ReadFieldRestartRabitz()
         init_field.init(user_input)
         self.starting_field.init_field(init_field.parameters)
+
+
 
     def init_pcm(self, user_input):
         init_pcm = InitPCMPar()
@@ -65,7 +69,7 @@ class SystemManager():
         init_save = InitSavePar()
         init_save.init(user_input)
         init_log_header = InitLogPar()
-        #init_log_header.init(user_input)
+        init_log_header.init(user_input)
         self.oc.init_oc(init_oc.parameters, init_oc.iterator_parameters, init_save.parameters, init_log_header.parameters, self.mol, self.starting_field, self.pcm)
 
 
