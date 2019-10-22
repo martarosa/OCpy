@@ -2,46 +2,64 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="55efd99c-0da1-4ff7-b8ef-8191bd12be39" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/field/ReadFieldRestartGenetic.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/field/ReadFieldRestartRabitz.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/field/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/run_genetic_DEAP_chr.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chromosome.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chromosome.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DeapWrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/DEAPTutorial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeneticParameters.py" beforeDir="false" afterPath="$PROJECT_DIR$/GeneticParameters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/InitOCPar.py" beforeDir="false" afterPath="$PROJECT_DIR$/InitOCPar.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OCEuleroIterator.py" beforeDir="false" afterPath="$PROJECT_DIR$/OCEuleroIterator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/OCGeneticIterator.py" beforeDir="false" afterPath="$PROJECT_DIR$/OCGeneticIterator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OCIterator.py" beforeDir="false" afterPath="$PROJECT_DIR$/OCIterator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OCManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/OCManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OCRabitzIterator.py" beforeDir="false" afterPath="$PROJECT_DIR$/OCRabitzIterator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SystemManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/SystemManager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field/Field.py" beforeDir="false" afterPath="$PROJECT_DIR$/field/Field.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field/FieldParameters.py" beforeDir="false" afterPath="$PROJECT_DIR$/field/FieldParameters.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field/InitFieldPar.py" beforeDir="false" afterPath="$PROJECT_DIR$/field/InitFieldPar.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field/ReadFieldRestart.py" beforeDir="false" afterPath="$PROJECT_DIR$/field/ReadFieldRestart.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/genetic_cxUniform.par" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/genetic_mutGaussian.par" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/read/NameListSections.py" beforeDir="false" afterPath="$PROJECT_DIR$/read/NameListSections.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/read/ReadNamelistGenetic.py" beforeDir="false" afterPath="$PROJECT_DIR$/read/ReadNamelistGenetic.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_genetic.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_genetic.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_oc.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_oc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/save/SaveFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/save/SaveFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/save/SaveOCGenetic.py" beforeDir="false" afterPath="$PROJECT_DIR$/save/SaveOCGenetic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/save/SaveOCRabitz.py" beforeDir="false" afterPath="$PROJECT_DIR$/save/SaveOCRabitz.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/save/SaveTools.py" beforeDir="false" afterPath="$PROJECT_DIR$/save/SaveTools.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/genetic/genetic.conf" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/genetic.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/genetic/genetic_cxUniform.par" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/genetic/genetic_mutGaussian.par" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/oc/fullpy/input.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/oc/fullpy/input.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/oc/fullpy/output.log.1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/oc/fullpy/output.log.2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/oc/fullpy/output_field_t.dat.1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/oc/fullpy/output_field_t.dat.2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/oc/fullpy/output_final_pop.dat.1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/oc/fullpy/output_final_pop.dat.2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/oc/fullpy/output_pop_t.dat.1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/oc/fullpy/output_pop_t.dat.2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/input.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/input.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output.log.1" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/output.log.1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output.log.2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output.log.3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output.log.4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_field_ampl.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/output_field_ampl.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_field_ampl.dat.1" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/output_field_ampl.dat.1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_field_ampl.dat.2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_field_ampl.dat.3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_field_ampl.dat.4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_field_t.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/output_field_t.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_field_t.dat.1" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/output_field_t.dat.1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_field_t.dat.2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_field_t.dat.3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_field_t.dat.4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_final_pop.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/output_final_pop.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_final_pop.dat.1" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/output_final_pop.dat.1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_final_pop.dat.2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_final_pop.dat.3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_final_pop.dat.4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_pop_t.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/output_pop_t.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_pop_t.dat.1" beforeDir="false" afterPath="$PROJECT_DIR$/test/genetic/output_pop_t.dat.1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_pop_t.dat.2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_pop_t.dat.3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/genetic/output_pop_t.dat.4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/input.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/pi-pulse-inversion/input.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_2_J_terms.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_2_field_bkp.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_2_field_t.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_2_final_ci.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_2_final_pop.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_2_pop_t.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_J_terms.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_J_terms.dat.1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_field_bkp.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_field_t.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_field_t.dat.1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_final_ci.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_final_ci.dat.1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_final_pop.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_final_pop.dat.1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_pop_t.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_3_pop_t.dat.1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_J_terms.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_field_bkp.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_field_t.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_final_ci.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_final_pop.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pi-pulse-inversion/output_davide_pop_t.dat" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -52,34 +70,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/save/SaveTools.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="521">
-              <caret line="64" column="29" selection-start-line="64" selection-start-column="29" selection-end-line="64" selection-end-column="29" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/save/SaveOCGenetic.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="45" column="44" lean-forward="true" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/run_oc.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="25" column="72" selection-start-line="25" selection-start-column="72" selection-end-line="25" selection-end-column="72" />
+            <state relative-caret-position="146">
+              <caret line="25" selection-start-line="25" selection-end-line="25" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
               </folding>
@@ -88,28 +82,80 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/save/SaveFile.py">
+        <entry file="file://$PROJECT_DIR$/OCEuleroIterator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="48" selection-start-line="9" selection-start-column="48" selection-end-line="9" selection-end-column="48" />
+            <state relative-caret-position="-375">
+              <caret line="5" column="49" selection-end-line="5" selection-end-column="49" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/OCGeneticIterator.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="435">
+              <caret line="176" column="17" selection-start-line="176" selection-start-column="17" selection-end-line="176" selection-end-column="17" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/save/SaveOC.py">
+        <entry file="file://$PROJECT_DIR$/read/auxiliary_functions.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="314">
+              <caret line="92" column="14" selection-start-line="92" selection-start-column="14" selection-end-line="92" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/molecule/InitMolecularPar.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
-              <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="21" />
+              <caret line="20" column="109" selection-start-line="20" selection-start-column="109" selection-end-line="20" selection-end-column="109" />
+              <folding>
+                <element signature="e#0#27#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/save/SaveOCRabitz.py">
+        <entry file="file://$PROJECT_DIR$/molecule/MoleculeParameters.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/molecule/Molecule.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/field/Field.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="29" lean-forward="true" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+            <state relative-caret-position="353">
+              <caret line="131" selection-start-line="131" selection-end-line="131" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/propagator/PropagatorsEulero.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="480">
+              <caret line="32" selection-start-line="32" selection-end-line="32" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -120,31 +166,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/OCManager.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="79" column="89" selection-start-line="79" selection-start-column="89" selection-end-line="79" selection-end-column="89" />
+            <state relative-caret-position="435">
+              <caret line="32" selection-start-line="32" selection-end-line="32" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/save/SaveParameters.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="32" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SystemManager.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
-              <caret line="71" column="8" selection-start-line="71" selection-start-column="8" selection-end-line="71" selection-end-column="8" />
-              <folding>
-                <element signature="e#0#43#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -161,17 +186,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>savetxt(name, sa</find>
-      <find>save n</find>
-      <find>out</find>
-      <find>print</find>
-      <find>pcm.q_</find>
-      <find>Vijn()</find>
-      <find>Ci()</find>
-      <find>proje</find>
-      <find>RabitzA</find>
-      <find>ReadOutputGaussian</find>
-      <find>self.field_matrix</find>
       <find>algorit</find>
       <find>algori</find>
       <find>algorith</find>
@@ -191,6 +205,17 @@
       <find>sort</find>
       <find>if</find>
       <find>if se</find>
+      <find>fitnes</find>
+      <find>fitne</find>
+      <find>selecte</find>
+      <find>prop_psi.mol</find>
+      <find>calc_J</find>
+      <find>random</find>
+      <find>projector</find>
+      <find>selW</find>
+      <find>selBe</find>
+      <find>sum</find>
+      <find>pop</find>
     </findStrings>
     <replaceStrings>
       <replace>.par</replace>
@@ -202,8 +227,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/OCEuleroAlgorithm.py" />
-        <option value="$PROJECT_DIR$/genetic.py" />
         <option value="$PROJECT_DIR$/testP.py" />
         <option value="$PROJECT_DIR$/WaveFunction.py" />
         <option value="$PROJECT_DIR$/PropagatorOCRabitz.py" />
@@ -230,12 +253,9 @@
         <option value="$PROJECT_DIR$/DEAPTutorial.py" />
         <option value="$PROJECT_DIR$/Chromosome.py" />
         <option value="$PROJECT_DIR$/OCGeneticIteratorDEAP.py" />
-        <option value="$PROJECT_DIR$/run_genetic.py" />
         <option value="$PROJECT_DIR$/run_genetic_DEAP_chr.py" />
-        <option value="$PROJECT_DIR$/field/InitFieldPar.py" />
         <option value="$PROJECT_DIR$/field/ReadFieldRestartRabitz.py" />
         <option value="$PROJECT_DIR$/field/ReadFieldRestart.py" />
-        <option value="$PROJECT_DIR$/field/Field.py" />
         <option value="$PROJECT_DIR$/field/ReadFieldRestartGenetic.py" />
         <option value="$PROJECT_DIR$/GeneticParameters.py" />
         <option value="$PROJECT_DIR$/OCEuleroIterator.py" />
@@ -245,14 +265,19 @@
         <option value="$PROJECT_DIR$/save/LogHeaderParameters.py" />
         <option value="$PROJECT_DIR$/save/SaveTools.py" />
         <option value="$PROJECT_DIR$/OCRabitzIterator.py" />
-        <option value="$PROJECT_DIR$/OCGeneticIterator.py" />
         <option value="$PROJECT_DIR$/read/NameListSections.py" />
         <option value="$PROJECT_DIR$/read/ReadNamelistGenetic.py" />
         <option value="$PROJECT_DIR$/InitOCPar.py" />
         <option value="$PROJECT_DIR$/save/SaveOCRabitz.py" />
         <option value="$PROJECT_DIR$/OCManager.py" />
-        <option value="$PROJECT_DIR$/run_oc.py" />
         <option value="$PROJECT_DIR$/save/SaveOCGenetic.py" />
+        <option value="$PROJECT_DIR$/field/FieldParameters.py" />
+        <option value="$PROJECT_DIR$/field/InitFieldPar.py" />
+        <option value="$PROJECT_DIR$/run_genetic.py" />
+        <option value="$PROJECT_DIR$/molecule/InitMolecularPar.py" />
+        <option value="$PROJECT_DIR$/field/Field.py" />
+        <option value="$PROJECT_DIR$/run_oc.py" />
+        <option value="$PROJECT_DIR$/OCGeneticIterator.py" />
       </list>
     </option>
   </component>
@@ -278,7 +303,22 @@
             <path>
               <item name="OCpy" type="b2602c69:ProjectViewProjectNode" />
               <item name="OCpy" type="462c0819:PsiDirectoryNode" />
-              <item name="save" type="462c0819:PsiDirectoryNode" />
+              <item name="field" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="OCpy" type="b2602c69:ProjectViewProjectNode" />
+              <item name="OCpy" type="462c0819:PsiDirectoryNode" />
+              <item name="molecule" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="OCpy" type="b2602c69:ProjectViewProjectNode" />
+              <item name="OCpy" type="462c0819:PsiDirectoryNode" />
+              <item name="propagator" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="OCpy" type="b2602c69:ProjectViewProjectNode" />
+              <item name="OCpy" type="462c0819:PsiDirectoryNode" />
+              <item name="read" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -374,14 +414,14 @@
     </configuration>
     <list>
       <item itemvalue="Python.run_genetic" />
-      <item itemvalue="Python.run_oc" />
       <item itemvalue="Python.run_genetic_DEAP_chr" />
+      <item itemvalue="Python.run_oc" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.run_oc" />
-        <item itemvalue="Python.run_genetic_DEAP_chr" />
         <item itemvalue="Python.run_genetic" />
+        <item itemvalue="Python.run_genetic_DEAP_chr" />
       </list>
     </recent_temporary>
   </component>
@@ -400,6 +440,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="24" width="1922" height="1032" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7021041" visible="true" weight="0.13600422" />
       <window_info id="Structure" order="1" sideWeight="0.2978959" side_tool="true" weight="0.18713759" />
@@ -454,61 +495,8 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/read/ReadOutputGaussian.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="53" selection-start-line="53" selection-end-line="53" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/propagator/Propagator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/optimal_control.py" />
-    <entry file="file://$PROJECT_DIR$/pcm/PCM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="29" selection-start-line="29" selection-end-line="29" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save/InitSavePar.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="8" lean-forward="true" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pcm/PCMParameters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/genetic.py" />
     <entry file="file://$PROJECT_DIR$/README.md" />
     <entry file="file://$PROJECT_DIR$/testP.py" />
-    <entry file="file:///usr/local/lib/python3.5/dist-packages/deap/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="76" selection-start-line="76" selection-end-line="76" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/lib/python3.5/random.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
@@ -538,26 +526,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2220">
           <caret line="150" selection-start-line="150" selection-end-line="150" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/molecule/Molecule.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/propagator/PropagatorsEulero.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="27" lean-forward="true" selection-start-line="20" selection-end-line="22" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OCParameters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
         </state>
       </provider>
     </entry>
@@ -598,26 +566,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/run_genetic_DEAP_chr.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1035">
-          <caret line="77" selection-start-line="77" selection-end-line="77" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/run_genetic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/save/SaveEulero.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
@@ -649,77 +597,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/field/InitFieldPar.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/field/ReadFieldRestartGenetic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="35" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GeneticParameters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/field/Field.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1860">
-          <caret line="124" lean-forward="true" selection-start-line="124" selection-end-line="124" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/OCIterator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/read/ReadNamelistOC.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="74" column="56" selection-start-line="74" selection-start-column="56" selection-end-line="74" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OCEuleroIterator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-150">
-          <caret line="5" column="49" selection-end-line="5" selection-end-column="49" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OCRabitzIterator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="404">
-          <caret line="78" column="30" selection-start-line="78" selection-start-column="30" selection-end-line="78" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -728,47 +609,6 @@
         <state>
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OCGeneticIterator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="22" column="24" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save/SaveParameters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="32" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save/SaveFile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="48" selection-start-line="9" selection-start-column="48" selection-end-line="9" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save/SaveOC.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/read/NameListSections.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="758">
-          <caret line="74" column="43" selection-start-line="74" selection-start-column="43" selection-end-line="74" selection-end-column="43" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -790,9 +630,74 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/save/SaveFile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="48" selection-start-line="9" selection-start-column="48" selection-end-line="9" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OCParameters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run_genetic_DEAP_chr.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="651">
+          <caret line="77" selection-start-line="77" selection-end-line="77" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/save/SaveOCRabitz.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="18" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/save/SaveOC.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/save/SaveParameters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="32" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GeneticParameters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/save/SaveTools.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1245">
+          <caret line="86" selection-start-line="86" selection-end-line="86" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/InitOCPar.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
+        <state relative-caret-position="435">
           <caret line="33" selection-start-line="33" selection-end-line="33" />
           <folding>
             <element signature="e#0#42#0" expanded="true" />
@@ -802,7 +707,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SystemManager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
+        <state relative-caret-position="870">
           <caret line="71" column="8" selection-start-line="71" selection-start-column="8" selection-end-line="71" selection-end-column="8" />
           <folding>
             <element signature="e#0#43#0" expanded="true" />
@@ -810,20 +715,117 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/save/SaveTools.py">
+    <entry file="file:///usr/local/lib/python3.5/dist-packages/deap/creator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="521">
-          <caret line="64" column="29" selection-start-line="64" selection-start-column="29" selection-end-line="64" selection-end-column="29" />
+        <state relative-caret-position="2460">
+          <caret line="166" selection-start-line="166" selection-end-line="166" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/field/ReadFieldRestartGenetic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="17" column="35" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/save/SaveOCRabitz.py">
+    <entry file="file://$PROJECT_DIR$/field/FieldParameters.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="29" lean-forward="true" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+        <state relative-caret-position="165">
+          <caret line="11" column="29" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/field/InitFieldPar.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="35" column="91" selection-start-line="35" selection-start-column="91" selection-end-line="35" selection-end-column="91" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.5/dist-packages/deap/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="174" selection-start-line="174" selection-end-line="174" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.5/dist-packages/deap/tools/init.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/save/SaveOCGenetic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="40" column="27" selection-start-line="40" selection-start-column="27" selection-end-line="40" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/propagator/PropagatorOCRabitz.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OCRabitzIterator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1620">
+          <caret line="114" column="8" selection-start-line="114" selection-start-column="8" selection-end-line="114" selection-end-column="66" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run_genetic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="477">
+          <caret line="93" selection-start-line="93" selection-end-line="93" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/read/NameListSections.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="36" selection-start-line="36" selection-end-line="36" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/read/ReadNamelistOC.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="75" selection-start-line="75" selection-end-line="75" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/propagator/PropagatorsEulero.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -832,8 +834,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/OCManager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="79" column="89" selection-start-line="79" selection-start-column="89" selection-end-line="79" selection-end-column="89" />
+        <state relative-caret-position="435">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/read/auxiliary_functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="314">
+          <caret line="92" column="14" selection-start-line="92" selection-start-column="14" selection-end-line="92" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/molecule/MoleculeParameters.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/molecule/Molecule.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/molecule/InitMolecularPar.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="109" selection-start-line="20" selection-start-column="109" selection-end-line="20" selection-end-column="109" />
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OCEuleroIterator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-375">
+          <caret line="5" column="49" selection-end-line="5" selection-end-column="49" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -842,18 +880,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/run_oc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="25" column="72" selection-start-line="25" selection-start-column="72" selection-end-line="25" selection-end-column="72" />
+        <state relative-caret-position="146">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/save/SaveOCGenetic.py">
+    <entry file="file://$PROJECT_DIR$/field/Field.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="45" column="44" lean-forward="true" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
+        <state relative-caret-position="353">
+          <caret line="131" selection-start-line="131" selection-end-line="131" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OCGeneticIterator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="176" column="17" selection-start-line="176" selection-start-column="17" selection-end-line="176" selection-end-column="17" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

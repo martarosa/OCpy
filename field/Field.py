@@ -51,6 +51,7 @@ class Field():
         self.parameters['sigma'] = field_parameters.sigma
         self.parameters['t0'] = field_parameters.t0
         self.parameters['omega_max'] = field_parameters.omega_max
+        self.parameters['omega_min'] = field_parameters.omega_min
         self.chose_field(self.field_type)
 
 
@@ -63,6 +64,7 @@ class Field():
             'sin': lambda: self.sin_pulse(),
             'gau': lambda: self.gau_pulse(),
             'sum': lambda: self.sum_pulse(),
+            'sum_pip': lambda: self.sum_pip_pulse(),
             'genetic' : lambda: self.genetic_pulse(),
             'optimizedRabitz' : lambda: self.read_pulse(),
             'restart_genetic' : lambda: self.sum_pulse()
@@ -123,18 +125,42 @@ class Field():
                                     + self.parameters['fi'][j] * np.sin(self.parameters['omega'][j] * i * self.dt)
 
 
-    def genetic_pulse(self):
-        n_fourier_omega = int(1 + self.parameters['omega_max']*self.dt*self.nstep/(2*np.pi))
-        self.parameters['omega'] = np.zeros([n_fourier_omega, 3])
-        self.parameters['fi'] = np.full([n_fourier_omega, 3], self.parameters['fi'][0])
-        #self.parameters['fi_cos'] = np.full([n_fourier_omega, 3], self.parameters['fi'][0])
-        for n in range(n_fourier_omega):
-            omega_n = np.pi*2*n/(self.dt*self.nstep)
-            self.parameters['omega'][n] = [omega_n, omega_n, omega_n]
-        self.parameters['sigma'] = 0
-        self.parameters['t0'] = 0
-        self.sum_pulse()
+            if abs(self.dt * i - self.parameters['t0']) < self.parameters['sigma']:
+                self.field[i] = self.parameters['fi'] \
+                                * np.square(
+                    np.cos(np.pi * (self.dt * i - self.parameters['t0']) / (2 * self.parameters['sigma']))) \
+                                * np.cos(self.parameters['omega'] * (self.dt * i - self.parameters['t0']))
 
+
+    def sum_pip_pulse(self):
+        self.field = np.zeros([self.nstep, 3])
+        # f0+fi*sin(wi*t)
+        for i in range(self.nstep):
+            if abs(self.dt * i - self.parameters['t0']) < self.parameters['sigma']:
+                for j in range(self.parameters['omega'].shape[0]):
+                    self.field[i] = self.field[i] \
+                                    + self.parameters['fi'][j] \
+                                    * np.square( np.cos(np.pi * (self.dt * i - self.parameters['t0'])/(2 * self.parameters['sigma']))) \
+                                    * np.cos(self.parameters['omega'][j] * (i * self.dt - self.parameters['t0']))
+
+
+    def genetic_pulse(self):
+        n_fourier_omega_min = int(self.parameters['omega_min'] * self.dt * self.nstep / (2 * np.pi)-1)
+        n_fourier_omega_min = 1
+        n_fourier_omega_max = int(2 + self.parameters['omega_max']*self.dt*self.nstep/(2*np.pi))
+        n_fourier_omega = n_fourier_omega_max - n_fourier_omega_min
+        #n_fourier_omega = 1
+        self.parameters['omega'] = np.zeros([n_fourier_omega+1, 3])
+        self.parameters['fi'] = np.full([n_fourier_omega+1, 3], self.parameters['fi'][0])
+        self.parameters['omega'][0] = [0, 0, 0]
+        for n in range(n_fourier_omega):
+            omega_n = (np.pi*2*(n + n_fourier_omega_min))/(self.dt*self.nstep)
+            self.parameters['omega'][n+1] = [omega_n, omega_n, omega_n]
+        #self.parameters['omega'] = np.array([[0,0,0],[0.26953409,0.26953409,0.26953409]])
+        #self.parameters['sigma'] = 0
+        #self.parameters['t0'] = 0
+        #self.sum_pulse()
+        self.sum_pip_pulse()
 
 
 
