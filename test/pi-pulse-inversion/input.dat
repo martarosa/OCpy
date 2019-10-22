@@ -1,22 +1,22 @@
 [SYSTEM]
 dt=0.01
-nstep=500000
-name = output_davide_3 
+nstep=25000
+name = output 
 propagation = eulero_2order 
 #folder=/home/mana/Desktop/python/optimal_control/test_funzionamento/
 
 [WAVEFUNCTION]
 name_ci=ci_ini.inp
-name_ei=ci_energy_davide.inp
-name_mut=ci_mut_davide.inp
+#name_ei=ci_energy_davide.inp
+#name_mut=ci_mut_davide.inp
 
 [FIELD]
-field_type=davide
-#omega=0.2695340923
-omega = 0.0125784 
-sigma=2500
-t0=2500
-f_max=0.011023132117858924 0 0.0
+field_type=pip
+omega=0.26953409 0.26953409 0.26953409
+#omega = 0.0125784 
+sigma=125
+t0=125
+fi= 0.04349293637661562 0 0.0
 #f_max= 0.005 0.0 0.0 
 #name_field_file=
 
