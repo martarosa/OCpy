@@ -1,0 +1,44 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module math_functions ! in 
+    interface  ! in :math_functions
+        subroutine doublesum(ket,bra,m,states,tessere,prod) ! in :math_functions:math_functions.f90
+            complex*16 dimension(states),intent(in) :: ket
+            complex*16 dimension(states),intent(in),depend(states) :: bra
+            complex*16 dimension(tessere,states,states),intent(in),depend(states,states) :: m
+            integer, optional,check(len(ket)>=states),depend(ket) :: states=len(ket)
+            integer, optional,check(shape(m,0)==tessere),depend(m) :: tessere=shape(m,0)
+            complex*16 dimension(tessere),intent(out),depend(tessere) :: prod
+        end subroutine doublesum
+        subroutine single_summation_tessere(ket,m,states,tessere,prod) ! in :math_functions:math_functions.f90
+            complex*16 dimension(tessere),intent(in) :: ket
+            complex*16 dimension(tessere,states,states),intent(in),depend(tessere) :: m
+            integer, optional,check(shape(m,1)==states),depend(m) :: states=shape(m,1)
+            integer, optional,check(len(ket)>=tessere),depend(ket) :: tessere=len(ket)
+            complex*16 dimension(states,states),intent(out),depend(states,states) :: prod
+        end subroutine single_summation_tessere
+        subroutine bwd_pcm(chi_prev,wf_fwd,qijn,vijn,subtract,states,tessere,out_matmul_sum) ! in :math_functions:math_functions.f90
+            complex*16 dimension(states),intent(in) :: chi_prev
+            complex*16 dimension(states),intent(in),depend(states) :: wf_fwd
+            complex*16 dimension(tessere,states,states),intent(in),depend(states,states) :: qijn
+            complex*16 dimension(tessere,states,states),intent(in),depend(tessere,states,states) :: vijn
+            complex*16 dimension(states,states),intent(in),depend(states,states) :: subtract
+            integer, optional,check(len(chi_prev)>=states),depend(chi_prev) :: states=len(chi_prev)
+            integer, optional,check(shape(qijn,0)==tessere),depend(qijn) :: tessere=shape(qijn,0)
+            complex*16 dimension(states),intent(out),depend(states) :: out_matmul_sum
+        end subroutine bwd_pcm
+        subroutine fwd_pcm(psi_prev,qijn,vijn,subtract,states,tessere,out_matmul_sum) ! in :math_functions:math_functions.f90
+            complex*16 dimension(states),intent(in) :: psi_prev
+            complex*16 dimension(tessere,states,states),intent(in),depend(states,states) :: qijn
+            complex*16 dimension(tessere,states,states),intent(in),depend(tessere,states,states) :: vijn
+            complex*16 dimension(states,states),intent(in),depend(states,states) :: subtract
+            integer, optional,check(len(psi_prev)>=states),depend(psi_prev) :: states=len(psi_prev)
+            integer, optional,check(shape(qijn,0)==tessere),depend(qijn) :: tessere=shape(qijn,0)
+            complex*16 dimension(states),intent(out),depend(states) :: out_matmul_sum
+        end subroutine fwd_pcm
+    end interface 
+end python module math_functions
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/

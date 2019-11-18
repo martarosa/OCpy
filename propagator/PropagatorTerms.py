@@ -3,7 +3,7 @@ import numpy as np
 from read import auxiliary_functions as af
 from molecule.Molecule import Molecule
 from pcm.PCM import PCM
-
+from propagator import math_functions as mf
 
 class PropagatorTerms():
     def __init__(self):
@@ -23,9 +23,9 @@ class PropagatorTerms():
         self.dict_terms["eulero2_coeff"] = self.eulero2_coeff_term
         self.dict_terms["eulero_energy"] = self.eulero_energy_term
         self.dict_terms["eulero_field"] = self.eulero_field_term
-        self.dict_terms["eulero_pcm"] = self.eulero_Env_term
+        self.dict_terms["eulero_pcm"] = self.eulero_PCM_term_fortran
         self.dict_terms["norm"] = self.norm
-        self.dict_terms["oc_pcm_bwd"] = self.bwd_PCM_term
+        self.dict_terms["oc_pcm_bwd"] = self.bwd_PCM_term_fortran
 
     # <editor-fold desc="H terms">
 
@@ -47,14 +47,30 @@ class PropagatorTerms():
     def eulero_field_term(self, order, field, *args):
         self.mol.wf.ci += -order * 1j * self.dt * (-np.dot(np.dot(self.mol.wf.ci_prev[0], self.mol.muT), field))
 
-    def eulero_Env_term(self, order, field, *args):
+
+
+    def eulero_PCM_term(self, order, field, *args):
         self.pcm.propagate(self.mol, field)
         self.mol.wf.ci += -order * 1j * self.dt \
                           * (np.dot(self.mol.wf.ci_prev[0],
                                     af.single_summation_tessere(self.pcm.get_q_t() - self.pcm.q00n, self.mol.Vijn)))
 
+    def eulero_PCM_term_fortran(self, order, field, *args):
+        self.pcm.propagate_fortran(self.mol.wf.ci_prev[0], field)
+        q_t = self.pcm.get_q_t() - self.pcm.q00n
+        #print(q_t_tmp.shape)
+        #q_t_flip = af.flip_3D_py2f(self.pcm.get_q_t() - self.pcm.q00n)
+        self.mol.wf.ci += -order * 1j * self.dt \
+                          *mf.eulero_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
+                                         np.asfortranarray(q_t, dtype=np.complex128),
+                                         np.asfortranarray(self.mol.Vijn_fortran_flip, dtype=np.complex128))
+
+
+
+
+
     def bwd_PCM_term(self, order, field, wf_fwd, *args):
-        self.pcm.propagate_bwd_oc(self.mol, field, wf_fwd)
+        self.pcm.propagate_fortran(wf_fwd, field)
         self.mol.wf.ci += -order * 1j * self.dt \
                           * (np.dot(self.mol.wf.ci_prev[0],
                                     af.single_summation_tessere(self.pcm.get_q_t() - self.pcm.q00n,
@@ -74,14 +90,16 @@ class PropagatorTerms():
 
 
 
+    def bwd_PCM_term_fortran(self, order, field, wf_fwd, *args):
+        self.pcm.propagate_bwd_oc(self.mol, field, wf_fwd)
+        q_t = self.pcm.get_q_t() - self.pcm.q00n
+        self.mol.wf.ci += -order * 1j * self.dt \
+                          * (mf.bwd_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
+                                        np.asfortranarray(wf_fwd, dtype=np.complex128),
+                                        np.asfortranarray(q_t, dtype=np.complex128),
+                                        np.asfortranarray(self.mol.Vijn_fortran_flip, dtype=np.complex128),
+                                        np.asfortranarray(self.pcm.qijn_fortran_flip, dtype=np.complex128)))
 
-#    def bwd_PCM_term_fortran(self, order, field, wf_fwd, *args):
-#        self.mol.wf.ci += -order * 1j * self.dt \
-#                          * (mf.bwd_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
-#                                        np.asfortranarray(wf_fwd, dtype=np.complex128),
-#                                        np.asfortranarray(self.env.qijn_flip, dtype=np.complex128),
-#                                        np.asfortranarray(self.env.Vij_flip, dtype=np.complex128),
-#                                        np.asfortranarray(self.h.toSubtract, dtype=np.complex128)))
 
 
 

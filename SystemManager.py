@@ -14,13 +14,35 @@ from pcm.PCM import PCM, FrozenSolventPCM, DinamicPCM
 from OCManager import OCManager
 
 
+
+#The system contains Molecule, Field, PCM and OCManager objects.
+# Description of the molecule, starting field and pcm are stored separately outside the OCManager. They are never modified and practically useless, there just for
+# mental order and debugging
+
+# ReadNamelistOC reads the OCinput file (no gaussian output or other data files), performs checks and store all the parameters in separate dictionaries for each section:
+# sys, wf, field, env, save, oc
+# Files containingmolecule and pcm informations (energies, dipoles, potential, tessere etc) are read by a separate object which knows the format (right now only ReadOutputgaussian is implemented)
+
+# Both SystemManager, and InitPar objects (InitMolecularpar, InitiFieldpar, etc) know user_input format
+
+# Molecule, Field, PCM, OCManager, Save objects don't know anything about user_input format.
+# InitPar objects bridge the external format of user input and internal one:
+# e.g. 1) InitMolecularPar.init(user_input) receives user_input as argument, read informations, open and read gaussian output files if needed
+#      2) fills MoleculeParameters object which has as attributes all informations about the molecule and no methods.
+#         Parameters don't know any format, are only containers of informations
+#      3) Molecule.init_molecule(MoleculeParameters) initialize Molecule attributes from MoleculeParameters
+
+
 class SystemManager():
 
     def __init__(self):
+
         self.mol = Molecule()
         self.starting_field = Field()
         self.pcm = PCM()
-        self.oc = OCManager() #l'alternativa di sola propagazione sta dentro a OC perchè questo è un programma per l'OC
+        self.oc = OCManager() # the possibility to perform a single propagation without OC is a special case of optimalControl (since this is a OC program
+
+
 
     def init_system(self, folder, name_file):
         user_input = ReadNamelistOC()
@@ -31,13 +53,10 @@ class SystemManager():
             self.init_pcm(user_input)
         self.init_optimal_control(user_input)
 
-
-
     def init_molecule(self, user_input):
         init_mol = InitMolecularPar()
         init_mol.init(user_input)
         self.mol.init_molecule(init_mol.parameters)
-
 
     def init_starting_field(self, user_input):
         init_field = InitFieldPar()
@@ -51,8 +70,6 @@ class SystemManager():
         init_field.init(user_input)
         self.starting_field.init_field(init_field.parameters)
 
-
-
     def init_pcm(self, user_input):
         init_pcm = InitPCMPar()
         init_pcm.init(user_input)
@@ -61,7 +78,6 @@ class SystemManager():
         elif user_input.env.par['env'] == 'nanop':
             self.pcm = DinamicPCM()
         self.pcm.init_pcm(init_pcm.parameters, self.mol, self.starting_field.field[0])
-
 
     def init_optimal_control(self, user_input):
         init_oc = InitOCPar()

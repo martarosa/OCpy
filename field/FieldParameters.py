@@ -8,7 +8,6 @@ class FieldParameters():
         self.omega = None
         self.sigma = None
         self.t0 = None
-        self.omega_max = None
-        self.omega_min = None
+        self.omega_sys = None
         self.namefile = None
         self.field = None

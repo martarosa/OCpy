@@ -1,6 +1,6 @@
 import numpy as np
 from read import auxiliary_functions as af
-
+from propagator import math_functions as mf
 
 class PCM():
     def __init__(self):
@@ -24,6 +24,9 @@ class PCM():
 
 
 
+# if the solvent is frozen qijn and qijn_lf are fixed, calculated once at the initialization
+#q_t dependence on time comes only from <psi(t)|qijn|psi(t)>
+#q_t_lf dependence comes from qijn_lf * field_t
 class FrozenSolventPCM(PCM):
     def __init__(self):
         super().__init__()
@@ -36,17 +39,28 @@ class FrozenSolventPCM(PCM):
         self.qijn_lf = None
         self.q00n = None
 
+        self.qijn_fortran_flip = None
+        self.qijn_lf_fortran_flipped = None
+
+
     def init_pcm(self, PCM_parameters, mol, field_t):
         self.env = PCM_parameters.env
         self.cavity = PCM_parameters.cavity
         self.init_static_matrices(PCM_parameters.Qnn_reactionfield, PCM_parameters.Qnn_localfield, mol)
-        self.muLF = -af.matrix_prod_tesserae(self.qijn_lf, mol.Vijn)
+        self.muLF = -af.matrix_prod_tesserae_ijn_nn(self.qijn_lf, mol.Vijn)
         self.propagate(mol, field_t)
+        self.qijn_fortran_flip = af.flip_3D_py2f(self.qijn)
 
     def propagate(self, mol, field_t):
         q_t_reactionf = af.double_summation(mol.wf.ci_prev[0], np.conj(mol.wf.ci_prev[0]), self.qijn)
         q_t_lf = np.dot(self.qijn_lf, field_t)
         self.q_t = np.array([q_t_reactionf, q_t_lf])
+
+    def propagate_fortran(self, ci, field_t):
+        q_t_reactionf = mf.propagate_q_frozen(ci, self.qijn_fortran_flip)
+        q_t_lf = np.dot(self.qijn_lf, field_t)
+        self.q_t = np.array([q_t_reactionf, q_t_lf])
+
 
     def propagate_bwd_oc(self, mol, field_t, ci):
         q_t_reactionf = af.double_summation(ci, np.conj(ci), self.qijn)
@@ -68,7 +82,7 @@ class FrozenSolventPCM(PCM):
 
     def calc_qijn(self, Q_gamess, Vijn):
         Q_tdplas = np.dot(Q_gamess, np.diag(self.cavity[:,3]))
-        self.qijn = af.matrix_prod_tesserae(Q_tdplas, Vijn)
+        self.qijn = af.matrix_prod_tesserae_ijn_nn(Q_tdplas, Vijn)
         self.q00n = self.qijn[0,0]
 
     def calc_qijn_lf(self, Q_gamess_lf):
@@ -78,6 +92,11 @@ class FrozenSolventPCM(PCM):
 
 
 
+
+# if the solvent is dinamic qijn and qijn_lf depend on time = qijn_t, qijn_lf_t
+#q_t dependence on time comes from <psi(t)|qijn_t|psi(t)>
+#q_t_lf dependence comes from qijn_lf_t * field_t
+#at each timestep qijn_t and qijn_lf_t are given by tdplas
 
 
 class DinamicPCM(PCM):

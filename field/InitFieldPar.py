@@ -30,11 +30,8 @@ class InitFieldPar(InitPar):
         self.parameters.sigma = float(user_input.field.par['sigma'])
         self.parameters.omega = user_input.field.par['omega']
         self.parameters.t0 = float(user_input.field.par['t0'])
-        self.parameters.omega_max = read_output.read_en_ci0(user_input.sys.par['folder'] +
-                                                            user_input.wf.par['name_ei'])[-1]
-        self.parameters.omega_min = read_output.read_en_ci0(user_input.sys.par['folder'] +
-                                                            user_input.wf.par['name_ei'])[1]
-
+        self.parameters.omega_sys = read_output.read_en_ci0(user_input.sys.par['folder'] +
+                                                            user_input.wf.par['name_ei'])
 
 
     def init_restart(self, user_input):

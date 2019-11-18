@@ -21,9 +21,11 @@ class PropagatorOCfwd(Propagator):
         if self.propagator_terms.pcm.env == "sol":
             self.add_term_to_propagator("eulero_pcm")
 
+
     def propagate_one_step(self, field):
         for func in self.propagator:
             func(1, field)
+
 
     def propagate_n_step(self, nstep, field):
         out = list()
