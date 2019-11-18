@@ -97,8 +97,6 @@ class FrozenSolventPCM(PCM):
 #q_t dependence on time comes from <psi(t)|qijn_t|psi(t)>
 #q_t_lf dependence comes from qijn_lf_t * field_t
 #at each timestep qijn_t and qijn_lf_t are given by tdplas
-
-
 class DinamicPCM(PCM):
     def __init__(self):
         super().__init__()

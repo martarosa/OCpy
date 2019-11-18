@@ -27,7 +27,6 @@ class SaveTools():
         f.write(header)
         f.close()
 
-
     def print_iteration_separator(self, name_file):
         f = open(name_file, 'a')
         f.write("#new iteration \n")
@@ -90,7 +89,6 @@ class SaveTools():
         name = folder_name + save_restart.name
         if iteration % save_restart.nstep == 0:
             np.savetxt(name, save_restart.out(), delimiter =' ', header ='', footer ='')
-
 
     def save_3D_matrix(self, Mijn, name_file):
         f = open(name_file, 'w+')
