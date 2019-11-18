@@ -61,6 +61,7 @@ def double_summation(ket, bra, M):
     double_sum = np.dot(bra, np.sum(M*ket[np.newaxis, :, np.newaxis], axis=1))
     return double_sum
 
+
 def double_summation_state_tessere(Mijn,Nijn):
     tmp=[]
     for i in range(Mijn.shape[2]):
@@ -70,7 +71,20 @@ def double_summation_state_tessere(Mijn,Nijn):
     return out
 
 
-def matrix_prod_tesserae(Mnm, Mijn):
+def matrix_prod_tesserae_ijn_ijn(Mijn,Nijn):
+    states=Mijn.shape[0]
+    tessere=Mijn.shape[2]
+    out=np.zeros((states,states,states))
+    for i in range(states):
+        for j in range(states):
+            tmp=[]
+            for n in range(tessere):
+                tmp.append(Mijn[i,:,n]*Nijn[:,j,n])
+            tmp=np.asarray(tmp)
+            out[i,j] = tmp.sum(axis=0)
+    return out
+
+def matrix_prod_tesserae_ijn_nn(Mnm, Mijn):
     prod = np.dot(Mijn, Mnm)
     return prod.astype(float)
 
@@ -79,7 +93,6 @@ def matrix_prod_tesserae(Mnm, Mijn):
 def func(Mnr,Mijn):
     prod = np.dot(Mijn, Mnr)
     return prod
-
 
 
 
@@ -140,6 +153,7 @@ def flip_3D_py2f(Mpy):
     tmp = np.swapaxes(Mpy, 1, 2)
     Mf = np.swapaxes(tmp, 0, 1)
     return Mf
+
 
 def flip_3D_f2py(Mf):
     tmp = np.swapaxes(Mf, 0, 1)

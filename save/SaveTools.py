@@ -90,3 +90,12 @@ class SaveTools():
         name = folder_name + save_restart.name
         if iteration % save_restart.nstep == 0:
             np.savetxt(name, save_restart.out(), delimiter =' ', header ='', footer ='')
+
+
+    def save_3D_matrix(self, Mijn, name_file):
+        f = open(name_file, 'w+')
+        for i in range(Mijn.shape[0]):
+            for j in range(Mijn.shape[1]):
+                f.write(str(i)+" "+str(j)+"\n")
+                np.savetxt(f, Mijn[i,j])
+        f.close()

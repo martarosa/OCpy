@@ -73,10 +73,13 @@ class OCRabitzIterator(OCIterator):
 
 
 
+
+
     def check_convergence(self):
         J_prev_tmp = np.copy(self.class_attributes.J)
         self.calc_J()
         self.class_attributes.convergence_t = self.class_attributes.J - J_prev_tmp
+
 
     def calc_J(self):
         if self.rabitz_iterator == "rabitzi":

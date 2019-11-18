@@ -62,7 +62,7 @@ class EnvPy(Env):
         self.q_t = FrozenSolventPCM()
 
     def set_muLF(self, mol):
-        self.muLF = -af.matrix_prod_tesserae(self.q_t.qijn_lf, mol.Vijn)
+        self.muLF = -af.matrix_prod_tesserae_ijn_nn(self.q_t.qijn_lf, mol.Vijn)
 
 
 
@@ -145,12 +145,12 @@ class PCM():
     def calc_muT_local_field(self, Q_local_field_gamess, h):
         Q_local_field_tdplas = np.dot(Q_local_field_gamess, np.diag(self.cavity[:,3]))
         q_local = - np.dot(Q_local_field_tdplas, self.cavity[:,0:3])
-        h.mod_muT_local_field(-af.matrix_prod_tesserae(q_local, self.Vij))
+        h.mod_muT_local_field(-af.matrix_prod_tesserae_ijn_nn(q_local, self.Vij))
 
 
     def calc_qijn(self, name, Q_gamess):
         Q_tdplas = np.dot(Q_gamess, np.diag( self.cavity[:,3]))
-        self.qijn = af.matrix_prod_tesserae(Q_tdplas, self.Vij)
+        self.qijn = af.matrix_prod_tesserae_ijn_nn(Q_tdplas, self.Vij)
 
     def calc_and_write_qijn(self, name, Q_gamess):
         Q_tdplas = np.dot(Q_gamess, np.diag( self.cavity[:,3]))

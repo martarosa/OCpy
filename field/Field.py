@@ -50,8 +50,7 @@ class Field():
         self.parameters['omega'] = field_parameters.omega
         self.parameters['sigma'] = field_parameters.sigma
         self.parameters['t0'] = field_parameters.t0
-        self.parameters['omega_max'] = field_parameters.omega_max
-        self.parameters['omega_min'] = field_parameters.omega_min
+        self.parameters['omega_sys'] = field_parameters.omega_sys
         self.chose_field(self.field_type)
 
 
@@ -120,49 +119,54 @@ class Field():
                                 + self.parameters['fi'] * np.sin(self.parameters['omega'] * i * self.dt)
         elif self.parameters['omega'].ndim == 2: #matrix, N values of omega, 3D [w0x,w0y,w0z],[w1x,w1y,w1z]... il primo valore di omega deve essere sempre 0
             for i in range(self.nstep):
+                self.field[i] = self.parameters['fi'][0]
                 for j in range(self.parameters['omega'].shape[0]):
                     self.field[i] = self.field[i] \
-                                    + self.parameters['fi'][j] * np.sin(self.parameters['omega'][j] * i * self.dt)
+                                    + self.parameters['fi'][j+1] * np.sin(self.parameters['omega'][j] * i * self.dt)
 
-
-            if abs(self.dt * i - self.parameters['t0']) < self.parameters['sigma']:
-                self.field[i] = self.parameters['fi'] \
-                                * np.square(
-                    np.cos(np.pi * (self.dt * i - self.parameters['t0']) / (2 * self.parameters['sigma']))) \
-                                * np.cos(self.parameters['omega'] * (self.dt * i - self.parameters['t0']))
 
 
     def sum_pip_pulse(self):
         self.field = np.zeros([self.nstep, 3])
         # f0+fi*sin(wi*t)
         for i in range(self.nstep):
+            self.field[i] = self.parameters['fi'][0]
             if abs(self.dt * i - self.parameters['t0']) < self.parameters['sigma']:
                 for j in range(self.parameters['omega'].shape[0]):
                     self.field[i] = self.field[i] \
-                                    + self.parameters['fi'][j] \
+                                    + self.parameters['fi'][j+1] \
                                     * np.square( np.cos(np.pi * (self.dt * i - self.parameters['t0'])/(2 * self.parameters['sigma']))) \
                                     * np.cos(self.parameters['omega'][j] * (i * self.dt - self.parameters['t0']))
 
 
+
     def genetic_pulse(self):
-        n_fourier_omega_min = int(self.parameters['omega_min'] * self.dt * self.nstep / (2 * np.pi)-1)
-        n_fourier_omega_min = 1
-        n_fourier_omega_max = int(2 + self.parameters['omega_max']*self.dt*self.nstep/(2*np.pi))
-        n_fourier_omega = n_fourier_omega_max - n_fourier_omega_min
-        #n_fourier_omega = 1
-        self.parameters['omega'] = np.zeros([n_fourier_omega+1, 3])
-        self.parameters['fi'] = np.full([n_fourier_omega+1, 3], self.parameters['fi'][0])
-        self.parameters['omega'][0] = [0, 0, 0]
-        for n in range(n_fourier_omega):
-            omega_n = (np.pi*2*(n + n_fourier_omega_min))/(self.dt*self.nstep)
-            self.parameters['omega'][n+1] = [omega_n, omega_n, omega_n]
+        self.chose_omega_fourier()
+        self.parameters['fi'] = np.full([self.parameters['omega'].shape[0]+1, 3], self.parameters['fi'][0])
         #self.parameters['omega'] = np.array([[0,0,0],[0.26953409,0.26953409,0.26953409]])
         #self.parameters['sigma'] = 0
         #self.parameters['t0'] = 0
-        #self.sum_pulse()
-        self.sum_pip_pulse()
+        self.sum_pulse()
+        #self.sum_pip_pulse()
 
 
+    def chose_omega_fourier(self):
+        #n_fourier_omega_min = int(self.parameters['omega_sys'][1] * self.dt * self.nstep / (2 * np.pi)-1)
+        n_fourier_omega_min = 1
+        n_fourier_omega_max = int(2 + self.parameters['omega_sys'][-1]*self.dt*self.nstep/(2*np.pi))
+        n_fourier_omega = n_fourier_omega_max - n_fourier_omega_min
+        self.parameters['omega'] = np.zeros([n_fourier_omega, 3])
+        for n in range(n_fourier_omega):
+            omega_n = (np.pi*2*(n + n_fourier_omega_min))/(self.dt*self.nstep)
+            self.parameters['omega'][n] = [omega_n, omega_n, omega_n]
 
 
-
+    def chose_omega_energy(self):
+        freq= []
+        for i in range(self.parameters['omega_sys'].shape[0]):
+            for j in range(i):
+                freq.append(self.parameters['omega_sys'][i]-self.parameters['omega_sys'][j])
+        self.parameters['omega'] = np.zeros([len(freq), 3])
+        self.parameters['omega'][:,0] = freq
+        self.parameters['omega'][:, 1] = freq
+        self.parameters['omega'][:,2] = freq
