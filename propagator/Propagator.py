@@ -1,5 +1,10 @@
 from propagator.PropagatorTerms import PropagatorTerms
 
+# in propagator_terms there are all possible propagation terms (probably we could delete this attribute and
+# temporary inlitialized in each child class.
+# Then in each child class the specific terms arre added to the propagator delegate, and the propagation is done
+#cycling through all the terms in propagate_one_step (for funct in propagator: func(..))
+
 class Propagator():
     def __init__(self):
         self.propagator_terms = PropagatorTerms()
@@ -19,6 +24,7 @@ class Propagator():
         return
 
     def propagate_one_step(self, *args):
+
         return
 
     def propagate_n_step(self, *args):

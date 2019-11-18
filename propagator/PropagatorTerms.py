@@ -5,6 +5,11 @@ from molecule.Molecule import Molecule
 from pcm.PCM import PCM
 from propagator import math_functions as mf
 
+
+# all posible propagator term. Some use PCM methods specific of FrozenSolventPCM child class, If/when
+# DinamicPCM(PCM) will have rabitz implemented, it will have a propagate_bwd_oc term, while the propagation in
+# DinamicPCM(PCM) is always done with fortran, so propagate_fortran doesn't exist
+# terms are added to the propagator that is used for the wave function propagation
 class PropagatorTerms():
     def __init__(self):
         self.dt = None
@@ -64,9 +69,6 @@ class PropagatorTerms():
                           *mf.eulero_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
                                          np.asfortranarray(q_t, dtype=np.complex128),
                                          np.asfortranarray(self.mol.Vijn_fortran_flip, dtype=np.complex128))
-
-
-
 
 
     def bwd_PCM_term(self, order, field, wf_fwd, *args):

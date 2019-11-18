@@ -10,6 +10,10 @@ from save.SaveEulero import SaveEulero
 from save.SaveOCGenetic import SaveOCGenetic
 from OCGeneticIterator import OCGeneticIterator
 
+# OCmanager is only one, and deals with the different OC_iterators (propagation, rapitz, genetic...) Depending
+# on the iterator, the SaveOC class is differently initialized. The restart method is inside Save and is also differently initialized
+# depending on the algorithm (e.g. for the genetic it reads the field parameters, while for Rabitz it reads the field point by point
+
 
 class OCManager:
     def __init__(self):
