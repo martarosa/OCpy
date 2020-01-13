@@ -3,7 +3,7 @@ import array
 import sys
 
 from read import auxiliary_functions as af
-from OCIterator import OCIterator, OCIteratorAttr
+from OCIterator import OCIterator, OCIteratorParameters
 from Chromosome import Chromosome
 from field.Field import Field
 from copy import deepcopy
@@ -30,6 +30,9 @@ q = 0.2
 #######################################################
 
 
+
+
+
 Evolutionary_Algorithm_dict = {'DEAP_cxUniform': tools.cxUniform,
                                'DEAP_mutGaussian': tools.mutGaussian,
                                'DEAP_selBest': tools.selBest}
@@ -39,18 +42,19 @@ Evolutionary_Algorithm_dict = {'DEAP_cxUniform': tools.cxUniform,
 class OCGeneticIterator(OCIterator):
     def __init__(self):
         super().__init__()
-        self.class_attributes = OCIteratorAttr()
-
-        self.chromosomes = [] #can be a DEAP class or personal chromosome class
+        self.oc_iterator_parameters = OCIteratorParameters()
 
         #genetic
         self.initial_c0 = None
 
-        self.n_amplitudes = None
+        self.chromosomes = [] #can be a DEAP class or personal chromosome class
         self.n_chromosomes = None
         self.n_selected_chr = None
+
+        self.n_amplitudes = None
         self.ampl_min = None
         self.ampl_max = None
+
         self.omegas_matrix = None
 
         self.n_mutation_succes = None
@@ -67,49 +71,48 @@ class OCGeneticIterator(OCIterator):
 
 
     def init_output_dictionary(self):
-        self.class_attributes.dict_out['log_file'] = self.get_log_file_out
-        self.class_attributes.dict_out['final_pop'] = self.get_final_pop
-        self.class_attributes.dict_out['pop_t'] = self.get_pop_t
-        self.class_attributes.dict_out['field_t'] = self.get_field_t
-        self.class_attributes.dict_out['field_ampl'] = self.get_field_ampl
+        self.oc_iterator_parameters.dict_out['log_file'] = self.get_log_file_out
+        self.oc_iterator_parameters.dict_out['final_pop'] = self.get_final_pop
+        self.oc_iterator_parameters.dict_out['pop_t'] = self.get_pop_t
+        self.oc_iterator_parameters.dict_out['field_t'] = self.get_field_t
+        self.oc_iterator_parameters.dict_out['field_ampl'] = self.get_field_ampl
 
 
-    def init(self, oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t):
-        self.class_attributes.nstep = oc_parameters.nstep
-        self.class_attributes.dt = oc_parameters.dt
-        self.class_attributes.alpha_t = alpha_t
-        self.class_attributes.target_state = oc_parameters.target_state
-        self.class_attributes.convergence_t = 99999
-        self.class_attributes.J = 99999
-        self.class_attributes.field_psi_matrix = np.zeros([self.class_attributes.nstep, 3])
-        self.class_attributes.psi_coeff_t = np.zeros([self.class_attributes.nstep + 1, molecule.wf.n_ci], dtype=complex)
+    def init(self, oc_iterator_parameters, molecule, starting_field, pcm, alpha_t):
+        self.oc_iterator_parameters.nstep = oc_iterator_parameters.nstep
+        self.oc_iterator_parameters.dt = oc_iterator_parameters.dt
+        self.oc_iterator_parameters.alpha_t = alpha_t
+        self.oc_iterator_parameters.target_state = oc_iterator_parameters.target_state
+        self.oc_iterator_parameters.convergence_t = 99999
+        self.oc_iterator_parameters.J = 99999
+        self.oc_iterator_parameters.field_psi_matrix = np.zeros([self.oc_iterator_parameters.nstep, 3])
+        self.oc_iterator_parameters.psi_coeff_t = np.zeros([self.oc_iterator_parameters.nstep + 1, molecule.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
 
         #iterator_parameters = genetic
-        self.n_chromosomes = iterator_parameters.n_chromosomes
+        self.n_chromosomes = oc_iterator_parameters.n_chromosomes
         self.n_amplitudes = starting_field.parameters['fi'].size
         self.omegas_matrix = starting_field.parameters['omega']
-        self.ampl_min = iterator_parameters.amplitude_min
-        self.ampl_max = iterator_parameters.amplitude_max
-        self.n_selected_chr = iterator_parameters.n_evolved_chr
-        self.deap = iterator_parameters.DEAP
+        self.ampl_min = oc_iterator_parameters.amplitude_min
+        self.ampl_max = oc_iterator_parameters.amplitude_max
+        self.n_selected_chr = oc_iterator_parameters.n_evolved_chr
+        self.deap = oc_iterator_parameters.DEAP
 
         self.init_chromosomes(molecule, starting_field, pcm)
-        self.init_evolutionary_algorithm(iterator_parameters)
+        self.init_evolutionary_algorithm(oc_iterator_parameters)
 
 
     def calc_J(self):
         self.chromosomes.sort(key=lambda x: x.J, reverse=True)
-        self.class_attributes.J = self.chromosomes[0].J.values
-        self.class_attributes.field_psi_matrix = self.chromosomes[0].field.field
+        self.oc_iterator_parameters.J = self.chromosomes[0].J.values
+        self.oc_iterator_parameters.field_psi_matrix = self.chromosomes[0].field.field
 
 
     def check_convergence(self):
-        J_prev_tmp = np.copy(self.class_attributes.J)
+        J_prev_tmp = np.copy(self.oc_iterator_parameters.J)
         self.calc_J()
-        self.class_attributes.convergence_t = self.class_attributes.J - J_prev_tmp
-        self.class_attributes.convergence_t = self.class_attributes.convergence_t[0]
-
+        self.oc_iterator_parameters.convergence_t = self.oc_iterator_parameters.J - J_prev_tmp
+        self.oc_iterator_parameters.convergence_t = self.oc_iterator_parameters.convergence_t[0]
 
 
     def init_chromosomes(self, molecule, starting_field, pcm):
@@ -134,7 +137,7 @@ class OCGeneticIterator(OCIterator):
         toolbox.register('chromosomes_population', tools.initRepeat, list, toolbox.single_chromosome)
         self.chromosomes = toolbox.chromosomes_population(n=self.n_chromosomes) #create all chromosomes
         prop_psi = prop.PropagatorEulero2Order()
-        prop_psi.set_propagator(self.class_attributes.dt, molecule, pcm)
+        prop_psi.set_propagator(self.oc_iterator_parameters.dt, molecule, pcm)
         self.initial_c0 = prop_psi.propagator_terms.mol.wf.ci
         for i in range(len(self.chromosomes)):
             self.chromosomes[i].field = deepcopy(starting_field)
@@ -144,7 +147,7 @@ class OCGeneticIterator(OCIterator):
 
     def init_general_chromosome(self, molecule, starting_field, pcm):
         chromosome = Chromosome()
-        chromosome.init_chromosome(self.class_attributes.dt, molecule, starting_field, pcm)
+        chromosome.init_chromosome(self.oc_iterator_parameters.dt, molecule, starting_field, pcm)
         self.chromosomes = self.n_chromosomes * chromosome
         for i in range(self.n_chromosomes):
             rand = []
@@ -157,10 +160,10 @@ class OCGeneticIterator(OCIterator):
     def evaluate_J_general_chromosomes(self):
         for i in range(len(self.chromosomes)):
             self.chromosomes[i].amplitudes_to_field()
-            self.chromosomes[i].prop_psi.propagate_n_step(self.class_attributes.nstep, self.chromosomes[i].field.field)
-            self.chromosomes[i].calc_J(self.class_attributes.target_state,
-                                       self.class_attributes.alpha_t,
-                                       self.class_attributes.dt)
+            self.chromosomes[i].prop_psi.propagate_n_step(self.oc_iterator_parameters.nstep, self.chromosomes[i].field.field)
+            self.chromosomes[i].calc_J(self.oc_iterator_parameters.target_state,
+                                       self.oc_iterator_parameters.alpha_t,
+                                       self.oc_iterator_parameters.dt)
 
 
     def evaluate_J_DEAP_chromosome(self, chro):
@@ -168,18 +171,18 @@ class OCGeneticIterator(OCIterator):
         chro.field.chose_field('sum')
         #chro.field.chose_field('sum_pip')
         chro.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
-        chro.prop_psi.propagate_n_step(self.class_attributes.nstep, chro.field.field)
+        chro.prop_psi.propagate_n_step(self.oc_iterator_parameters.nstep, chro.field.field)
         pop= np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
-                                            self.class_attributes.target_state))
+                                             self.oc_iterator_parameters.target_state))
         field = np.real(af.alpha_field_J_integral(chro.field.field,
-                                                self.class_attributes.alpha_t,
-                                                self.class_attributes.dt))
+                                                  self.oc_iterator_parameters.alpha_t,
+                                                  self.oc_iterator_parameters.dt))
 
         J = np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
-                                            self.class_attributes.target_state)
+                                            self.oc_iterator_parameters.target_state)
                     - af.alpha_field_J_integral(chro.field.field,
-                                                self.class_attributes.alpha_t,
-                                                self.class_attributes.dt))
+                                                self.oc_iterator_parameters.alpha_t,
+                                                self.oc_iterator_parameters.dt))
         if J > chro.J.values:
             self.n_mutation_succes += 1
         return [J]
@@ -327,12 +330,12 @@ class OCGeneticIterator(OCIterator):
 
 
     def get_log_file_out(self):
-        integral_field = np.real(af.field_J_integral(self.class_attributes.field_psi_matrix, self.class_attributes.dt))
+        integral_field = np.real(af.field_J_integral(self.oc_iterator_parameters.field_psi_matrix, self.oc_iterator_parameters.dt))
         norm_proj = np.real(af.projector_mean_value(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci,
-                                                    self.class_attributes.target_state)/
+                                                    self.oc_iterator_parameters.target_state) /
                             (np.dot(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci,
                                     np.conj(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci))))
-        return np.array([self.class_attributes.convergence_t, self.class_attributes.J[0], norm_proj, integral_field])
+        return np.array([self.oc_iterator_parameters.convergence_t, self.oc_iterator_parameters.J[0], norm_proj, integral_field])
 
 
     def get_final_pop(self):
@@ -342,14 +345,14 @@ class OCGeneticIterator(OCIterator):
 
     def get_pop_t(self):
         self.chromosomes[0].prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
-        self.class_attributes.psi_coeff_t = self.chromosomes[0].prop_psi.propagate_n_step(self.class_attributes.nstep,
-                                                                                          self.chromosomes[0].field.field)
-        pop_t = np.real(af.population_from_wf_matrix(self.class_attributes.psi_coeff_t))
+        self.oc_iterator_parameters.psi_coeff_t = self.chromosomes[0].prop_psi.propagate_n_step(self.oc_iterator_parameters.nstep,
+                                                                                                self.chromosomes[0].field.field)
+        pop_t = np.real(af.population_from_wf_matrix(self.oc_iterator_parameters.psi_coeff_t))
         return pop_t
 
 
     def get_field_t(self):
-        return self.class_attributes.field_psi_matrix
+        return self.oc_iterator_parameters.field_psi_matrix
 
 
     def get_field_ampl(self):

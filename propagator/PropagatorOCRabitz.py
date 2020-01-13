@@ -22,16 +22,16 @@ class PropagatorOCfwd(Propagator):
             self.add_term_to_propagator("eulero_pcm")
 
 
-    def propagate_one_step(self, field):
+    def propagate_one_step(self, i, field):
         for func in self.propagator:
-            func(1, field)
+            func(i, 1, field)
 
 
     def propagate_n_step(self, nstep, field):
         out = list()
         out.append(self.propagator_terms.mol.wf.ci)
         for i in range(nstep):
-            self.propagate_one_step(field[i])
+            self.propagate_one_step(i, field[i])
             out.append(self.propagator_terms.mol.wf.ci)
         out = np.array(out)
         return out
@@ -55,15 +55,15 @@ class PropagatorOCbwd(Propagator):
             self.add_term_to_propagator("oc_pcm_bwd")
 
 
-    def propagate_one_step(self, field, wf_fwd):
+    def propagate_one_step(self, i, field, wf_fwd):
         for func in self.propagator:
-            func(1, field, wf_fwd)
+            func(i, 1, field, wf_fwd)
 
     def propagate_n_step(self, nstep, field, wf_fwd):
         out = list()
         out.append(self.propagator_terms.mol.wf.ci)
         for i in range(nstep):
-            self.propagate_one_step(field[i], wf_fwd)
+            self.propagate_one_step(i, field[i], wf_fwd)
             out.append(self.propagator_terms.mol.wf.ci)
         out = np.array(out)
         return out

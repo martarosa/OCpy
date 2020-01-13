@@ -40,17 +40,17 @@ class Field():
 
 
 
-    def init_field(self, field_parameters):
-        self.field_type = field_parameters.field_type
-        self.dt = field_parameters.dt
-        self.nstep = field_parameters.nstep
-        self.field = field_parameters.field
-        self.parameters['fi'] = field_parameters.fi
-        self.parameters['fi_cos'] = field_parameters.fi_cos
-        self.parameters['omega'] = field_parameters.omega
-        self.parameters['sigma'] = field_parameters.sigma
-        self.parameters['t0'] = field_parameters.t0
-        self.parameters['omega_sys'] = field_parameters.omega_sys
+    def init_field(self, field_input):
+        self.field_type = field_input.field_type
+        self.dt = field_input.dt
+        self.nstep = field_input.nstep
+        self.field = field_input.field
+        self.parameters['fi'] = field_input.fi
+        self.parameters['fi_cos'] = field_input.fi_cos
+        self.parameters['omega'] = field_input.omega
+        self.parameters['sigma'] = field_input.sigma
+        self.parameters['t0'] = field_input.t0
+        self.parameters['omega_sys'] = field_input.omega_sys
         self.chose_field(self.field_type)
 
 

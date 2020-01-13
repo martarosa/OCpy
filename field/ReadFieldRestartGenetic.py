@@ -1,6 +1,6 @@
 import numpy as np
 
-from field.FieldParameters import FieldParameters
+from field.FieldInput import FieldInput
 from field.ReadFieldRestart import ReadFieldRestart
 import configparser
 
@@ -8,7 +8,7 @@ import configparser
 class ReadFieldRestartGenetic(ReadFieldRestart):
     def __init__(self):
         super().__init__()
-        self.field_par = FieldParameters()
+        self.field_par = FieldInput()
 
 
     def read_file(self, folder, namefile):

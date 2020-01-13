@@ -18,15 +18,15 @@ class PropagatorEulero1Order(Propagator):
             self.add_term_to_propagator("eulero_pcm")
         self.add_term_to_propagator("norm")
 
-    def propagate_one_step(self, field):
+    def propagate_one_step(self, i, field):
         for func in self.propagator:
-            func(1,field)
+            func(i, 1, field)
 
     def propagate_n_step(self, nstep, field):
         out = list()
         out.append(self.propagator_terms.mol.wf.ci)
         for i in range(nstep):
-            self.propagate_one_step(field[i])
+            self.propagate_one_step(i, field[i])
             out.append(self.propagator_terms.mol.wf.ci)
         out = np.array(out)
         return out
@@ -50,18 +50,18 @@ class PropagatorEulero2Order(Propagator):
         self.add_term_to_propagator("norm")
 
 
-    def propagate_one_step(self, field, order=2):
+    def propagate_one_step(self, i, field, order=2):
         for func in self.propagator:
-            func(order, field)
+            func(i, order, field)
 
     def propagate_n_step(self, nstep, field):
         out = list()
         out.append(self.propagator_terms.mol.wf.ci)
         for i in range(nstep):
             if i != 0:
-                self.propagate_one_step(field[i])
+                self.propagate_one_step(i, field[i])
             else:
-                self.propagate_one_step(field[i], order=1)
+                self.propagate_one_step(i, field[i], order=1)
             out.append(self.propagator_terms.mol.wf.ci)
         out = np.array(out)
         return out

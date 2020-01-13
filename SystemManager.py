@@ -1,9 +1,9 @@
-from field.InitFieldPar import InitFieldPar
-from save.InitLogPar import InitLogPar
-from molecule.InitMolecularPar import InitMolecularPar
-from InitOCPar import InitOCPar
-from pcm.InitPCMPar import InitPCMPar
-from save.InitSavePar import InitSavePar
+from field.SetFieldInput import SetFieldInput
+from save.SetLogInput import SetLogInput
+from molecule.SetMoleculeInput import SetMoleculeInput
+from SetOCInput import SetOCInput
+from pcm.SetPCMInput import SetPCMInput
+from save.SetSaveInput import SetSaveInput
 from read.ReadNamelistOC import ReadNamelistOC
 from field.ReadFieldRestartGenetic import ReadFieldRestartGenetic
 from field.ReadFieldRestartRabitz import ReadFieldRestartRabitz
@@ -45,48 +45,51 @@ class SystemManager():
 
 
     def init_system(self, folder, name_file):
-        user_input = ReadNamelistOC()
+
+        user_input = ReadNamelistOC() #tmp, after reading everithing apart system manager vanishes
+
         user_input.read_file(folder, name_file)
         self.init_molecule(user_input)
         self.init_starting_field(user_input)
-        if user_input.env.par['env'] != "vac":
+        if user_input.env.section_dictionary['env'] != "vac":
             self.init_pcm(user_input)
         self.init_optimal_control(user_input)
 
+
     def init_molecule(self, user_input):
-        init_mol = InitMolecularPar()
-        init_mol.init(user_input)
-        self.mol.init_molecule(init_mol.parameters)
+        init_mol = SetMoleculeInput()
+        init_mol.set(user_input)
+        self.mol.init_molecule(init_mol.input_parameters)
 
     def init_starting_field(self, user_input):
-        init_field = InitFieldPar()
-        if user_input.sys.par['propagation'] == 'genetic':
+        init_field = SetFieldInput()
+        if user_input.sys.section_dictionary['propagation'] == 'genetic':
             if(user_input.field.par['field_type']) != 'genetic':
                 user_input.field.par['internal_check_genetic_field'] = False
                 user_input.field.par['field_type'] = 'genetic'
             init_field.read_restart = ReadFieldRestartGenetic()
         else:
             init_field.read_restart = ReadFieldRestartRabitz()
-        init_field.init(user_input)
-        self.starting_field.init_field(init_field.parameters)
+        init_field.set(user_input)
+        self.starting_field.init_field(init_field.input_parameters)
 
     def init_pcm(self, user_input):
-        init_pcm = InitPCMPar()
-        init_pcm.init(user_input)
-        if user_input.env.par['env'] == 'sol':
+        init_pcm = SetPCMInput()
+        init_pcm.set(user_input)
+        if user_input.env.section_dictionary['env'] == 'sol':
             self.pcm = FrozenSolventPCM()
-        elif user_input.env.par['env'] == 'nanop':
+        elif user_input.env.section_dictionary['env'] == 'nanop':
             self.pcm = DinamicPCM()
-        self.pcm.init_pcm(init_pcm.parameters, self.mol, self.starting_field.field[0])
+        self.pcm.init_pcm(init_pcm.input_parameters, self.mol, self.starting_field.field[0])
 
     def init_optimal_control(self, user_input):
-        init_oc = InitOCPar()
-        init_oc.init(user_input)
-        init_save = InitSavePar()
-        init_save.init(user_input)
-        init_log_header = InitLogPar()
-        init_log_header.init(user_input)
-        self.oc.init_oc(init_oc.parameters, init_oc.iterator_parameters, init_save.parameters, init_log_header.parameters, self.mol, self.starting_field, self.pcm)
+        init_oc = SetOCInput()
+        init_oc.set(user_input)
+        init_save = SetSaveInput()
+        init_save.set(user_input)
+        init_log_header = SetLogInput()
+        init_log_header.set(user_input)
+        self.oc.init_oc(init_oc.input_parameters, init_oc.OC_iterator_input, init_save.input_parameters, init_log_header.input_parameters, self.mol, self.starting_field, self.pcm)
 
 
 

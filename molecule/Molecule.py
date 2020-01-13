@@ -10,13 +10,63 @@ class Molecule:
         self.Vijn_fortran_flip = None
 
 
-    def init_molecule(self, molecule_parameters):
-        self.wf.set_wf(molecule_parameters.wf_ci, True)
-        self.muT = molecule_parameters.muT
-        self.en_ci = molecule_parameters.en_ci
-        self.Vijn = molecule_parameters.Vijn
+    def init_molecule(self, molecule_input):
+        self.wf.set_wf(molecule_input.wf_ci, True)
+        self.muT = molecule_input.muT
+        self.en_ci = molecule_input.en_ci
+        self.Vijn = molecule_input.Vijn
         if(self.Vijn.any()):
             self.Vijn_fortran_flip = af.flip_3D_py2f(self.Vijn)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

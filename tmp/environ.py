@@ -1,5 +1,5 @@
 import numpy as np
-from save.SaveOC import SaveOC
+from save.Save import Save
 import pandas as pd
 from read import auxiliary_functions as af
 from pcm.PCM import PCM, FrozenSolventPCM, DinamicPCM
@@ -9,7 +9,7 @@ class Env():
         self.env = None
         self.pcm = PCM()
         self.muLF = 0
-        self.save = SaveOC()
+        self.save = Save()
 
     def set_env(self, env):
         self.env = env
@@ -92,7 +92,7 @@ class PCM():
         self.Vij_flip = None
         self.muT_local_field = None
         self.to_subtract_fromH = None
-        self.save = SaveOC()
+        self.save = Save()
 
 
 

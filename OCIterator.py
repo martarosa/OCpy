@@ -1,5 +1,7 @@
-class OCIteratorAttr():
+class OCIteratorParameters():
     def __init__(self):
+
+
         self.nstep = None
         self.dt = None
         self.target_state = None
@@ -17,9 +19,11 @@ class OCIteratorAttr():
 
 
 
+
+
 class OCIterator():
     def __init__(self):
-        self.class_attributes = OCIteratorAttr()
+        self.oc_iterator_parameters = OCIteratorParameters()
 
     def iterate(self, current_iteration):
         pass
@@ -33,5 +37,5 @@ class OCIterator():
     def init_output_dictionary(self):
         pass
 
-    def init(self, oc_parameters, iterator_parameters, molecule, starting_field, pcm, alpha_t):
+    def init(self, oc_iterator_parameters, molecule, starting_field, pcm, alpha_t):
         pass

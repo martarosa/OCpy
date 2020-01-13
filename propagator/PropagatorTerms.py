@@ -46,7 +46,7 @@ class PropagatorTerms():
         self.mol.wf.ci_prev[0] = np.copy(self.mol.wf.ci)
         self.mol.wf.ci = np.copy(self.mol.wf.ci_prev[1])
 
-    def eulero_energy_term(self, order, *args):
+    def eulero_energy_term(self, i, order, *args):
         self.mol.wf.ci += -order * 1j * self.dt * (self.mol.en_ci * self.mol.wf.ci_prev[0])
 
     def eulero_field_term(self, order, field, *args):
@@ -54,25 +54,34 @@ class PropagatorTerms():
 
 
 
-    def eulero_PCM_term(self, order, field, *args):
-        self.pcm.propagate(self.mol, field)
+    def eulero_PCM_term(self, i, order, field, *args):
+        self.pcm.propagate(i, self.mol, field)
         self.mol.wf.ci += -order * 1j * self.dt \
                           * (np.dot(self.mol.wf.ci_prev[0],
                                     af.single_summation_tessere(self.pcm.get_q_t() - self.pcm.q00n, self.mol.Vijn)))
 
-    def eulero_PCM_term_fortran(self, order, field, *args):
+    def eulero_PCM_term_fortran(self, i, order, field, *args):
         self.pcm.propagate_fortran(self.mol.wf.ci_prev[0], field)
         q_t = self.pcm.get_q_t() - self.pcm.q00n
-        #print(q_t_tmp.shape)
-        #q_t_flip = af.flip_3D_py2f(self.pcm.get_q_t() - self.pcm.q00n)
         self.mol.wf.ci += -order * 1j * self.dt \
                           *mf.eulero_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
                                          np.asfortranarray(q_t, dtype=np.complex128),
                                          np.asfortranarray(self.mol.Vijn_fortran_flip, dtype=np.complex128))
 
 
-    def bwd_PCM_term(self, order, field, wf_fwd, *args):
-        self.pcm.propagate_fortran(wf_fwd, field)
+    def eulero_NANO_term_fortran(self, i, order, field, *args):
+        self.pcm.propagate(i, self.mol.wf.ci_prev[0], field)
+        q_t = self.pcm.get_q_t() - self.pcm.q00n
+        self.mol.wf.ci += -order * 1j * self.dt \
+                          *mf.eulero_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
+                                         np.asfortranarray(q_t, dtype=np.complex128),
+                                         np.asfortranarray(self.mol.Vijn_fortran_flip, dtype=np.complex128))
+
+
+
+
+    def bwd_PCM_term(self, i, order, field, wf_fwd, *args):
+        self.pcm.propagate_bwd_oc(i, self.mol, field, wf_fwd)
         self.mol.wf.ci += -order * 1j * self.dt \
                           * (np.dot(self.mol.wf.ci_prev[0],
                                     af.single_summation_tessere(self.pcm.get_q_t() - self.pcm.q00n,
@@ -92,8 +101,8 @@ class PropagatorTerms():
 
 
 
-    def bwd_PCM_term_fortran(self, order, field, wf_fwd, *args):
-        self.pcm.propagate_bwd_oc(self.mol, field, wf_fwd)
+    def bwd_PCM_term_fortran(self, i,  order, field, wf_fwd, *args):
+        self.pcm.propagate_fortran(wf_fwd, field)
         q_t = self.pcm.get_q_t() - self.pcm.q00n
         self.mol.wf.ci += -order * 1j * self.dt \
                           * (mf.bwd_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
@@ -105,36 +114,3 @@ class PropagatorTerms():
 
 
 
-
-
-
-
-    #   def eulero_Env_TDPLas_term(self, order, field, *args):
-    #       self.wavef.ci += -order*1j*self.dt \
-    #                        * (sub_fortran.fwd_pcm(np.asfortranarray(self.wavef.ci_prev[0], dtype=np.complex128),
-    #                                              np.asfortranarray(self.env.Vij_flip, dtype=np.complex128),
-    #                                              np.asfortranarray(np.dot(field, self.env.cavity[:,0:3]), dtype=np.complex128),
-    #                                              np.asfortranarray(self.env.to_subtract_fromH, dtype=np.complex128)))
-
-
-
-#    def eulero_PCM_term_fortran(self, order, *args):
-#        self.mol.wf.ci += -order * 1j * self.dt \
-#                          * (mf.fwd_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
-#                                        np.asfortranarray(self.env.qijn_flip, dtype=np.complex128),
-#                                        np.asfortranarray(self.env.Vij_flip, dtype=np.complex128),
-#                                        np.asfortranarray(self.env.to_subtract_fromH,dtype=np.complex128)))
-
-
-#    def eulero_NANOP_term(self, order, *args):
-
-#        daDareATDPlas=af.double_summation(self.wavef.ci_prev[0],
-#                            np.conj(self.wavef.ci_prev[0]),
-#                            self.env.get_Vijn())
-
-#        qijnt_tdplas=cosa_presa_da_tdplas
-
-#        self.wavef.ci += -order*1j*self.dt \
-#                         * (np.dot(self.wavef.ci_prev[0],
-#                                   af.single_summation_tessere(qijnt_tdplas, self.env.get_Vij())
-#                                   -self.h.toSubtract))

@@ -53,9 +53,6 @@ end subroutine
 
 
 
-
-
-
 subroutine eulero_pcm(psi_prev, qijn_t, Vijn, states, tessere, out_matmul_sum)
     integer :: states
     integer :: tessere
