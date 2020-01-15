@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="55efd99c-0da1-4ff7-b8ef-8191bd12be39" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/OCRabitzIterator.py" beforeDir="false" afterPath="$PROJECT_DIR$/OCRabitzIterator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/genetic/2levels/rabitz/output_mixed_36_0.02_start0_field_ampl.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/genetic/2levels/rabitz/output_mixed_36_0.02_start0_field_bkp.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/genetic/2levels/rabitz/output_mixed_36_0.02_start0_field_t.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/genetic/2levels/rabitz/output_mixed_36_0.02_start0_final_pop.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/genetic/2levels/rabitz/output_mixed_36_0.02_start0_pop_t.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OCEuleroIterator.py" beforeDir="false" afterPath="$PROJECT_DIR$/OCEuleroIterator.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,8 +16,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/OCGeneticIterator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-368">
-              <caret line="40" selection-start-line="40" selection-end-line="40" />
+            <state relative-caret-position="-953">
+              <caret line="1" selection-start-line="1" selection-end-line="1" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -38,11 +34,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/OCRabitzIterator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-38">
-              <caret line="47" column="47" selection-start-line="47" selection-start-column="34" selection-end-line="47" selection-end-column="47" />
+            <state relative-caret-position="232">
+              <caret line="63" column="44" selection-start-line="63" selection-start-column="44" selection-end-line="63" selection-end-column="44" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/propagator/PropagatorsEulero.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="409">
+              <caret line="56" column="21" lean-forward="true" selection-start-line="56" selection-start-column="21" selection-end-line="56" selection-end-column="21" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -53,10 +61,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/run_oc.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="33" selection-start-line="33" selection-end-line="33" />
+            <state relative-caret-position="510">
+              <caret line="34" selection-start-line="34" selection-end-line="34" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/OCEuleroIterator.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="194">
+              <caret line="56" column="82" selection-start-line="56" selection-start-column="82" selection-end-line="56" selection-end-column="82" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -149,7 +169,6 @@
         <option value="$PROJECT_DIR$/OCInput.py" />
         <option value="$PROJECT_DIR$/read/ReadConfFileGenetic.py" />
         <option value="$PROJECT_DIR$/read/ReadOCConfigurationNamelistGenetic.py" />
-        <option value="$PROJECT_DIR$/OCEuleroIterator.py" />
         <option value="$PROJECT_DIR$/pcm/PCM.py" />
         <option value="$PROJECT_DIR$/molecule/Molecule.py" />
         <option value="$PROJECT_DIR$/OCIterator.py" />
@@ -165,6 +184,7 @@
         <option value="$PROJECT_DIR$/OCGeneticIterator.py" />
         <option value="$PROJECT_DIR$/run_oc.py" />
         <option value="$PROJECT_DIR$/OCRabitzIterator.py" />
+        <option value="$PROJECT_DIR$/OCEuleroIterator.py" />
       </list>
     </option>
   </component>
@@ -286,6 +306,9 @@
       <module name="OCpy" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -326,6 +349,15 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="24" width="1402" height="1002" extended-state="6" />
     <editor active="true" />
@@ -334,7 +366,7 @@
       <window_info id="Structure" order="1" sideWeight="0.2978959" side_tool="true" weight="0.18713759" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.19358534" />
+      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.19358534" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32890365" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -529,16 +561,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OCEuleroIterator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="57" column="42" selection-start-line="57" selection-start-column="42" selection-end-line="57" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SetInput.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -717,8 +739,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/OCGeneticIterator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-368">
-          <caret line="40" selection-start-line="40" selection-end-line="40" />
+        <state relative-caret-position="-953">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -750,20 +772,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/run_oc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="33" selection-start-line="33" selection-end-line="33" />
+        <state relative-caret-position="510">
+          <caret line="34" selection-start-line="34" selection-end-line="34" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/propagator/PropagatorsEulero.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="62" column="17" selection-start-line="62" selection-start-column="17" selection-end-line="62" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -780,8 +792,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/OCRabitzIterator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-38">
-          <caret line="47" column="47" selection-start-line="47" selection-start-column="34" selection-end-line="47" selection-end-column="47" />
+        <state relative-caret-position="232">
+          <caret line="63" column="44" selection-start-line="63" selection-start-column="44" selection-end-line="63" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OCEuleroIterator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="56" column="82" selection-start-line="56" selection-start-column="82" selection-end-line="56" selection-end-column="82" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/propagator/PropagatorsEulero.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="409">
+          <caret line="56" column="21" lean-forward="true" selection-start-line="56" selection-start-column="21" selection-end-line="56" selection-end-column="21" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
