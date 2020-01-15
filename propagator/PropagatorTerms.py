@@ -49,7 +49,7 @@ class PropagatorTerms():
     def eulero_energy_term(self, i, order, *args):
         self.mol.wf.ci += -order * 1j * self.dt * (self.mol.en_ci * self.mol.wf.ci_prev[0])
 
-    def eulero_field_term(self, order, field, *args):
+    def eulero_field_term(self, i, order, field, *args):
         self.mol.wf.ci += -order * 1j * self.dt * (-np.dot(np.dot(self.mol.wf.ci_prev[0], self.mol.muT), field))
 
 

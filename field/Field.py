@@ -142,6 +142,7 @@ class Field():
 
     def genetic_pulse(self):
         self.chose_omega_fourier()
+        print(self.parameters['omega'].shape)
         self.parameters['fi'] = np.full([self.parameters['omega'].shape[0]+1, 3], self.parameters['fi'][0])
         #self.parameters['omega'] = np.array([[0,0,0],[0.26953409,0.26953409,0.26953409]])
         #self.parameters['sigma'] = 0
@@ -152,7 +153,7 @@ class Field():
 
     def chose_omega_fourier(self):
         #n_fourier_omega_min = int(self.parameters['omega_sys'][1] * self.dt * self.nstep / (2 * np.pi)-1)
-        n_fourier_omega_min = 1
+        n_fourier_omega_min = 0
         n_fourier_omega_max = int(2 + self.parameters['omega_sys'][-1]*self.dt*self.nstep/(2*np.pi))
         n_fourier_omega = n_fourier_omega_max - n_fourier_omega_min
         self.parameters['omega'] = np.zeros([n_fourier_omega, 3])

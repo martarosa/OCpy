@@ -1,18 +1,14 @@
 class OCIteratorParameters():
+
     def __init__(self):
-
-
         self.nstep = None
         self.dt = None
         self.target_state = None
         self.alpha_t = None
-
         self.convergence_t =  99999
         self.J = 99999
-
         self.field_psi_matrix = None
         self.psi_coeff_t = None
-
         self.dict_out = {}
 #        self.dict_restart = {}
 

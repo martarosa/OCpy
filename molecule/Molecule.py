@@ -15,7 +15,7 @@ class Molecule:
         self.muT = molecule_input.muT
         self.en_ci = molecule_input.en_ci
         self.Vijn = molecule_input.Vijn
-        if(self.Vijn.any()):
+        if(self.Vijn!= None):
             self.Vijn_fortran_flip = af.flip_3D_py2f(self.Vijn)
 
 

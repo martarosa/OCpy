@@ -3,7 +3,7 @@ from read import auxiliary_functions as af
 from propagator import math_functions as mf
 import sys
 sys.path.append('/home/mana/programmi/WaveT/TDPlas/src/')
-import interface_tdplas as tdplas
+#import interface_tdplas as tdplas
 
 
 class PCM():

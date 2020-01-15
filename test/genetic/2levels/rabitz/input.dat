@@ -1,8 +1,8 @@
 [SYSTEM]
 dt=0.1
 nstep=2500
-name = output_mixed_36_0.02_start0_mut1 
-propagation = genetic 
+name = output_ref 
+propagation = rabitzi 
 #folder=
 
 [WAVEFUNCTION]
@@ -11,11 +11,11 @@ name_ei=ci_energy.inp
 name_mut=ci_mut.inp
 
 [FIELD]
-field_type=genetic
+field_type=const
 fi=0.01 0.01 0.01
-omega=0.2695340923 0.2695340923 0.2695340923
-sigma=125
-t0=125
+#omega=0.2695340923 0.2695340923 0.2695340923
+#sigma=125
+#t0=125
 
 
 [ENVIRON]

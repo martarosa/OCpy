@@ -1,4 +1,5 @@
 import numpy as np
+from copy import deepcopy
 
 from propagator import PropagatorsEulero as prop
 from field.Field import Field
@@ -33,6 +34,7 @@ class Chromosome():
 
 
     def calc_J(self, target_state, alpha_t, dt):
+        Jprev = deepcopy(self.J)
         self.J = np.real(af.projector_mean_value(
                                        self.prop_psi.propagator_terms.mol.wf.ci,
                                        target_state)
@@ -40,3 +42,7 @@ class Chromosome():
                                        self.field.field,
                                        alpha_t,
                                        dt))
+        if self.J > Jprev:
+            return 1
+        else:
+            return 0
