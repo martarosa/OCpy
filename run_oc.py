@@ -28,7 +28,7 @@ import time as time
 #    namefile = split[1]
 import numpy as np
 #folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/fullpy/"
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/genetic/2levels/rabitz/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/genetic/3levels/"
 #folder ="/home/mana/programmi/python/optimal_control/OCpy/test/oc/"
 namefile = "input.dat"
 

@@ -17,7 +17,6 @@ class ReadFieldRestartGenetic(ReadFieldRestart):
         self.field_par.omega = load[:n]
         self.field_par.fi = load[n:]
         self.field_par. field_type = 'restart_genetic'
-        self.field_par.fi_cos = np.array([0, 0, 0])
         self.field_par.sigma = 0
         self.field_par.t0 = 0
         self.field_par.namefile = 'false'

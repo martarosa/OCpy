@@ -15,20 +15,36 @@ from deap import tools
 
 import random
 
-###################DEAP INITIALIZATION#################
+###################GENETIC ALGORITHMS#################
+#sequential: first mate with crossover, then mutate all chromosomes
+
+#mixed: mates n_tot - n_mutate chromosomes and mutate n_mutate chromosomes
+#       only if mating and mutation are separated it is possible to evaluate mutation success
+
+#restart: if stucked in local minima restart from a different point in the space
+
+#clustering:
+
+#dcrab:
+#################SIGMA##########################
+#adaptive_on_mutate_success:  depending on the muate successes, defined as eta > eta_thr, sigma changes
+#                             only compatible with mixed genetic algorithm
+
+
+
 #mate
 mate_probability = 1 #given 2 list which is the probability they mate
 #cxUniform
 cx_uniform_probability = 0.5
 #mutate
-mutate_probability = 0.4
-n_mutate = 2
+mutate_probability = 0.2
+n_mutate = 6
 #mutGaussian
-mu = 0
+mu = 0.00
 eta_thr = 0.6
 q = 0.9
-#######################################################
 
+#######################################################
 
 
 
@@ -58,7 +74,10 @@ class OCGeneticIterator(OCIterator):
         self.omegas_matrix = None
 
         self.n_mutation_succes = 0
-        self.mutate_sigma = 0.002
+        self.mutate_sigma = 0.01
+
+
+        self.n_mutate = n_mutate
 
         self.deap = None
         self.evolutionary_algorithms = None
@@ -92,6 +111,7 @@ class OCGeneticIterator(OCIterator):
         #iterator_parameters = genetic
         self.n_chromosomes = oc_iterator_parameters.n_chromosomes
         self.n_amplitudes = starting_field.parameters['fi'].size
+        #self.n_chro_generated_mutation = n_mutate * self.n_chromosomes
         self.omegas_matrix = starting_field.parameters['omega']
         self.ampl_min = oc_iterator_parameters.amplitude_min
         self.ampl_max = oc_iterator_parameters.amplitude_max
@@ -124,11 +144,8 @@ class OCGeneticIterator(OCIterator):
 
 
     def create_random_ampl_rounded(self):
-        number = 0.000
-        #number = round(random.uniform(self.ampl_min, self.ampl_max),4)
+        number = round(random.uniform(-0.005, 0.005),4)
         return number
-
-
 
 
 
@@ -166,7 +183,7 @@ class OCGeneticIterator(OCIterator):
             self.chromosomes[i].field = deepcopy(starting_field)
             self.chromosomes[i].prop_psi = deepcopy(prop_psi)
             self.chromosomes[i].J.values = [0.5]
-
+        self.oc_iterator_parameters.J = [99999]
 
 
 
@@ -174,7 +191,7 @@ class OCGeneticIterator(OCIterator):
     # prende l'array di Chromosme e lo mette nel campo come ampiezze
         chro.field.parameters['fi'] = np.asarray(chro).reshape((-1, 3))
     #genera il campo con forma sum
-        chro.field.chose_field('sum')
+        chro.field.chose_field('sum_pip')
         #chro.field.chose_field('sum_pip')
     #setto il propagatore e lo propago con il campo appena generato
         chro.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
@@ -191,16 +208,16 @@ class OCGeneticIterator(OCIterator):
                     - af.alpha_field_J_integral(chro.field.field,
                                                 self.oc_iterator_parameters.alpha_t,
                                                 self.oc_iterator_parameters.dt))
-    #se J è maggiore della J precedente lo dichiaro un successo e lo conto
-        if J > chro.J.values:
-            self.n_mutation_succes += 1
-        #print("successi", self.n_mutation_succes)
+
+        success =  J - chro.J.values[0]
+        if success > 0:
+            self.n_mutation_succes +=1
         return [J]
 
 
     def evolve(self):
         if self.deap == 'true':
-            self.evolve_mixed_DEAP()
+            self.evolve_subsequent_DEAP()
 
 
 
@@ -234,7 +251,6 @@ class OCGeneticIterator(OCIterator):
                 self.evolutionary_algorithms.mutate(mutant)
         self.check_bounds(new)
         J = self.evolutionary_algorithms.map(self.evolutionary_algorithms.evaluate, new)
-        self.update_sigma_mutation(self.n_chromosomes)
         for ind, fit in zip(new, J):
             ind.J.values = fit
         self.chromosomes[:] = new
@@ -242,10 +258,7 @@ class OCGeneticIterator(OCIterator):
 
     #quello del paper, con parte crossover e parte mutati
     def evolve_mixed_DEAP(self):
-
-        n_children_each = self.n_chromosomes/self.n_selected_chr
-        if n_children_each.is_integer() == False:
-            sys.exit("wrong numer of chromosome to evolve, n_chromosomes/n_selected must be integer")
+        n_mate = self.n_chromosomes-(self.n_selected_chr*n_mutate)
         print("evolve")
         # Select the next generation individuals
         new_crossover = []
@@ -254,7 +267,7 @@ class OCGeneticIterator(OCIterator):
         selected = self.evolutionary_algorithms.clone(selected)
     # Apply crossover on the offspring
     # li prendo tutti e ne genero quanti me ne servono mescolandoli
-        for i in range(int(n_children_each-n_mutate)):
+        for i in range(n_mate):
     #se tolgo questo il primo abbinamento me lo fa tra i vicini di J, se lo lascio è random
             random.shuffle(selected)
             for first, second in zip(selected[::2], selected[1::2]):
@@ -264,29 +277,27 @@ class OCGeneticIterator(OCIterator):
                     a, b = deepcopy(first), deepcopy(second)
                 new_crossover.append(deepcopy(a))
                 new_crossover.append(deepcopy(b))
-            random.shuffle(selected)
-
-
     # Apply mutation on the offspring
-    # li prendo tutti in ordine e comincio a mutarli. Poi faccio il giro e li muto tutti n_mutate volte
+    # li prendo tutti in ordine e li muto le volte che mi serve
         new_mutation = []
-        print("during evolution")
-
+        print("sigma:")
         print(self.evolutionary_algorithms.mutate.keywords['sigma'])
-        for i in range(n_mutate):
-            for j in range(self.n_selected_chr):
-                new_mutation.append(deepcopy(selected[j]))
-                if random.random() < mutate_probability:
-                    self.evolutionary_algorithms.mutate(new_mutation[-1])
-        self.check_bounds(new_mutation)
+        for i in range(self.n_selected_chr):
+            for j in range(self.n_mutate):
+                new_mutation.append(deepcopy(selected[i]))
+                self.evolutionary_algorithms.mutate(new_mutation[-1])
+        #self.check_bounds(new_mutation)
 
-    #calcolo la J del crossover e la J della mutazione
+        #calcolo la J del crossover e la J della mutazione
         J_crossover = list(self.evolutionary_algorithms.map(self.evolutionary_algorithms.evaluate, new_crossover))
-        #self.n_mutation_succes = 0
+        self.n_mutation_succes = 0
         J_mutation = list(self.evolutionary_algorithms.map(self.evolutionary_algorithms.evaluate, new_mutation))
-    #updato sigma della mutazione secondo il successo di questa generazione
-        self.update_sigma_mutation(n_mutate * self.n_selected_chr)
-    #genero il nuovo pool, lo zippo con le sue J
+        print("mutation_success:")
+        print(self.n_mutation_succes)
+        #updato sigma della mutazione secondo il successo di questa generazione
+
+        self.update_sigma_mutation()
+        #genero il nuovo pool, lo zippo con le sue J
         new = new_crossover + new_mutation
         J = J_crossover + J_mutation
         for ind, fit in zip(new, J):
@@ -297,8 +308,10 @@ class OCGeneticIterator(OCIterator):
 
 
 
-    def update_sigma_mutation(self, n_mutated):
-        eta = self.n_mutation_succes/n_mutated
+    def update_sigma_mutation(self):
+        print("eta:")
+        eta = self.n_mutation_succes/(self.n_mutate*self.n_selected_chr)
+        print(eta)
         #print(eta)
         #print(self.mutate_sigma)
         if eta <= eta_thr:
@@ -315,6 +328,8 @@ class OCGeneticIterator(OCIterator):
                     matrix[i][j] = self.ampl_max
                 elif matrix[i][j] < self.ampl_min:
                     matrix[i][j] = self.ampl_min
+                #elif (matrix[i][j] < 0.0005 and matrix[i][j] > -0.0005):
+                #    matrix[i][j] = 0.0
 
 
 
@@ -393,9 +408,9 @@ class OCGeneticIterator(OCIterator):
         for i in range(self.n_chromosomes):
             rand = []
             for j in range(self.n_amplitudes):
-                rand.append(random.uniform(self.ampl_min, self.ampl_max))
+                rand.append(random.uniform(-0.01, 0.01))
             self.chromosomes[i].amplitudes = deepcopy(rand)
-            self.chromosomes[i].J = [0.5]
+
 
 
     def evaluate_J_general_chromosomes(self):

@@ -20,7 +20,6 @@ class SetLogInput(SetInput):
 
         self.input_parameters.field_type = user_input.field.section_dictionary['field_type']
         self.input_parameters.fi = np.array2string(user_input.field.section_dictionary['fi'])
-        self.input_parameters.fi_cos = np.array2string(user_input.field.section_dictionary['fi_cos'])
         self.input_parameters.sigma = user_input.field.section_dictionary['sigma']
         self.input_parameters.omega = np.array2string(user_input.field.section_dictionary['omega'])
         self.input_parameters.t0 = user_input.field.section_dictionary['t0']

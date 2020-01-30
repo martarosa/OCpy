@@ -12,9 +12,8 @@ class ReadFieldRestartRabitz(ReadFieldRestart):
 
     def read_file(self, folder, namefile):
         self.field_par.field = np.loadtxt(folder + namefile, usecols=(0, 1, 2))
-        self.field_par. field_type = 'optimizedRabitz'
+        self.field_par. field_type = 'restart_rabitz'
         self.field_par.fi = np.array([0, 0, 0])
-        self.field_par.fi_cos = np.array([0, 0, 0])
         self.field_par.omega = np.array([0, 0, 0])
         self.field_par.sigma = 0
         self.field_par.t0 = 0

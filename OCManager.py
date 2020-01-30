@@ -25,8 +25,8 @@ class OCManager:
         self.alpha_0 = None
         self.alpha = None
 
-        self.oc_iterator = OCIterator()
-        self.save = Save()
+        self.oc_iterator = None #OCIterator()
+        self.save = None #Save()
 
         self.psi_coeff_t = None
         self.field_psi_matrix = None
@@ -40,7 +40,7 @@ class OCManager:
         self.alpha0 = oc_input.alpha0
         self.alpha = oc_input.alpha
         self.oc_iterator_name = oc_input.oc_iterator_name
-        if self.oc_iterator_name != "eulero_1order" and self.oc_iterator_name != "eulero_2order":
+        if self.oc_iterator_name != "eulero_1order_prop" and self.oc_iterator_name != "eulero_2order_prop":
             self.convergence_thr = oc_input.convergence_thr
             self.n_iterations = oc_input.n_iterations
         else:
@@ -63,9 +63,9 @@ class OCManager:
             self.oc_iterator = OCRabitzIterator()
         elif self.oc_iterator_name == "genetic":
             self.oc_iterator = OCGeneticIterator()
-        elif self.oc_iterator_name == "eulero_1order":
+        elif self.oc_iterator_name == "eulero_1order_prop":
             self.oc_iterator = Eulero1PropagationIterator()
-        elif self.oc_iterator_name == "eulero_2order":
+        elif self.oc_iterator_name == "eulero_2order_prop":
             self.oc_iterator = Eulero2PropagationIterator()
         self.oc_iterator.init(oc_parameters, molecule, starting_field, pcm, alpha_t)
 
@@ -75,7 +75,7 @@ class OCManager:
         if self.oc_iterator_name == "rabitzi" or self.oc_iterator_name == "rabitzii":
             self.save = SaveOCRabitz()
             self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
-        elif self.oc_iterator_name == "eulero_1order" or self.oc_iterator_name == "eulero_2order":
+        elif self.oc_iterator_name == "eulero_1order_prop" or self.oc_iterator_name == "eulero_2order_prop":
             self.save = SaveEulero()
             self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
         elif self.oc_iterator_name == "genetic":

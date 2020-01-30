@@ -1,11 +1,13 @@
 from propagator.PropagatorTerms import PropagatorTerms
+from abc import ABCMeta, abstractmethod
+
 
 # in propagator_terms there are all possible propagation terms (probably we could delete this attribute and
 # temporary inlitialized in each child class.
 # Then in each child class the specific terms arre added to the propagator delegate, and the propagation is done
 #cycling through all the terms in propagate_one_step (for funct in propagator: func(..))
 
-class Propagator():
+class Propagator(metaclass=ABCMeta):
     def __init__(self):
         self.propagator_terms = PropagatorTerms()
         self.propagator = []
@@ -20,15 +22,17 @@ class Propagator():
     def clean_propagator(self):
         self.propagator = []
 
+    @abstractmethod
     def set_propagator(self, dt, molecule, env):
-        return
+        pass
 
+    @abstractmethod
     def propagate_one_step(self, *args):
+        pass
 
-        return
-
+    @abstractmethod
     def propagate_n_step(self, *args):
-        return
+        pass
 
 
 

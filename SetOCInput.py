@@ -2,7 +2,7 @@ from read import auxiliary_functions as af
 from SetInput import SetInput
 from OCInput import OCInput, OCGeneticInput
 
-from read.ReadOCConfigurationNamelistGenetic import ReadOCConfigurationNamelistGenetic
+from read.ReadNamelistGenetic import ReadOCConfigurationNamelistGenetic
 
 
 class SetOCInput(SetInput):
@@ -12,7 +12,7 @@ class SetOCInput(SetInput):
 
 
     def set(self, user_input):
-        if user_input.sys.section_dictionary["propagation"] == "genetic":
+        if user_input.sys.section_dictionary["oc_algorithm"] == "genetic":
             self.input_parameters = OCGeneticInput()
         else:
             self.input_parameters = OCInput()
@@ -28,7 +28,7 @@ class SetOCInput(SetInput):
 
 
     def set_common_oc_parameters(self, user_input):
-        self.input_parameters.oc_iterator_name = user_input.sys.section_dictionary['propagation']
+        self.input_parameters.oc_iterator_name = user_input.sys.section_dictionary['oc_algorithm']
         self.input_parameters.alpha = user_input.oc.section_dictionary['alpha']
         self.input_parameters.alpha0 = float(user_input.oc.section_dictionary['alpha0'])
         self.input_parameters.n_iterations = int(user_input.oc.section_dictionary['n_iterations'])

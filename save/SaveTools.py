@@ -56,14 +56,11 @@ class SaveTools():
             #input_par_file.modify_oc_restart_par("false")
         elif log_header_par.restart == "true" or log_header_par.restart == 'restart_from_different_name_field':
             f.write("#Restarted from bkp field: " + name_file)
-        elif log_header_par.internal_check_genetic_field == False:
-            f.write("#WARNING: sum field used instead than the requested one, only one implemented for genetic algorithm" + "\n")
         else:
             f.write("#field parameters: \n #field: " + log_header_par.field_type)
             if log_header_par.field_type != "genetic":
                 f.write("fi: " + log_header_par.fi)
             if log_header_par.field_type == "sum":
-                f.write(" fi_cos: " + log_header_par.fi_cos + "\n")
                 f.write("# omega: " + log_header_par.omega)
             elif log_header_par.field_type != "const":
                 f.write(" sigma: " + log_header_par.sigma +

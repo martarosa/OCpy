@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.1
 nstep=2500
-name = output_mixed_36_0.02_start0_mut1 
+name = output_240 
 propagation = genetic 
 #folder=
 
@@ -29,7 +29,7 @@ env=vac
 restart=False
 alpha=const
 alpha0=1
-n_iterations=50
+n_iterations=30
 target_state=0 1          
 #iterator_config_file = genetic.conf
 

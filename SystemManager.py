@@ -63,10 +63,7 @@ class SystemManager():
 
     def init_starting_field(self, user_input):
         init_field = SetFieldInput()
-        if user_input.sys.section_dictionary['propagation'] == 'genetic':
-            if(user_input.field.section_default_dictionary['field_type']) != 'genetic':
-                user_input.field.section_default_dictionary['internal_check_genetic_field'] = False
-                user_input.field.section_default_dictionary['field_type'] = 'genetic'
+        if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
             init_field.read_restart = ReadFieldRestartGenetic()
         else:
             init_field.read_restart = ReadFieldRestartRabitz()

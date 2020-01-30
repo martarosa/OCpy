@@ -1,8 +1,8 @@
 [SYSTEM]
-dt=0.1
-nstep=2500
-name = output_en_diff_sum
-propagation = genetic 
+dt=0.01
+nstep=25000
+name = rabitz 
+oc_algorithm = rabitzi 
 #folder=
 
 [WAVEFUNCTION]
@@ -11,11 +11,11 @@ name_ei=ci_energy.inp
 name_mut=ci_mut.inp
 
 [FIELD]
-field_type=genetic
+field_type=const
 fi=0.01 0.01 0.01
-sigma = 125
-t0 = 125
-
+#sigma = 125
+#t0 = 125
+#omega = 0.32140573 0.32140573 0.32140573 
 
 [ENVIRON]
 env=vac
@@ -29,10 +29,8 @@ restart=False
 alpha=const
 alpha0=1
 n_iterations=50
-target_state=0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0          
+target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0           
 #iterator_config_file = genetic.conf
 
 [SAVE]
-#save_restart_step=10
-#save_iteration_pop_step=10
-#save_iteration_field_step=10
+restart_step=1

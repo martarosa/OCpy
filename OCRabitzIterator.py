@@ -45,7 +45,7 @@ class OCRabitzIterator(OCIterator):
                         self.prop_chi.propagator_terms.mol.wf.ci,
                         self.prop_psi.propagator_terms.mol.muT + self.prop_psi.propagator_terms.pcm.muLF,
                         self.oc_iterator_parameters.alpha_t[i - 1])
-                    self.prop_chi.propagate_one_step(1, self.prop_field.field_dt,
+                    self.prop_chi.propagate_one_step(i, self.prop_field.field_dt,
                                                      self.oc_iterator_parameters.psi_coeff_t[i])
 
                     self.chi_coeff_t[i - 1] = self.prop_chi.propagator_terms.mol.wf.ci
@@ -61,7 +61,7 @@ class OCRabitzIterator(OCIterator):
                         self.prop_psi.propagator_terms.mol.muT + self.prop_psi.propagator_terms.pcm.muLF,
                         self.oc_iterator_parameters.alpha_t[i])
                         # qui invece scorre
-                    self.prop_psi.propagate_one_step(1, self.prop_field.field_dt)
+                    self.prop_psi.propagate_one_step(i, self.prop_field.field_dt)
                     self.oc_iterator_parameters.psi_coeff_t[i + 1] = self.prop_psi.propagator_terms.mol.wf.ci  # coefficients are stored
 
                 self.check_convergence( )

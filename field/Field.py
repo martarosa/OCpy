@@ -1,6 +1,6 @@
 import numpy as np
 from read import auxiliary_functions as af
-
+import random
 
 #-------------------------------------------
 #Field (x y z) components at time t: 3D vector
@@ -46,7 +46,6 @@ class Field():
         self.nstep = field_input.nstep
         self.field = field_input.field
         self.parameters['fi'] = field_input.fi
-        self.parameters['fi_cos'] = field_input.fi_cos
         self.parameters['omega'] = field_input.omega
         self.parameters['sigma'] = field_input.sigma
         self.parameters['t0'] = field_input.t0
@@ -64,15 +63,18 @@ class Field():
             'gau': lambda: self.gau_pulse(),
             'sum': lambda: self.sum_pulse(),
             'sum_pip': lambda: self.sum_pip_pulse(),
-            'genetic' : lambda: self.genetic_pulse(),
-            'optimizedRabitz' : lambda: self.read_pulse(),
+            'genetic' : lambda: self.test_pulse(),
+            'test'    :lambda: self.test_fourier_pulse(),
+             #only internal values
+            'restart_rabitz' : lambda: self.restart_rabitz(),
             'restart_genetic' : lambda: self.sum_pulse()
              }
          return field.get(key, lambda: "Inexistent field type")()
 
 
 
-    def read_pulse(self):
+    def restart_rabitz(self):
+        #everithing is already done in restart
         pass
 
 
@@ -83,6 +85,25 @@ class Field():
         self.field[:, 2] = self.parameters['fi'][2]
 
 
+    def test_fourier_pulse(self):
+        self.parameters['omega'] = np.array(
+            [[0, 0, 0], [0.1266749, 0.1266749, 0.1266749], [0.32140573, 0.32140573, 0.32140573]])
+        a=np.array([[0.1,0,0],[0,0.02,0],[0,0,0.1]])
+        self.parameters['fi'] = a
+        self.sum_pulse()
+
+
+    def test_pulse(self):
+        a = []
+        for i in range(15):
+            a.append(round(random.uniform(-0.005, 0.005),4))
+        a=np.array(a)
+        a=a.reshape((5,3))
+        self.parameters['omega'] = np.array([[0,0,0],[0.1266749, 0.1266749, 0.1266749],[0.32140573, 0.32140573, 0.32140573], [0.33407322, 0.33407322,0.33407322],[0.34652756,0.34652756,0.34652756]])
+        self.parameters['sigma'] = 125
+        self.parameters['t0'] = 125
+        self.parameters['fi'] = a
+        self.sum_pip_pulse()
 
 
     def pip_pulse(self):
@@ -104,6 +125,7 @@ class Field():
                             * np.exp(-(self.dt * i - self.parameters['t0']) ** 2 / (2 * (self.parameters['sigma']) ** 2)) \
                             * np.sin(self.parameters['omega'] * (self.dt * i))
 
+
     def gau_pulse(self):
         self.field = np.zeros([self.nstep, 3])
         for i in range(self.nstep):
@@ -122,7 +144,7 @@ class Field():
                 self.field[i] = self.parameters['fi'][0]
                 for j in range(self.parameters['omega'].shape[0]):
                     self.field[i] = self.field[i] \
-                                    + self.parameters['fi'][j+1] * np.sin(self.parameters['omega'][j] * i * self.dt)
+                                    + self.parameters['fi'][j] * np.sin(self.parameters['omega'][j] * i * self.dt)
 
 
 
@@ -134,25 +156,18 @@ class Field():
             if abs(self.dt * i - self.parameters['t0']) < self.parameters['sigma']:
                 for j in range(self.parameters['omega'].shape[0]):
                     self.field[i] = self.field[i] \
-                                    + self.parameters['fi'][j+1] \
+                                    + self.parameters['fi'][j] \
                                     * np.square( np.cos(np.pi * (self.dt * i - self.parameters['t0'])/(2 * self.parameters['sigma']))) \
                                     * np.cos(self.parameters['omega'][j] * (i * self.dt - self.parameters['t0']))
-
-
 
     def genetic_pulse(self):
         self.chose_omega_fourier()
         print(self.parameters['omega'].shape)
         self.parameters['fi'] = np.full([self.parameters['omega'].shape[0]+1, 3], self.parameters['fi'][0])
-        #self.parameters['omega'] = np.array([[0,0,0],[0.26953409,0.26953409,0.26953409]])
-        #self.parameters['sigma'] = 0
-        #self.parameters['t0'] = 0
         self.sum_pulse()
-        #self.sum_pip_pulse()
 
 
     def chose_omega_fourier(self):
-        #n_fourier_omega_min = int(self.parameters['omega_sys'][1] * self.dt * self.nstep / (2 * np.pi)-1)
         n_fourier_omega_min = 0
         n_fourier_omega_max = int(2 + self.parameters['omega_sys'][-1]*self.dt*self.nstep/(2*np.pi))
         n_fourier_omega = n_fourier_omega_max - n_fourier_omega_min

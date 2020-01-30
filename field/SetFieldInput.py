@@ -26,7 +26,6 @@ class SetFieldInput(SetInput):
         self.input_parameters.nstep = int(user_input.sys.section_dictionary['nstep'])
         self.input_parameters.field_type = user_input.field.section_dictionary['field_type']
         self.input_parameters.fi = user_input.field.section_dictionary['fi']
-        self.input_parameters.fi_cos = user_input.field.section_dictionary['fi_cos']
         self.input_parameters.sigma = float(user_input.field.section_dictionary['sigma'])
         self.input_parameters.omega = user_input.field.section_dictionary['omega']
         self.input_parameters.t0 = float(user_input.field.section_dictionary['t0'])

@@ -1,3 +1,7 @@
+from abc import ABCMeta, abstractmethod
+
+
+
 class OCIteratorParameters():
 
     def __init__(self):
@@ -13,25 +17,26 @@ class OCIteratorParameters():
 #        self.dict_restart = {}
 
 
-
-
-
-
-class OCIterator():
+class OCIterator(metaclass=ABCMeta):
     def __init__(self):
         self.oc_iterator_parameters = OCIteratorParameters()
 
+    @abstractmethod
     def iterate(self, current_iteration):
         pass
 
+    @abstractmethod
     def check_convergence(self):
         pass
 
+    @abstractmethod
     def calc_J(self):
         pass
 
+    @abstractmethod
     def init_output_dictionary(self):
         pass
 
+    @abstractmethod
     def init(self, oc_iterator_parameters, molecule, starting_field, pcm, alpha_t):
         pass

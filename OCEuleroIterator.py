@@ -45,6 +45,12 @@ class Eulero1PropagationIterator(OCIterator):
         return self.oc_iterator_parameters.field_psi_matrix
 
 
+    def check_convergence(self):
+        pass
+
+    def calc_J(self):
+        pass
+
 class Eulero2PropagationIterator(OCIterator):
     def __init__(self):
         super().__init__()
@@ -79,5 +85,11 @@ class Eulero2PropagationIterator(OCIterator):
         return self.oc_iterator_parameters.field_psi_matrix
 
 
+    def check_convergence(self):
+        pass
+
+
+    def calc_J(self):
+        pass
 
 
