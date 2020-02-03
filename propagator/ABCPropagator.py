@@ -7,7 +7,7 @@ from abc import ABCMeta, abstractmethod
 # Then in each child class the specific terms arre added to the propagator delegate, and the propagation is done
 #cycling through all the terms in propagate_one_step (for funct in propagator: func(..))
 
-class Propagator(metaclass=ABCMeta):
+class ABCPropagator(metaclass=ABCMeta):
     def __init__(self):
         self.propagator_terms = PropagatorTerms()
         self.propagator = []

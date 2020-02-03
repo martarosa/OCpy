@@ -10,7 +10,9 @@ from field.ReadFieldRestartRabitz import ReadFieldRestartRabitz
 
 from molecule.Molecule import Molecule
 from field.Field import Field
-from pcm.PCM import PCM, FrozenSolventPCM, DinamicPCM
+from pcm.ABCPCM import ABCPCM
+from pcm.DinamicPCM import DinamicPCM
+from pcm.FrozenSolventPCM import FrozenSolventPCM
 from OCManager import OCManager
 
 
@@ -39,7 +41,7 @@ class SystemManager():
 
         self.mol = Molecule()
         self.starting_field = Field()
-        self.pcm = PCM()
+        self.pcm = ABCPCM()
         self.oc = OCManager() # the possibility to perform a single propagation without OC is a special case of optimalControl (since this is a OC program
 
 

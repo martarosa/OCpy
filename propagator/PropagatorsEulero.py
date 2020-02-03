@@ -1,8 +1,8 @@
 import numpy as np
-from propagator.Propagator import Propagator
+from propagator.ABCPropagator import ABCPropagator
 from propagator.PropagatorTerms import PropagatorTerms
 
-class PropagatorEulero1Order(Propagator):
+class PropagatorEulero1Order(ABCPropagator):
     def __init__(self):
         super().__init__()
         self.propagator_terms = PropagatorTerms()
@@ -33,7 +33,7 @@ class PropagatorEulero1Order(Propagator):
 
 
 
-class PropagatorEulero2Order(Propagator):
+class PropagatorEulero2Order(ABCPropagator):
     def __init__(self):
         super().__init__()
         self.propagator_terms = PropagatorTerms()

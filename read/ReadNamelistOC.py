@@ -1,11 +1,11 @@
 import configparser
 import sys
 from read import NameListSections as sec
-from read import ReadNamelist as readnamelist
+from read import ABCReadNamelist as readnamelist
 
 
 
-class ReadNamelistOC_new(readnamelist.ReadNamelist):
+class ReadNamelistOC(readnamelist.ABCReadNamelist):
     def __init__(self):
         super().__init__()
         self.n_sections = None
@@ -46,7 +46,6 @@ class ReadNamelistOC_new(readnamelist.ReadNamelist):
                                   'name_file_cavity': 'cavity.inp',
                                   'name_q_local_field': 'np_bem.mld'},
                               'OPTIMALC': {
-                                  'oc_algorithm': 'rabitzi',
                                   'restart': 'false',
                                   'alpha': 'const',
                                   'alpha0': '1',
@@ -106,6 +105,10 @@ class ReadNamelistOC_new(readnamelist.ReadNamelist):
 
     def check_wavef_nml_consistency(self, user_input):
         pass
+
+
+
+
 
     def check_field_nml_consistency(self, user_input):
         #if restart only name_field_file can be present in FIELD nml
@@ -183,7 +186,7 @@ class ReadNamelistOC_new(readnamelist.ReadNamelist):
 
 
 
-class ReadNamelistOC():
+class ReadNamelistOC_old():
     def __init__(self):
         self.n_sections = None
         self.sys = sec.SectionSystem()

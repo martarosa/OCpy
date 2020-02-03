@@ -44,38 +44,11 @@ class SaveTools():
             np.savetxt(f, np.insert(matrix, 0, iteration)[None], delimiter=' ', header='', footer='', fmt='%1.8f')
         f.close()
 
-    def print_log_header(self, name_file, log_header_par):
-        #check log extension
-        f = open(name_file+".log", 'a')
-        f.write("#dt: "+ log_header_par.dt +
-                " env: " + log_header_par.env +
-                " alpha: " + log_header_par.alpha +
-                " alpha value: " + log_header_par.alpha0 + "\n")
-        if log_header_par.restart == "norestart_found":
-            f.write("#WARNING: restart asked but restart file not found. Starting from guess field" + "\n")
-            #input_par_file.modify_oc_restart_par("false")
-        elif log_header_par.restart == "true" or log_header_par.restart == 'restart_from_different_name_field':
-            f.write("#Restarted from bkp field: " + name_file)
-        else:
-            f.write("#field parameters: \n #field: " + log_header_par.field_type)
-            if log_header_par.field_type != "genetic":
-                f.write("fi: " + log_header_par.fi)
-            if log_header_par.field_type == "sum":
-                f.write("# omega: " + log_header_par.omega)
-            elif log_header_par.field_type != "const":
-                f.write(" sigma: " + log_header_par.sigma +
-                        " omega: " + log_header_par.omega +
-                        " t0: " + log_header_par.t0)
-        f.write("\n")
-        f.write("#target state: " + log_header_par.target_state +"\n")
-        f.write("\n")
-
     def creation_save_files(self, folder_name, save_file, restart):
         name = folder_name + save_file.name
         if restart == "false" or restart == "norestart_found" or restart == 'restart_from_different_name_field':
             self.create_bkp_file(name)
         self.print_date_header(name, save_file.header)
-
 
     def save_every_n_iterations(self, iteration, folder_name, save_file):
         name = folder_name + save_file.name

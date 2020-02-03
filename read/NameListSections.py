@@ -1,50 +1,13 @@
-import sys
 import numpy as np
+from read.ABCNameListSection import ABCNamelistSection
 
 
 
-
-
-
-class Section():
-    def __init__(self):
-        self.section = None
-        self.section_default_dictionary = {}
-        self.section_dictionary = {}
-        self.allowed_val = None
-        self.case_unsensitive_keys = None
-
-
-    def init(self, user_input, default, section):
-        self.section_dictionary = dict(user_input[section])
-        self.section_default_dictionary = default[section]
-
-
-    def check(self):
-        self.check_keys()
-        self.lowering_case()
-        self.check_allowed_values()
-
-    def check_keys(self):
-            if not all(elem in self.section_dictionary.keys() for elem in self.section_default_dictionary.keys()):
-                sys.exit("Error in input. Wrong key in " + self.section + "\n")
-
-    def lowering_case(self):
-        for key in self.case_unsensitive_keys:
-            self.section_dictionary[key] = self.section_dictionary[key].lower()
-
-    def check_allowed_values(self):
-        if self.allowed_val:
-            for key, par in self.allowed_val:
-                if self.section_dictionary[key] not in par:
-                    sys.exit("Error in input. Wrong \"" + key + "\" value. \n"
-                             + "Default value is: " + self.section_default_dictionary[key] + "\n")
-
-
-class SectionSystem(Section):
+class SectionSystem(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = 'SYSTEM'
+        self.section_keys = ['folder', 'name', 'nstep', 'dt', 'oc_algorithm']
         self.section_default_dictionary = {}
         self.section_dictionary = {}
         self.allowed_val = [['oc_algorithm', ['eulero_1order_prop', 'eulero_2order_prop', 'rabitzi', 'rabitzii', 'genetic']]]
@@ -52,10 +15,11 @@ class SectionSystem(Section):
         self.not_implemented_val = []
 
 
-class SectionField(Section):
+class SectionField(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = 'FIELD'
+        self.section_keys = ['field_type', 'fi', 'omega', 'sigma', 't0', 'name_field_file']
         self.section_default_dictionary = {}
         self.section_dictionary = {}
         self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'read_file', 'sum', 'sum_pip', 'genetic', 'test']]]
@@ -68,10 +32,11 @@ class SectionField(Section):
         self.section_dictionary[key_string_coeff].reshape(rows, 3)
 
 
-class SectionWaveFunction(Section):
+class SectionWaveFunction(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = 'WAVEFUNCTION'
+        self.section_keys = ['name_ci','name_ei', 'name_mut']
         self.section_default_dictionary = {}
         self.section_dictionary = {}
         self.allowed_val = []
@@ -79,10 +44,11 @@ class SectionWaveFunction(Section):
         self.not_implemented_val = []
 
 
-class SectionEnviron(Section):
+class SectionEnviron(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = 'ENVIRON'
+        self.section_keys = ['env', 'name_vij', 'name_q_tdplas', 'read_qijn', 'name_file_qijn', 'name_file_cavity', 'name_q_local_field']
         self.section_default_dictionary = {}
         self.section_dictionary = {}
         self.allowed_val = [['env', ['vac', 'sol', 'nanop']]]
@@ -90,10 +56,11 @@ class SectionEnviron(Section):
         self.not_implemented_val = []
 
 
-class SectionSave(Section):
+class SectionSave(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = "SAVE"
+        self.section_keys = ['restart_step']
         self.section_default_dictionary = {}
         self.section_dictionary = {}
         self.allowed_val = []
@@ -101,10 +68,12 @@ class SectionSave(Section):
         self.not_implemented_val = []
 
 
-class SectionOptimalControl(Section):
+class SectionOptimalControl(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = "OPTIMALC"
+        self.section_keys = ['restart', 'alpha', 'alpha0', 'target_state', 'n_iterations', 'convergence_thr',
+                             'delta_ts', 'Ns', 'iterator_config_file']
         self.section_default_dictionary = {}
         self.section_dictionary = {}
         self.allowed_val = [['alpha', ['const', 'sin', 'quin']],
@@ -112,7 +81,7 @@ class SectionOptimalControl(Section):
         self.case_unsensitive_keys = ['restart', 'alpha']
 
 
-class SectionGenetic(Section):
+class SectionGenetic(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = None
@@ -125,7 +94,7 @@ class SectionGenetic(Section):
         self.case_unsensitive_keys = ['deap']
 
 
-class SectionGenetic_new(Section):
+class SectionGenetic_new(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = None
@@ -135,7 +104,7 @@ class SectionGenetic_new(Section):
         self.case_unsensitive_keys = ['genetic_algorithm']
 
 
-class SectionMate(Section):
+class SectionMate(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = None
@@ -144,7 +113,7 @@ class SectionMate(Section):
         self.allowed_val = [['mate', ['DEAP_cxUniform']]]
         self.case_unsensitive_keys = []
 
-class SectionMutate(Section):
+class SectionMutate(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = None
@@ -153,7 +122,7 @@ class SectionMutate(Section):
         self.allowed_val = [['mutate',['DEAP_mutGaussian']]]
         self.case_unsensitive_keys = []
 
-class SectionSelect(Section):
+class SectionSelect(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = None
@@ -164,56 +133,3 @@ class SectionSelect(Section):
 
 
 
-
-class SectionTDPlasPropagate(Section):
-    def __init__(self):
-        super().__init__()
-        self.section = 'propagate'
-        self.section_default_dictionary = {}
-        self.section_dictionary = {}
-        self.allowed_val = [['out_level', ['high', 'low']],
-                            ['interaction_type',['pcm']],
-                            ['propagation_type',['ief']],
-                            ['interaction_init', ['non-scf']],
-                            ['debug_type', ['non']],
-                            ['medium_relax', ['non']],
-                            ['test_type',['non']]]
-        self.case_unsensitive_keys = ['out_level',
-                                      'interaction_type',
-                                      'propagation_type',
-                                      'interaction_init',
-                                      'debug_type',
-                                      'medium_relax',
-                                      'test_type']
-
-class SectionTDPlasMedium(Section):
-    def __init__(self):
-        super().__init__()
-        self.section = 'medium'
-        self.section_default_dictionary = {}
-        self.section_dictionary = {}
-        self.allowed_val = [['medium_type', ['nan', 'sol']],
-                            ['medium_init',['fro']],
-                            ['medium_pol',['chr']],
-                            ['bem_type', ['diag']],
-                            ['bem_read_write', ['rea']]]
-        self.case_unsensitive_keys = ['medium_type',
-                                      'medium_init',
-                                      'medium_pol',
-                                      'bem_type',
-                                      'bem_read_write']
-
-
-class SectionTDPlasSurface(Section):
-    def __init__(self):
-        super().__init__()
-
-
-class SectionTDPlasEps(Section):
-    def __init__(self):
-        super().__init__()
-        self.section = 'eps_function'
-        self.section_default_dictionary = {}
-        self.section_dictionary = {}
-        self.allowed_val = [['epsilon_omega', ['drl']]]
-        self.case_unsensitive_keys = ['epsilon_omega']

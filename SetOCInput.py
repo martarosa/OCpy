@@ -1,11 +1,12 @@
 from read import auxiliary_functions as af
-from SetInput import SetInput
-from OCInput import OCInput, OCGeneticInput
+from ABCSetInput import ABCSetInput
+from OCInput import OCInput
+from OCGeneticInput import OCGeneticInput
 
 from read.ReadNamelistGenetic import ReadOCConfigurationNamelistGenetic
 
 
-class SetOCInput(SetInput):
+class SetOCInput(ABCSetInput):
     def __init__(self):
         self.input_parameters = OCInput()
 

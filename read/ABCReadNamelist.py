@@ -2,7 +2,7 @@ import sys
 from abc import ABCMeta, abstractmethod
 
 
-class ReadNamelist(metaclass=ABCMeta):
+class ABCReadNamelist(metaclass=ABCMeta):
     def __init__(self):
         self.n_sections = None
         self.default_dict = None

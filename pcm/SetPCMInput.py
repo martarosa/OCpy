@@ -1,9 +1,9 @@
-from SetInput import SetInput
+from ABCSetInput import ABCSetInput
 from pcm.PCMInput import PCMInput
 from read.ReadOutputGaussian import ReadOutputGaussian
 
 
-class SetPCMInput(SetInput):
+class SetPCMInput(ABCSetInput):
     def __init__(self):
         super().__init__()
         self.input_parameters = PCMInput()

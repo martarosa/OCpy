@@ -1,10 +1,10 @@
 import numpy as np
 
-from OCIterator import OCIterator
+from ABCOCIterator import ABCOCIterator
 from OCEuleroIterator import  Eulero1PropagationIterator, Eulero2PropagationIterator
 from OCRabitzIterator import OCRabitzIterator
 #from OCGeneticIterator import OCGeneticIterator
-from save.Save import Save
+from save.ABCSave import ABCSave
 from save.SaveOCRabitz import SaveOCRabitz
 from save.SaveEulero import SaveEulero
 from save.SaveOCGenetic import SaveOCGenetic
@@ -19,6 +19,7 @@ class OCManager:
     def __init__(self):
 
         self.oc_iterator_name = None
+
         self.convergence_thr = None
         self.n_iterations = None
 
@@ -33,7 +34,6 @@ class OCManager:
         self.current_iteration = 0
         self.convergence_t = 99999
 
-        #self.restart = None
 
 
     def init_oc(self, oc_input, save_parameters, log_header_parameters, molecule, starting_field, pcm):

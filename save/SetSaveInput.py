@@ -1,8 +1,8 @@
-from SetInput import SetInput
+from ABCSetInput import ABCSetInput
 from save.SaveInput import SaveInput
 
 
-class SetSaveInput(SetInput):
+class SetSaveInput(ABCSetInput):
     def __init__(self):
         super().__init__()
         self.input_parameters = SaveInput()

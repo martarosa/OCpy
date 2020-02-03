@@ -6,8 +6,6 @@ import random
 #Field (x y z) components at time t: 3D vector
 #-------------------------------------------
 
-
-
 class PropagatorFieldOC():
     def __init__(self):
         self.field_dt = np.array(3)
@@ -24,12 +22,11 @@ class PropagatorFieldOC():
         return self.field_dt
 
 
-
-
-
 #---------------------------------------------
 #field matrix at different times to be read or created
 #---------------------------------------------
+
+
 class Field():
     def __init__(self):
         self.field_type = None
@@ -63,8 +60,7 @@ class Field():
             'gau': lambda: self.gau_pulse(),
             'sum': lambda: self.sum_pulse(),
             'sum_pip': lambda: self.sum_pip_pulse(),
-            'genetic' : lambda: self.test_pulse(),
-            'test'    :lambda: self.test_fourier_pulse(),
+            'genetic' : lambda: self.genetic_pulse(),
              #only internal values
             'restart_rabitz' : lambda: self.restart_rabitz(),
             'restart_genetic' : lambda: self.sum_pulse()
@@ -85,25 +81,6 @@ class Field():
         self.field[:, 2] = self.parameters['fi'][2]
 
 
-    def test_fourier_pulse(self):
-        self.parameters['omega'] = np.array(
-            [[0, 0, 0], [0.1266749, 0.1266749, 0.1266749], [0.32140573, 0.32140573, 0.32140573]])
-        a=np.array([[0.1,0,0],[0,0.02,0],[0,0,0.1]])
-        self.parameters['fi'] = a
-        self.sum_pulse()
-
-
-    def test_pulse(self):
-        a = []
-        for i in range(15):
-            a.append(round(random.uniform(-0.005, 0.005),4))
-        a=np.array(a)
-        a=a.reshape((5,3))
-        self.parameters['omega'] = np.array([[0,0,0],[0.1266749, 0.1266749, 0.1266749],[0.32140573, 0.32140573, 0.32140573], [0.33407322, 0.33407322,0.33407322],[0.34652756,0.34652756,0.34652756]])
-        self.parameters['sigma'] = 125
-        self.parameters['t0'] = 125
-        self.parameters['fi'] = a
-        self.sum_pip_pulse()
 
 
     def pip_pulse(self):

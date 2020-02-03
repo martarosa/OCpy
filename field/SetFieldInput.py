@@ -1,16 +1,16 @@
 import os.path
 
 from field.FieldInput import FieldInput
-from SetInput import SetInput
-from field.ReadFieldRestart import ReadFieldRestart
+from ABCSetInput import ABCSetInput
+from field.ABCReadFieldRestart import ABCReadFieldRestart
 from read.ReadOutputGaussian import ReadOutputGaussian
 
 
-class SetFieldInput(SetInput):
+class SetFieldInput(ABCSetInput):
     def __init__(self):
         super().__init__()
         self.input_parameters = FieldInput()
-        self.read_restart = ReadFieldRestart()
+        self.read_restart = ABCReadFieldRestart()
 
     def set(self, user_input):
         if (user_input.oc.section_dictionary['restart'] == 'false'):

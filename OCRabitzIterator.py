@@ -4,11 +4,11 @@ from propagator import PropagatorOCRabitz as rabitzI
 from read import auxiliary_functions as af
 
 from field.Field import PropagatorFieldOC
-from OCIterator import OCIterator, OCIteratorParameters
+from ABCOCIterator import ABCOCIterator, OCIteratorParameters
 
 
 
-class OCRabitzIterator(OCIterator):
+class OCRabitzIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
         self.oc_iterator_parameters = OCIteratorParameters()

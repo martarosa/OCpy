@@ -3,12 +3,12 @@ import numpy as np
 from propagator import PropagatorsEulero as prop
 from read import auxiliary_functions as af
 
-from OCIterator import OCIterator, OCIteratorParameters
+from ABCOCIterator import ABCOCIterator, OCIteratorParameters
 
 
 
 
-class Eulero1PropagationIterator(OCIterator):
+class Eulero1PropagationIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
         self.oc_iterator_parameters = OCIteratorParameters()
@@ -35,11 +35,15 @@ class Eulero1PropagationIterator(OCIterator):
 
     def init_output_dictionary(self):
         self.oc_iterator_parameters.dict_out['pop_t'] = self.get_pop_t
-
+        self.oc_iterator_parameters.dict_out['log_file'] = self.get_log_file_out()
 
     def get_pop_t(self):
-        pop_t = np.real(af.population_from_wf_matrix(self.psi_coeff_t))
+        pop_t = np.real(af.population_from_wf_matrix(self.oc_iterator_parameters.psi_coeff_t))
         return pop_t
+
+    def get_log_file_out(self):
+        return
+
 
     def get_restart(self):
         return self.oc_iterator_parameters.field_psi_matrix
@@ -51,7 +55,10 @@ class Eulero1PropagationIterator(OCIterator):
     def calc_J(self):
         pass
 
-class Eulero2PropagationIterator(OCIterator):
+
+
+
+class Eulero2PropagationIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
         self.oc_iterator_parameters = OCIteratorParameters()
@@ -76,10 +83,15 @@ class Eulero2PropagationIterator(OCIterator):
 
     def init_output_dictionary(self):
         self.oc_iterator_parameters.dict_out['pop_t'] = self.get_pop_t
+        self.oc_iterator_parameters.dict_out['log_file'] = self.get_log_file_out()
 
     def get_pop_t(self):
         pop_t = np.real(af.population_from_wf_matrix(self.oc_iterator_parameters.psi_coeff_t))
         return pop_t
+
+    def get_log_file_out(self):
+        return
+
 
     def get_restart(self):
         return self.oc_iterator_parameters.field_psi_matrix
@@ -91,5 +103,6 @@ class Eulero2PropagationIterator(OCIterator):
 
     def calc_J(self):
         pass
+
 
 

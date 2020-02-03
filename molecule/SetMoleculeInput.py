@@ -1,9 +1,9 @@
-from SetInput import SetInput
+from ABCSetInput import ABCSetInput
 from molecule.MoleculeInput import MoleculeInput
 from read.ReadOutputGaussian import ReadOutputGaussian
 
 
-class SetMoleculeInput(SetInput):
+class SetMoleculeInput(ABCSetInput):
     def __init__(self):
         super().__init__()
         self.input_parameters = MoleculeInput()

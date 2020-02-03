@@ -1,5 +1,6 @@
-class LogHeaderInput():
+class LogInput():
     def __init__(self):
+        self.oc_algorithm = None#sys
         self.dt = None#sys
         self.env = None#env
         self.alpha = None#oc
@@ -11,3 +12,6 @@ class LogHeaderInput():
         self.t0 = None#field
         self.target_state = None#oc
         self.restart = None#oc
+
+
+

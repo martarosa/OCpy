@@ -1,15 +1,18 @@
 import numpy as np
-from save.Save import Save
+from save.ABCSave import ABCSave
 import pandas as pd
 from read import auxiliary_functions as af
-from pcm.PCM import PCM, FrozenSolventPCM, DinamicPCM
+from pcm.ABCPCM import ABCPCM
+from pcm.DinamicPCM import DinamicPCM
+from pcm.FrozenSolventPCM import FrozenSolventPCM
+
 
 class Env():
     def __init__(self):
         self.env = None
-        self.pcm = PCM()
+        self.pcm = ABCPCM()
         self.muLF = 0
-        self.save = Save()
+        self.save = ABCSave()
 
     def set_env(self, env):
         self.env = env
@@ -92,7 +95,7 @@ class PCM():
         self.Vij_flip = None
         self.muT_local_field = None
         self.to_subtract_fromH = None
-        self.save = Save()
+        self.save = ABCSave()
 
 
 

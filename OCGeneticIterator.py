@@ -3,7 +3,7 @@ import array
 import sys
 
 from read import auxiliary_functions as af
-from OCIterator import OCIterator, OCIteratorParameters
+from ABCOCIterator import ABCOCIterator, OCIteratorParameters
 from Chromosome import Chromosome
 from field.Field import Field
 from copy import deepcopy
@@ -55,7 +55,7 @@ Evolutionary_Algorithm_dict = {'DEAP_cxUniform': tools.cxUniform,
 
 
 
-class OCGeneticIterator(OCIterator):
+class OCGeneticIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
         self.oc_iterator_parameters = OCIteratorParameters()

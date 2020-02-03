@@ -14,12 +14,13 @@ class OCIteratorParameters():
         self.field_psi_matrix = None
         self.psi_coeff_t = None
         self.dict_out = {}
-#        self.dict_restart = {}
 
 
-class OCIterator(metaclass=ABCMeta):
+
+class ABCOCIterator(metaclass=ABCMeta):
     def __init__(self):
         self.oc_iterator_parameters = OCIteratorParameters()
+
 
     @abstractmethod
     def iterate(self, current_iteration):

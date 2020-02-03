@@ -1,12 +1,12 @@
 import numpy as np
 
-from propagator.Propagator import Propagator
+from propagator.ABCPropagator import ABCPropagator
 from propagator.PropagatorTerms import PropagatorTerms
 
 
 #import math_functions as mf
 
-class PropagatorOCfwd(Propagator):
+class PropagatorOCfwd(ABCPropagator):
     def __init__(self):
         super().__init__()
         self.propagator_terms = PropagatorTerms()
@@ -37,9 +37,7 @@ class PropagatorOCfwd(Propagator):
         return out
 
 
-
-
-class PropagatorOCbwd(Propagator):
+class PropagatorOCbwd(ABCPropagator):
     def __init__(self):
         super().__init__()
         self.propagator_terms = PropagatorTerms()

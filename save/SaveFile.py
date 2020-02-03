@@ -1,6 +1,3 @@
-import numpy as np
-
-
 class SaveFile():
     def __init__(self, name, header, nstep, dict_flag, oc_iterator):
         self.name = name

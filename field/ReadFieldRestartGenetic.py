@@ -1,11 +1,11 @@
 import numpy as np
 
 from field.FieldInput import FieldInput
-from field.ReadFieldRestart import ReadFieldRestart
-import configparser
+from field.ABCReadFieldRestart import ABCReadFieldRestart
 
 
-class ReadFieldRestartGenetic(ReadFieldRestart):
+
+class ReadFieldRestartGenetic(ABCReadFieldRestart):
     def __init__(self):
         super().__init__()
         self.field_par = FieldInput()
@@ -16,7 +16,7 @@ class ReadFieldRestartGenetic(ReadFieldRestart):
         n = load.shape[0]/2
         self.field_par.omega = load[:n]
         self.field_par.fi = load[n:]
-        self.field_par. field_type = 'restart_genetic'
+        self.field_par.field_type = 'restart_genetic'
         self.field_par.sigma = 0
         self.field_par.t0 = 0
         self.field_par.namefile = 'false'

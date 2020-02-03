@@ -1,10 +1,10 @@
 import numpy as np
 
 from field.FieldInput import FieldInput
-from field.ReadFieldRestart import ReadFieldRestart
+from field.ABCReadFieldRestart import ABCReadFieldRestart
 
 
-class ReadFieldRestartRabitz(ReadFieldRestart):
+class ReadFieldRestartRabitz(ABCReadFieldRestart):
     def __init__(self):
         super().__init__()
         self.field_par = FieldInput()
