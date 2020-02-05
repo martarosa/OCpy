@@ -11,7 +11,6 @@ class SetMoleculeInput(ABCSetInput):
 
     def set(self, user_input):
         read_output = ReadOutputGaussian()
-
         self.input_parameters.wf_ci = read_output.read_ci0(user_input.sys.section_dictionary['folder'] +
                                                            user_input.wf.section_dictionary['name_ci'])
 

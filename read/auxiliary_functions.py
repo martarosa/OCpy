@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.fftpack import fft
 import os
-
+import sys
 
 def normalize_vector(vector):
     normalized = vector/np.sqrt(np.dot(np.conj(vector), vector))
@@ -159,3 +159,9 @@ def flip_3D_f2py(Mf):
     tmp = np.swapaxes(Mf, 0, 1)
     Mpy = np.swapaxes(tmp, 1, 2)
     return Mpy
+
+
+def exit_error(error_text):
+    print(error_text)
+    sys.exit()
+

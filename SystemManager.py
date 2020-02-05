@@ -41,7 +41,7 @@ class SystemManager():
 
         self.mol = Molecule()
         self.starting_field = Field()
-        self.pcm = ABCPCM()
+        self.pcm = None #ABCPCM()
         self.oc = OCManager() # the possibility to perform a single propagation without OC is a special case of optimalControl (since this is a OC program
 
 
@@ -49,8 +49,8 @@ class SystemManager():
     def init_system(self, folder, name_file):
 
         user_input = ReadNamelistOC() #tmp, after reading everithing apart system manager vanishes
-
         user_input.read_file(folder, name_file)
+
         self.init_molecule(user_input)
         self.init_starting_field(user_input)
         if user_input.env.section_dictionary['env'] != "vac":

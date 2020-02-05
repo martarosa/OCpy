@@ -14,7 +14,7 @@ class PropagatorTerms():
     def __init__(self):
         self.dt = None
         self.mol = Molecule()
-        self.pcm = ABCPCM()
+        self.pcm = None #ABCPCM()
 
         self.dict_terms = {}
 

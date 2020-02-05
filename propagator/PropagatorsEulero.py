@@ -14,8 +14,9 @@ class PropagatorEulero1Order(ABCPropagator):
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
         self.add_term_to_propagator("eulero_field")
-        if self.propagator_terms.pcm.env == "sol":
-            self.add_term_to_propagator("eulero_pcm")
+        if self.propagator_terms.pcm != None:
+            if self.propagator_terms.pcm.env == "sol":
+                self.add_term_to_propagator("eulero_pcm")
         self.add_term_to_propagator("norm")
 
     def propagate_one_step(self, i, field):
@@ -45,8 +46,9 @@ class PropagatorEulero2Order(ABCPropagator):
         self.add_term_to_propagator("eulero2_coeff")
         self.add_term_to_propagator("eulero_energy")
         self.add_term_to_propagator("eulero_field")
-        if self.propagator_terms.pcm.env == "sol":
-            self.add_term_to_propagator("eulero_pcm")
+        if self.propagator_terms.pcm != None:
+            if self.propagator_terms.pcm.env == "sol":
+                self.add_term_to_propagator("eulero_pcm")
         self.add_term_to_propagator("norm")
 
 

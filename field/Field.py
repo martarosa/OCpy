@@ -29,12 +29,13 @@ class PropagatorFieldOC():
 
 class Field():
     def __init__(self):
+
+        self.field = None
+
         self.field_type = None
         self.dt = None
         self.nstep = None
         self.parameters = dict({})
-        self.field = None
-
 
 
     def init_field(self, field_input):

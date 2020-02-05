@@ -1,8 +1,8 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = test_gennaio
-oc_algorithm = eulero_2order_prop 
+name = test_1order
+oc_algorithm = eulero_1order_prop 
 #folder=/home/mana/Desktop/python/optimal_control/test_funzionamento/
 
 [WAVEFUNCTION]
@@ -27,13 +27,11 @@ env=vac
 #name_file_qijn=./qijn.dat
 
 [OPTIMALC]
-restart=FALSE
-alpha=sin
-alpha0=1
-n_iterations=10
-target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0   
+#restart=FALSE
+#alpha=sin
+#alpha0=1
+#n_iterations=10
+#target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0   
 
 [SAVE]
 #save_restart_step=10
-#save_iteration_pop_step=10
-#save_iteration_field_step=10

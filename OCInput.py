@@ -6,8 +6,8 @@ class OCInput:
         self.n_iterations = None
         self.convergence_thr = None
         self.restart = None
-        self.nstep = None
-        self.dt = None
+        #self.nstep = None
+        #self.dt = None
         self.target_state = None
         self.iterator_config_file = None
 

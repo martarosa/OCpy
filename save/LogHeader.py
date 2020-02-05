@@ -6,16 +6,27 @@ class LogHeader():
 
     def init_log_header(self, log_input):
         self.init_oc_header(log_input)
-        self.init_field_header(log_input)
+        #self.init_field_header(log_input)
         if log_input.restart == "norestart_found":
-            restart = ("#WARNING: restart asked but restart file not found. Starting from guess field" + "\n")
-        elif log_input.restart == "true" or log_input.restart == 'restart_from_different_name_field':
-            restart = ("#Restarted from bkp field \n")
+            restart = ("#WARNING: restart asked but restart file not found. Starting from default field" + "\n")
+        elif log_input.restart == "true":
+            restart = ("#Restarted from field \n")
+            if log_input.oc_algorithm == "rabitzi" or log_input.oc_algorithm == "rabitzii":
+                log_input.field_type = "restart_rabitz"
+            elif log_input.oc_algorithm == "genetic":
+                log_input.field_type = "restart_genetic"
+        elif log_input.restart == "only_bkp_found":
+            restart = ("#WARNING: restart asked but restart file not found. Restarting from bkp field \n")
+            if log_input.oc_algorithm == "rabitzi" or log_input.oc_algorithm == "rabitzii":
+                log_input.field_type = "restart_rabitz"
+            elif log_input.oc_algorithm == "genetic":
+                log_input.field_type = "restart_genetic"
         else:
-            restart = ""
+            restart = "\n"
+        self.init_field_header(log_input)
         self.header = ( "#calculation: " + log_input.oc_algorithm + "\n" +
                         self.oc_header +
-                        "#dt: " + log_input.dt + "env: " + log_input.env +
+                        "#dt: " + log_input.dt + " env: " + log_input.env + "\n" +
                         restart +
                         self.field_header)
 
@@ -26,7 +37,7 @@ class LogHeader():
                 log_input.oc_algorithm == "rabitzii" or
                 log_input.oc_algorithm == "genetic"):
             self.oc_header = ("#target state: " + log_input.target_state + "\n" +
-                              "#alpha: " + log_input.alpha + "starting alpha value: " + log_input.alpha0 + "\n\n"
+                              "#alpha: " + log_input.alpha + " starting alpha value: " + log_input.alpha0 + "\n\n"
                               )
         else:
             self.oc_header="\n"
@@ -52,34 +63,35 @@ class LogHeader():
 
 
     def restart_rabitz(self, log_input):
+        self.field_header = ""
         #everithing is already done in restart
         pass
 
 
     def const_pulse(self, log_input):
-        self.field_header = ("#field parameters: \n #field: " + log_input.field_type + "\n" 
+        self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n" 
                              "#fi: " + log_input.fi +"\n\n"
                              )
 
     def pip_pulse(self, log_input):
-        self.field_header = ("#field parameters: \n #field: " + log_input.field_type +"\n"
+        self.field_header = ("#field parameters: \n#field: " + log_input.field_type +"\n"
                              "#fi: " + log_input.fi + "\n" +
                              "#omega: " + log_input.omega + "\n"
-                             "#sigma: " + log_input.sigma +"t0: " + log_input.t0 + "\n\n")
+                             "#sigma: " + log_input.sigma +" t0: " + log_input.t0 + "\n\n")
 
 
     def sin_pulse(self, log_input):
-        self.field_header = ("#field parameters: \n #field: " + log_input.field_type + "\n"
+        self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n"
                              "#fi: " + log_input.fi + "\n" +
                              "#omega: " + log_input.omega + "\n"
                              "#sigma: " + log_input.sigma + "\n\n")
 
     def gau_pulse(self, log_input):
-        self.field_header = ("#field parameters: \n #field: " + log_input.field_type + "\n"
+        self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n"
                              "#fi: " + log_input.fi + "\n" +
-                             "#sigma: " + log_input.sigma + "t0: " + log_input.t0 + "\n\n")
+                             "#sigma: " + log_input.sigma + " t0: " + log_input.t0 + "\n\n")
 
     def sum_pulse(self, log_input):
-        self.field_header = ("#field parameters: \n #field: " + log_input.field_type + "\n"
+        self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n"
                              "#fi: " + log_input.fi + "\n" +
                              "#omega: " + log_input.omega + "\n\n")

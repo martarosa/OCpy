@@ -46,7 +46,7 @@ class SaveTools():
 
     def creation_save_files(self, folder_name, save_file, restart):
         name = folder_name + save_file.name
-        if restart == "false" or restart == "norestart_found" or restart == 'restart_from_different_name_field':
+        if restart == "false" or restart == "norestart_found":
             self.create_bkp_file(name)
         self.print_date_header(name, save_file.header)
 

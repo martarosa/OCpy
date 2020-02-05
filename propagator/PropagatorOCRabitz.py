@@ -18,8 +18,9 @@ class PropagatorOCfwd(ABCPropagator):
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
         self.add_term_to_propagator("eulero_field")
-        if self.propagator_terms.pcm.env == "sol":
-            self.add_term_to_propagator("eulero_pcm")
+        if self.propagator_terms.pcm != None:
+            if self.propagator_terms.pcm.env == "sol":
+                self.add_term_to_propagator("eulero_pcm")
 
 
     def propagate_one_step(self, i, field):
@@ -49,8 +50,9 @@ class PropagatorOCbwd(ABCPropagator):
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
         self.add_term_to_propagator("eulero_field")
-        if (self.propagator_terms.pcm.env == "sol"):
-            self.add_term_to_propagator("oc_pcm_bwd")
+        if self.propagator_terms.pcm != None:
+            if (self.propagator_terms.pcm.env == "sol"):
+                self.add_term_to_propagator("oc_pcm_bwd")
 
 
     def propagate_one_step(self, i, field, wf_fwd):

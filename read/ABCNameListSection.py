@@ -1,5 +1,8 @@
 import sys
+from copy import deepcopy
 from abc import ABCMeta
+import read.auxiliary_functions as af
+import read.NamelistTools as nt
 
 
 class ABCNamelistSection(metaclass=ABCMeta):
@@ -11,27 +14,55 @@ class ABCNamelistSection(metaclass=ABCMeta):
         self.case_unsensitive_keys = None
 
 
-    def init(self, user_input, default, section):
-        self.section_dictionary = dict(user_input[section])
-        self.section_default_dictionary = default[section]
+    def init(self, user_input):
+        #self.section_dictionary = deepcopy(self.section_default_dictionary)
+        self.section_dictionary = dict(user_input[self.section])
 
 
     def check(self):
-        self.check_keys()
+        #self.check_keys()
         self.lowering_case()
         self.check_allowed_values()
 
+    def fill_empty_with_default(self):
+        tmp_dict = deepcopy(self.section_default_dictionary)
+        tmp_dict.update(self.section_dictionary)
+        self.section_dictionary = tmp_dict
+
     def check_keys(self):
-            if not all(elem in self.section_dictionary.keys() for elem in self.section_default_dictionary.keys()):
-                sys.exit("Error in input. Wrong key in " + self.section + "\n")
+        if (not all(elem in self.section_dictionary.keys() for elem in self.section_default_dictionary.keys())
+                or len(self.section_dictionary.keys()) > len(self.section_default_dictionary.keys())):
+            af.exit_error("ERROR in input. Wrong key in " + self.section + "\n")
 
     def lowering_case(self):
         for key in self.case_unsensitive_keys:
-            self.section_dictionary[key] = self.section_dictionary[key].lower()
+            if key in self.section_dictionary:
+                self.section_dictionary[key] = self.section_dictionary[key].lower()
 
     def check_allowed_values(self):
         if self.allowed_val:
-            for key, par in self.allowed_val:
-                if self.section_dictionary[key] not in par:
-                    sys.exit("Error in input. Wrong \"" + key + "\" value. \n"
+                for key, par in self.allowed_val:
+                    if key in self.section_dictionary:
+                        if self.section_dictionary[key] not in par:
+                            af.exit_error("ERROR in input. Wrong \"" + key + "\" value. \n"
                              + "Default value is: " + self.section_default_dictionary[key] + "\n")
+
+
+    def check_namelist_key_and_print(self, key, output_string):
+        if key in self.section_dictionary:
+            print(output_string)
+
+    def check_namelist_key_exist_and_value(self, key, value):
+        if key in self.section_dictionary:
+            if self.section_dictionary[key] == value:
+                return True
+
+    def check_namelist_key_exist_and_list_value(self, key, value):
+        if key in self.section_dictionary:
+            for i in range(len(value)):
+                if self.section_dictionary[key] == value[i]:
+                    return True
+
+    def check_namelist_key_exist(self, key):
+        if key in self.section_dictionary:
+            return True
