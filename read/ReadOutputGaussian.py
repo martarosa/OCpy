@@ -50,6 +50,10 @@ class ReadOutputGaussian():
         V_tot = -np.array(V_ijn_el)
         for i in range(n_en):
             V_tot[i,i,:] = -V_tot[i,i,:] + VN
+        #to compare with wt because gamess prints wrong potentials and wt does not know
+        #V_tot = np.array(V_ijn_el)
+        #for i in range(n_en):
+        #    V_tot[i, i, :] = V_tot[i, i, :] - VN
         return V_tot
 
 

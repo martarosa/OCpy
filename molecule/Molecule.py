@@ -1,5 +1,7 @@
 from molecule.WaveFunction import WaveFunction
-from read import auxiliary_functions as af
+
+
+
 
 class Molecule:
     def __init__(self):
@@ -7,7 +9,6 @@ class Molecule:
         self.muT = None  # transition dipoles from external code
         self.en_ci = None  # excitation energies from external code
         self.Vijn = None   # potential from external code if PCM
-
 
 
     def init_molecule(self, molecule_input):

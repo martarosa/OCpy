@@ -33,7 +33,7 @@ class SaveEulero(ABCSave):
         self.init_save_file_list(oc_iterator, save_input.restart_step)
         for i in np.arange(len(self.save_files)):
             self.save_tools.creation_save_files(self.folder + self.filename, self.save_files[i], self.restart_calculation)
-        self.print_log_header(log_input)
+
 
 
     def save(self, iteration):

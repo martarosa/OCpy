@@ -98,17 +98,17 @@ class OCRabitzIterator(ABCOCIterator):
         self.oc_iterator_parameters.dict_out['pop_t'] = self.get_pop_t
         self.oc_iterator_parameters.dict_out['field_t'] = self.get_field_t
 
-    def init(self, oc_iterator_parameters, molecule, starting_field, pcm, alpha_t):
-        self.oc_iterator_parameters.nstep = oc_iterator_parameters.nstep
-        self.oc_iterator_parameters.dt = oc_iterator_parameters.dt
-        self.oc_iterator_parameters.target_state = oc_iterator_parameters.target_state
+    def init(self, oc_input, molecule, starting_field, pcm, alpha_t):
+        self.oc_iterator_parameters.nstep = oc_input.nstep
+        self.oc_iterator_parameters.dt = oc_input.dt
+        self.oc_iterator_parameters.target_state = oc_input.target_state
         self.oc_iterator_parameters.alpha_t = alpha_t
         self.oc_iterator_parameters.J = 99999
         self.oc_iterator_parameters.convergence_t = 99999
         self.oc_iterator_parameters.field_psi_matrix = np.copy(starting_field.field)
         self.oc_iterator_parameters.psi_coeff_t = np.zeros([self.oc_iterator_parameters.nstep + 1, molecule.wf.n_ci], dtype=complex)
 
-        self.rabitz_iterator = oc_iterator_parameters.oc_iterator_name
+        self.rabitz_iterator = oc_input.oc_iterator_name
 
         self.prop_psi.set_propagator(self.oc_iterator_parameters.dt, molecule, pcm)
         self.prop_chi.set_propagator(-1 * self.oc_iterator_parameters.dt, molecule, pcm)

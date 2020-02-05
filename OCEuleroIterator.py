@@ -19,9 +19,9 @@ class Eulero1PropagationIterator(ABCOCIterator):
         self.oc_iterator_parameters.psi_coeff_t = self.prop_psi.propagate_n_step(self.oc_iterator_parameters.nstep, self.oc_iterator_parameters.field_psi_matrix)
 
 
-    def init(self, oc_iterator_parameters, molecule, starting_field, env, alpha_t):
-        self.oc_iterator_parameters.nstep = oc_iterator_parameters.nstep
-        self.oc_iterator_parameters.dt = oc_iterator_parameters.dt
+    def init(self, oc_input, molecule, starting_field, env, alpha_t):
+        self.oc_iterator_parameters.nstep = oc_input.nstep
+        self.oc_iterator_parameters.dt = oc_input.dt
         self.oc_iterator_parameters.J = 99999
         self.oc_iterator_parameters.convergence_t = 99999
 
@@ -63,9 +63,9 @@ class Eulero2PropagationIterator(ABCOCIterator):
     def iterate(self, current_iteration):
         self.oc_iterator_parameters.psi_coeff_t = self.prop_psi.propagate_n_step(self.oc_iterator_parameters.nstep, self.oc_iterator_parameters.field_psi_matrix)
 
-    def init(self, oc_iterator_parameters, molecule, starting_field, env, alpha_t):
-        self.oc_iterator_parameters.nstep = oc_iterator_parameters.nstep
-        self.oc_iterator_parameters.dt = oc_iterator_parameters.dt
+    def init(self, oc_input, molecule, starting_field, env, alpha_t):
+        self.oc_iterator_parameters.nstep = oc_input.nstep
+        self.oc_iterator_parameters.dt = oc_input.dt
         self.oc_iterator_parameters.J = 99999
         self.oc_iterator_parameters.convergence_t = 99999
 

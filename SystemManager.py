@@ -8,6 +8,7 @@ from read.ReadNamelistOC import ReadNamelistOC
 from field.ReadFieldRestartGenetic import ReadFieldRestartGenetic
 from field.ReadFieldRestartRabitz import ReadFieldRestartRabitz
 
+
 from molecule.Molecule import Molecule
 from field.Field import Field
 from pcm.ABCPCM import ABCPCM
@@ -34,6 +35,11 @@ from OCManager import OCManager
 #         Parameters don't know any format, are only containers of informations
 #      3) Molecule.init_molecule(MoleculeParameters) initialize Molecule attributes from MoleculeParameters
 
+class SystemParameters():
+    def __init__(self):
+        self.nstep = None
+        self.dt = None
+
 
 class SystemManager():
 
@@ -42,6 +48,7 @@ class SystemManager():
         self.mol = Molecule()
         self.starting_field = Field()
         self.pcm = None #ABCPCM()
+        self.system_parameters = SystemParameters()
         self.oc = OCManager() # the possibility to perform a single propagation without OC is a special case of optimalControl (since this is a OC program
 
 
@@ -50,6 +57,7 @@ class SystemManager():
 
         user_input = ReadNamelistOC() #tmp, after reading everithing apart system manager vanishes
         user_input.read_file(folder, name_file)
+
 
         self.init_molecule(user_input)
         self.init_starting_field(user_input)
@@ -64,31 +72,42 @@ class SystemManager():
         self.mol.init_molecule(init_mol.input_parameters)
 
     def init_starting_field(self, user_input):
-        init_field = SetFieldInput()
+        set_field = SetFieldInput()
         if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
-            init_field.read_restart = ReadFieldRestartGenetic()
+            set_field.read_restart = ReadFieldRestartGenetic()
         else:
-            init_field.read_restart = ReadFieldRestartRabitz()
-        init_field.set(user_input)
-        self.starting_field.init_field(init_field.input_parameters)
+            set_field.read_restart = ReadFieldRestartRabitz()
+        set_field.set(user_input)
+        self.starting_field.init_field(set_field.input_parameters)
 
     def init_pcm(self, user_input):
-        init_pcm = SetPCMInput()
-        init_pcm.set(user_input)
+        set_pcm = SetPCMInput()
+        set_pcm.set(user_input)
         if user_input.env.section_dictionary['env'] == 'sol':
             self.pcm = FrozenSolventPCM()
         elif user_input.env.section_dictionary['env'] == 'nanop':
             self.pcm = DinamicPCM()
-        self.pcm.init_pcm(init_pcm.input_parameters, self.mol, self.starting_field.field[0])
+        self.pcm.init_pcm(set_pcm.input_parameters, self.mol, self.starting_field.field[0])
+
+
+    def init_system_parameters(self, user_input):
+        init_system = SetSystemInput()
+
+
 
     def init_optimal_control(self, user_input):
-        init_oc = SetOCInput()
-        init_oc.set(user_input)
-        init_save = SetSaveInput()
-        init_save.set(user_input)
-        init_log_header = SetLogInput()
-        init_log_header.set(user_input)
-        self.oc.init_oc(init_oc.input_parameters, init_save.input_parameters, init_log_header.input_parameters, self.mol, self.starting_field, self.pcm)
+        set_oc = SetOCInput()
+        set_oc.set(user_input)
+        set_save = SetSaveInput()
+        set_save.set(user_input)
+        set_log_header = SetLogInput()
+        set_log_header.set(user_input)
+        self.oc.init_oc(set_oc.input_parameters,
+                        set_save.input_parameters,
+                        set_log_header.input_parameters,
+                        self.mol,
+                        self.starting_field,
+                        self.pcm)
 
 
 

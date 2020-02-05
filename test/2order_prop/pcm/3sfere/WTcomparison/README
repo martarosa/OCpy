@@ -1,0 +1,2 @@
+ gamess prints wrong file for potentials: out of diagonal sign is not coherent with mut. WT does not know and makes wrong calculations for LF
+In the code in readOutputGaussian there are the code lines to match WT, otherwise right reading is done  

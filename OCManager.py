@@ -14,20 +14,30 @@ from OCGeneticIterator import OCGeneticIterator
 # on the iterator, the SaveOC class is differently initialized. The restart method is inside Save and is also differently initialized
 # depending on the algorithm (e.g. for the genetic it reads the field parameters, while for Rabitz it reads the field point by point
 
+class OCManagerParameters:
+    def __init__(self):
+        self.oc_iterator_name = None
+        self.convergence_thr = None
+        self.n_iterations = None
+        self.alpha_0 = None
+        self.alpha = None
+
 
 class OCManager:
     def __init__(self):
 
         self.oc_iterator_name = None
-
         self.convergence_thr = None
         self.n_iterations = None
-
         self.alpha_0 = None
         self.alpha = None
 
+        self.oc_parameters = OCManagerParameters()
+
+
         self.oc_iterator = None #OCIterator()
         self.save = None #Save()
+
 
         self.psi_coeff_t = None
         self.field_psi_matrix = None
@@ -36,7 +46,7 @@ class OCManager:
 
 
 
-    def init_oc(self, oc_input, save_parameters, log_header_parameters, molecule, starting_field, pcm):
+    def init_oc(self, oc_input, save_input, log_header_input, molecule, starting_field, pcm):
         self.alpha0 = oc_input.alpha0
         self.alpha = oc_input.alpha
         self.oc_iterator_name = oc_input.oc_iterator_name
@@ -47,18 +57,22 @@ class OCManager:
             self.n_iterations = 0
             self.convergence_thr = 99999
 
+
         self.init_oc_iterator(oc_input,
                               molecule,
                               starting_field,
                               pcm,
                               self.set_alpha_t(oc_input.nstep, oc_input.dt))
 
-        self.init_save(save_parameters, log_header_parameters)
+        self.init_save(save_input, log_header_input)
         self.field_psi_matrix = np.copy(starting_field.field)
 
 
 
-    def init_oc_iterator(self, oc_parameters, molecule, starting_field, pcm, alpha_t):
+
+
+
+    def init_oc_iterator(self, oc_input, molecule, starting_field, pcm, alpha_t):
         if self.oc_iterator_name == "rabitzi" or self.oc_iterator_name == "rabitzii":
             self.oc_iterator = OCRabitzIterator()
         elif self.oc_iterator_name == "genetic":
@@ -67,7 +81,7 @@ class OCManager:
             self.oc_iterator = Eulero1PropagationIterator()
         elif self.oc_iterator_name == "eulero_2order_prop":
             self.oc_iterator = Eulero2PropagationIterator()
-        self.oc_iterator.init(oc_parameters, molecule, starting_field, pcm, alpha_t)
+        self.oc_iterator.init(oc_input, molecule, starting_field, pcm, alpha_t)
 
 
 

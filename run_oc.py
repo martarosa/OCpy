@@ -2,7 +2,7 @@ import SystemManager as ini
 from read.ReadNamelistOC import ReadNamelistOC
 
 
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/pcm/3sfere/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/"
 namefile = "input.dat"
 
 

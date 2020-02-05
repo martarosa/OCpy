@@ -12,6 +12,7 @@ class ABCPropagator(metaclass=ABCMeta):
         self.propagator_terms = PropagatorTerms()
         self.propagator = []
 
+
     def init_propagaror_terms(self, dt, molecule, pcm):
         self.propagator_terms.set_attributes(dt, molecule, pcm)
         self.propagator_terms.init_terms_dictionary()

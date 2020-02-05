@@ -39,5 +39,5 @@ class ABCOCIterator(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def init(self, oc_iterator_parameters, molecule, starting_field, pcm, alpha_t):
+    def init(self, oc_input, molecule, starting_field, pcm, alpha_t):
         pass

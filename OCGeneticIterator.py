@@ -97,11 +97,11 @@ class OCGeneticIterator(ABCOCIterator):
         self.oc_iterator_parameters.dict_out['field_ampl'] = self.get_field_ampl
 
 
-    def init(self, oc_iterator_parameters, molecule, starting_field, pcm, alpha_t):
-        self.oc_iterator_parameters.nstep = oc_iterator_parameters.nstep
-        self.oc_iterator_parameters.dt = oc_iterator_parameters.dt
+    def init(self, oc_input, molecule, starting_field, pcm, alpha_t):
+        self.oc_iterator_parameters.nstep = oc_input.nstep
+        self.oc_iterator_parameters.dt = oc_input.dt
         self.oc_iterator_parameters.alpha_t = alpha_t
-        self.oc_iterator_parameters.target_state = oc_iterator_parameters.target_state
+        self.oc_iterator_parameters.target_state = oc_input.target_state
         self.oc_iterator_parameters.convergence_t = 99999
         self.oc_iterator_parameters.J = 99999
         self.oc_iterator_parameters.field_psi_matrix = np.zeros([self.oc_iterator_parameters.nstep, 3])
@@ -109,18 +109,18 @@ class OCGeneticIterator(ABCOCIterator):
         self.init_output_dictionary()
 
         #iterator_parameters = genetic
-        self.n_chromosomes = oc_iterator_parameters.n_chromosomes
+        self.n_chromosomes = oc_input.n_chromosomes
         self.n_amplitudes = starting_field.parameters['fi'].size
         #self.n_chro_generated_mutation = n_mutate * self.n_chromosomes
         self.omegas_matrix = starting_field.parameters['omega']
-        self.ampl_min = oc_iterator_parameters.amplitude_min
-        self.ampl_max = oc_iterator_parameters.amplitude_max
-        self.n_selected_chr = oc_iterator_parameters.n_evolved_chr
-        self.deap = oc_iterator_parameters.DEAP
+        self.ampl_min = oc_input.amplitude_min
+        self.ampl_max = oc_input.amplitude_max
+        self.n_selected_chr = oc_input.n_evolved_chr
+        self.deap = oc_input.DEAP
 
         self.init_chromosomes(molecule, starting_field, pcm)
     #qui inizializzo l'algoritmo genetico che sto usando, che per adesso è solo uno
-        self.init_evolutionary_algorithm(oc_iterator_parameters)
+        self.init_evolutionary_algorithm(oc_input)
 
 
     def calc_J(self):

@@ -1,8 +1,8 @@
 class FieldInput():
     def __init__(self):
         self.field_type = None
-        self.dt = None
-        self.nstep = None
+        #self.dt = None
+        #self.nstep = None
         self.fi = None
         self.omega = None
         self.sigma = None
