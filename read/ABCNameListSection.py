@@ -15,7 +15,6 @@ class ABCNamelistSection(metaclass=ABCMeta):
 
 
     def init(self, user_input):
-        #self.section_dictionary = deepcopy(self.section_default_dictionary)
         self.section_dictionary = dict(user_input[self.section])
 
 

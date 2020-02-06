@@ -7,7 +7,6 @@ from abc import ABCMeta, abstractmethod
 class ABCReadNamelist(metaclass=ABCMeta):
     def __init__(self):
         self.n_sections = None
-        self.default_dict = None
         self.sections = []
 
     @abstractmethod

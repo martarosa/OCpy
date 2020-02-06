@@ -25,11 +25,11 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
         if(not os.path.isfile(folder+namefile)):
             af.exit_error("ERROR: input file not found")
         user_input = configparser.ConfigParser()
-        #first read without default values for checks on consistency
         self.n_sections = len(self.sections)
         user_input.read(folder + namefile)
         self.sys.init_default_folder(folder)
         self.set_nml_sections(user_input)
+        self.check_input_sections_names(user_input)
 
 
     def set_nml_sections(self, user_input):
@@ -124,8 +124,6 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
             print("WARNING: restart asked but file not found. \n"
                       "Starting calculation from default field")
             self.field.section_dictionary['name_field_file'] = 'false'
-
-
 
 
     def check_field_shape_parameters_warning(self):

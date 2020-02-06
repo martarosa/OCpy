@@ -103,52 +103,52 @@ class SectionOptimalControl(ABCNamelistSection):
         self.case_unsensitive_keys = ['restart', 'alpha']
 
 
+
+
+
 class SectionGenetic(ABCNamelistSection):
     def __init__(self):
         super().__init__()
-        self.section = None
-        self.section_default_dictionary = {}
-        self.section_dictionary = {}
-        self.allowed_val = [['mate', ['DEAP_cxUniform']],
-                            ['mutate',['DEAP_mutGaussian']],
-                            ['select',['DEAP_selBest']],
-                            ['deap',['true','false']]]
-        self.case_unsensitive_keys = ['deap']
-
-
-class SectionGenetic_new(ABCNamelistSection):
-    def __init__(self):
-        super().__init__()
-        self.section = None
-        self.section_default_dictionary = {}
+        self.section = "GENETIC"
+        self.section_default_dictionary = {'chromosomes': '120',
+                                           'n_evolver_chr': '20',
+                                           'genetic_algorithm' : 'sequential',
+                                           'amplitude_lim': '0.05'}
         self.section_dictionary = {}
         self.allowed_val = [['genetic_algorithm', ['sequential', 'mixed']]]
         self.case_unsensitive_keys = ['genetic_algorithm']
 
-
 class SectionMate(ABCNamelistSection):
     def __init__(self):
         super().__init__()
-        self.section = None
-        self.section_default_dictionary = {}
+        self.section = "MATE"
+        self.section_default_dictionary = {'mate' : 'cxUniform',
+                                           'mate_probability': '1'}
         self.section_dictionary = {}
         self.allowed_val = [['mate', ['DEAP_cxUniform']]]
         self.case_unsensitive_keys = []
 
+
 class SectionMutate(ABCNamelistSection):
     def __init__(self):
         super().__init__()
-        self.section = None
-        self.section_default_dictionary = {}
+        self.section = "MUTATE"
+        self.section_default_dictionary = {'mutate':'mutGaussian',
+                                           'mutate_probability': '0.2',
+                                           'n_mutate': '20',
+                                           'starting_sigma': '0.01',
+                                           'eta_thr': '0.6',
+                                           'q': '0.9'}
         self.section_dictionary = {}
         self.allowed_val = [['mutate',['DEAP_mutGaussian']]]
         self.case_unsensitive_keys = []
 
+
 class SectionSelect(ABCNamelistSection):
     def __init__(self):
         super().__init__()
-        self.section = None
-        self.section_default_dictionary = {}
+        self.section = "SELECT"
+        self.section_default_dictionary = {'select':'selBest'}
         self.section_dictionary = {}
         self.allowed_val = [['select',['DEAP_selBest']]]
         self.case_unsensitive_keys = []

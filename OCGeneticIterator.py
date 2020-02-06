@@ -32,19 +32,6 @@ import random
 
 
 
-#mate
-mate_probability = 1 #given 2 list which is the probability they mate
-#cxUniform
-cx_uniform_probability = 0.5
-#mutate
-mutate_probability = 0.2
-n_mutate = 6
-#mutGaussian
-mu = 0.00
-eta_thr = 0.6
-q = 0.9
-
-#######################################################
 
 
 

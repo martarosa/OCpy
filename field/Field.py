@@ -26,12 +26,21 @@ class PropagatorFieldOC():
 #field matrix at different times to be read or created
 #---------------------------------------------
 
+class FieldParameters():
+    def __init__(self):
+        self.field_type = None
+        self.fi = None
+        self.omega = None
+        self.sigma = None
+        self.t0 =  None
+        self.omega_sys = None
+
+
 
 class Field():
     def __init__(self):
 
         self.field = None
-
         self.field_type = None
         self.dt = None
         self.nstep = None

@@ -52,6 +52,8 @@ class SetOCInput(ABCSetInput):
         else:
             pass #rabitz ed eulero non fanno niente
 
+
+
     def set_genetic(self, genetic_input):
         self.input_parameters.amplitude_min = float(genetic_input.genetic.section_dictionary['amplitude_min'])
         self.input_parameters.amplitude_max = float(genetic_input.genetic.section_dictionary['amplitude_max'])

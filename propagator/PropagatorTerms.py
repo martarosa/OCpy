@@ -15,8 +15,8 @@ class PropagatorTerms():
         self.dt = None
         self.mol = Molecule()
         self.pcm = None #ABCPCM()
-
         self.dict_terms = {}
+
 
     def set_attributes(self, dt, molecule, pcm):
         self.dt = dt
