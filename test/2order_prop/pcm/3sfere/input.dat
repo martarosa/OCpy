@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = ref_z_2order_prop 
+name = test_2order_prop 
 oc_algorithm = eulero_2order_prop 
 #folder=
 

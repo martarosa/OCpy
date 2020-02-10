@@ -1,4 +1,4 @@
-from read_and_set.set.FieldInput import FieldInput
+from read_and_set.input.FieldInput import FieldInput
 from abc import ABCMeta, abstractmethod
 
 class ABCReadFieldRestart(metaclass=ABCMeta):

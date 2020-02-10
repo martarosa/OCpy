@@ -1,7 +1,7 @@
 import numpy as np
 
 from read_and_set.read import auxiliary_functions as af
-from ABCOCIterator import ABCOCIterator, OCIteratorParameters
+from OC.ABCOCIterator import ABCOCIterator, OCIteratorParameters
 from Chromosome import Chromosome
 from field.Field import Field
 from copy import deepcopy
@@ -34,9 +34,9 @@ import random
 
 
 
-Evolutionary_Algorithm_dict = {'DEAP_cxUniform': tools.cxUniform,
-                               'DEAP_mutGaussian': tools.mutGaussian,
-                               'DEAP_selBest': tools.selBest}
+Evolutionary_Algorithm_dict = {'cxUniform': tools.cxUniform,
+                               'mutGaussian': tools.mutGaussian,
+                               'selBest': tools.selBest}
 
 
 class GeneticParameters():
@@ -86,7 +86,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.par.dict_out['field_ampl'] = self.get_field_ampl
 
 
-    def init(self, oc_input, molecule, starting_field, pcm, alpha_t):
+    def init(self, molecule, starting_field, pcm, alpha_t, oc_input, iterator_config_input):
         self.par.nstep = oc_input.nstep
         self.par.dt = oc_input.dt
         self.par.alpha_t = alpha_t

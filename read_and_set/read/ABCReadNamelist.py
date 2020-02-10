@@ -1,4 +1,4 @@
-from read_and_set import read as af
+from read_and_set.read import auxiliary_functions as af
 from abc import ABCMeta, abstractmethod
 
 
@@ -16,7 +16,6 @@ class ABCReadNamelist(metaclass=ABCMeta):
     @abstractmethod
     def set_nml_sections(self, user_input):
         pass
-
 
 
     def check_input_sections_names(self, user_input):

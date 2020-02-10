@@ -4,5 +4,5 @@ class SaveFile():
         self.header = header
         self.save_step = save_step
         self.dict_flag = dict_flag
-        self.out = oc_iterator.oc_iterator_parameters.dict_out[self.dict_flag]
+        self.out = oc_iterator.dict_out[self.dict_flag]
 

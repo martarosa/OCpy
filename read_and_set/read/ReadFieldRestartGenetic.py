@@ -1,7 +1,7 @@
 import numpy as np
 
-from read_and_set.set.FieldInput import FieldInput
-from read_and_set.set.ABCReadFieldRestart import ABCReadFieldRestart
+from read_and_set.input.FieldInput import FieldInput
+from read_and_set.read.ABCReadFieldRestart import ABCReadFieldRestart
 
 
 

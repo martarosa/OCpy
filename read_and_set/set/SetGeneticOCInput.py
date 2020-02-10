@@ -1,0 +1,26 @@
+from read_and_set.set.ABCSetInput import ABCSetInput
+from read_and_set.input.OCGeneticInput import OCGeneticInput
+
+
+class SetGeneticOCInput(ABCSetInput):
+    def __init__(self):
+        self.input_parameters = OCGeneticInput()
+
+    def set(self, user_input):
+        self.input_parameters.n_chromosomes = user_input.genetic.section_dictionary['n_chromosomes']
+        self.input_parameters.n_selected_chr = user_input.genetic.section_dictionary['n_selected_chr']
+        self.input_parameters.genetic_algorithm = user_input.genetic.section_dictionary['genetic_algorithm']
+        self.input_parameters.amplitude_lim = user_input.genetic.section_dictionary['amplitude_lim']
+
+        self.input_parameters.mate = user_input.mate.section_dictionary['mate']
+        self.input_parameters.mate_probability = user_input.mate.section_dictionary['mate_probability']
+
+        self.input_parameters.mutate = user_input.mutate.section_dictionary['mutate']
+        self.input_parameters.mutate_probability = user_input.mutate.section_dictionary['mutate_probability']
+        self.input_parameters.n_mutate = user_input.mutate.section_dictionary['n_mutate']
+        self.input_parameters.mutate_starting_sigma = user_input.mutate.section_dictionary['mutate_starting_sigma']
+        self.input_parameters.eta_thr = user_input.mutate.section_dictionary['eta_thr']
+        self.input_parameters.q = user_input.mutate.section_dictionary['q']
+        self.input_parameters.select = user_input.select.section_dictionary['select']
+
+

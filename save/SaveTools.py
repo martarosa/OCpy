@@ -56,12 +56,12 @@ class SaveTools():
 
     def save_every_n_iterations(self, iteration, folder_name, save_file):
         name = folder_name + save_file.name
-        if iteration % save_file.nstep == 0:
+        if iteration % save_file.save_step == 0:
             self.save_iteration_matrix(name, iteration, save_file.out())
 
     def save_restart(self, iteration, folder_name, save_restart):
         name = folder_name + save_restart.name
-        if iteration % save_restart.nstep == 0:
+        if iteration % save_restart.restart_step == 0:
             np.savetxt(name, save_restart.out(), delimiter =' ', header ='', footer ='')
 
     def save_3D_matrix(self, Mijn, name_file):

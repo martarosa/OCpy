@@ -1,13 +1,13 @@
 import numpy as np
 
 
-from OCEuleroIterator import  Eulero1PropagationIterator, Eulero2PropagationIterator
-from OCRabitzIterator import OCRabitzIterator
+from OC.OCEuleroIterator import  Eulero1PropagationIterator, Eulero2PropagationIterator
+from OC.OCRabitzIterator import OCRabitzIterator
 
 from save.SaveOCRabitz import SaveOCRabitz
 from save.SaveEulero import SaveEulero
 from save.SaveOCGenetic import SaveOCGenetic
-from OCGeneticIterator import OCGeneticIterator
+from OC.OCGeneticIterator import OCGeneticIterator
 
 # OCmanager is only one, and deals with the different OC_iterators (propagation, rapitz, genetic...) Depending
 # on the iterator, the SaveOC class is differently initialized. The restart method is inside Save and is also differently initialized
@@ -22,21 +22,12 @@ class OCManagerParameters:
         self.alpha = None
 
 
-
 class OCManager:
     def __init__(self):
-
-
- #       self.oc_iterator_name = None
- #       self.convergence_thr = None
- #       self.n_iterations = None
- #       self.alpha_0 = None
- #       self.alpha = None
-
         self.par = OCManagerParameters()
 
-        self.oc_iterator = None #OCIterator()
-        self.save = None #Save()
+        self.oc_iterator = None
+        self.save = None
 
 
         self.psi_coeff_t = None
@@ -45,8 +36,7 @@ class OCManager:
         self.current_iteration = 0
 
 
-    def init_oc(self, oc_input, save_input, log_header_input, molecule, starting_field, pcm):
-
+    def init_oc(self, oc_input, iterator_config_input, save_input, log_header_input, molecule, starting_field, pcm):
         self.par.alpha0 = oc_input.alpha0
         self.par.alpha = oc_input.alpha
         self.par.oc_iterator_name = oc_input.oc_iterator_name
@@ -59,25 +49,29 @@ class OCManager:
 
 
         self.init_oc_iterator(oc_input,
+                              iterator_config_input,
                               molecule,
                               starting_field,
                               pcm,
                               self.set_alpha_t(oc_input.dt, oc_input.nstep))
 
         self.init_save(save_input, log_header_input)
-        #self.field_psi_matrix = np.copy(starting_field.get_full_field())
 
 
-    def init_oc_iterator(self, oc_input, molecule, starting_field, pcm, alpha_t):
+
+    def init_oc_iterator(self, oc_input, iterator_config_input, molecule, starting_field, pcm, alpha_t):
         if self.par.oc_iterator_name == "rabitzi" or self.par.oc_iterator_name == "rabitzii":
             self.oc_iterator = OCRabitzIterator()
+            self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input)
         elif self.par.oc_iterator_name == "genetic":
-            self.par.oc_iterator = OCGeneticIterator()
+            self.oc_iterator = OCGeneticIterator()
+            self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input, iterator_config_input)
         elif self.par.oc_iterator_name == "eulero_1order_prop":
-            self.par.oc_iterator = Eulero1PropagationIterator()
+            self.oc_iterator = Eulero1PropagationIterator()
+            self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input)
         elif self.par.oc_iterator_name == "eulero_2order_prop":
-            self.par.oc_iterator = Eulero2PropagationIterator()
-        self.par.oc_iterator.init(oc_input, molecule, starting_field, pcm, alpha_t)
+            self.oc_iterator = Eulero2PropagationIterator()
+            self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input)
 
 
 
@@ -106,16 +100,14 @@ class OCManager:
         return alpha_t
 
 
-
-
     def iterate(self):
-        while (self.current_iteration <= self.par.n_iterations or self.par.convergence_thr < self.oc_iterator.par.convergence_t):
+        while (self.current_iteration <= self.par.n_iterations or self.par.convergence_thr < self.oc_iterator.convergence_t):
             self.oc_iterator.iterate(self.current_iteration)
             self.save.save(self.current_iteration)
             self.current_iteration += 1
-        self.psi_coeff_t = self.oc_iterator.oc_iterator_parameters.psi_coeff_t
-        self.field_psi_matrix = self.oc_iterator.oc_iterator_parameters.field_psi_matrix
-        self.convergence_t = self.oc_iterator.oc_iterator_parameters.convergence_t
+        self.psi_coeff_t = self.oc_iterator.psi_coeff_t
+        self.field_psi_matrix = self.oc_iterator.field_psi_matrix
+        self.convergence_t = self.oc_iterator.convergence_t
 
 
 

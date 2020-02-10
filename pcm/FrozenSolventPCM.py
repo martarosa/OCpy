@@ -23,7 +23,9 @@ class FrozenSolventPCM(ABCPCM):
     def init_pcm(self, PCM_input, mol, field_t):
         self.par.env = PCM_input.env
         self.par.cavity = PCM_input.cavity
-        self.par.muLF = -af.matrix_prod_tesserae_ijn_nn(self.qijn_lf, mol.Vijn)
+
+        self.par.muLF = -af.matrix_prod_tesserae_ijn_nn(self.qijn_lf, mol.par.Vijn)
+
 
         self.propagate(0, mol, field_t)
         self.qijn_fortran_flip = af.flip_3D_py2f(self.qijn)

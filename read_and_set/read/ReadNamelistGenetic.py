@@ -1,11 +1,11 @@
 import configparser
 from read_and_set.read import NameListSections as sec
-from read_and_set.read import ABCReadNamelist as readnamelist
+from read_and_set.read.ABCReadNamelist import ABCReadNamelist
 import os.path
-from read_and_set import read as af
+from read_and_set.read import auxiliary_functions as af
 
 
-class ReadNamelistGenetic(readnamelist.ABCReadNamelist):
+class ReadNamelistGenetic(ABCReadNamelist):
     def __init__(self):
         super().__init__()
         self.n_sections = None

@@ -1,11 +1,11 @@
 import configparser
 import os.path
-from read_and_set import read as af
+from read_and_set.read import auxiliary_functions as af
 from read_and_set.read import NameListSections as sec
-from read_and_set.read import ABCReadNamelist as readnamelist
+from read_and_set.read.ABCReadNamelist import ABCReadNamelist
 
 
-class ReadNamelistOC(readnamelist.ABCReadNamelist):
+class ReadNamelistOC(ABCReadNamelist):
     def __init__(self):
         super().__init__()
         self.n_sections = None
@@ -45,16 +45,22 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
 
         self.check_system_nml_consistency()
         self.sys.fill_empty_with_default()
+
         self.check_field_nml_consistency()
         self.field.fill_empty_with_default()
         self.field.convert_string_coefficients('fi')
         self.field.convert_string_coefficients('omega')
+
         self.check_wavef_nml_consistency()
         self.wf.fill_empty_with_default()
+
         self.check_environ_nml_consistency()
         self.env.fill_empty_with_default()
+
         self.check_optimalc_nml_consistency()
+        self.set_oc_dependent_default()
         self.oc.fill_empty_with_default()
+
         self.check_save_nml_consistency()
         self.set_save_dependent_default()
         self.save.fill_empty_with_default()
@@ -99,7 +105,6 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
                         "\"field_type\" in \"FIELD\" namelist must be \"genetic\"")
         self.check_field_shape_parameters_warning()
 
-
     def check_field_restart(self):
         #if there is a name for the restaring field check if it exist
         if self.field.check_namelist_key_exist('name_field_file'):
@@ -126,7 +131,6 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
             print("WARNING: restart asked but file not found. \n"
                       "Starting calculation from default field")
             self.field.section_dictionary['name_field_file'] = 'false'
-
 
     def check_field_shape_parameters_warning(self):
         # if default (which is constant) or constant
@@ -173,12 +177,21 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
                 af.exit_error("ERROR. \"oc_algorithm\" in namelist \"SYSTEM\" is a propagation without optimal control. "
                          "OPTIMALC namelist should be empty")
 
-
     def check_save_nml_consistency(self):
         pass
 
 
+
+# set dependent default values
+    def set_oc_dependent_default(self):
+        #set default name of configuration file for oc iterator depending on algorithm
+        if not self.oc.check_namelist_key_exist('iterator_config_file'):
+            if self.sys.check_namelist_key_exist_and_value('oc_iterator', 'genetic'):
+                self.oc.add_key_and_value_to_namelist('iterator_config_file', 'genetic.conf')
+
+
     def set_save_dependent_default(self):
+        # set default value of append = true if restart asked
         if (self.oc.check_namelist_key_exist_and_value('restart', 'true')):
             if not(self.save.check_namelist_key_exist('append')):
                 self.save.add_key_and_value_to_namelist('append', 'true')

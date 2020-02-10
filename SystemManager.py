@@ -1,23 +1,22 @@
-from read_and_set.read import ReadNamelistOC
-
+from read_and_set.read.ReadNamelistOC import ReadNamelistOC
+from read_and_set.read.ReadNamelistGenetic import ReadNamelistGenetic
 
 from read_and_set.set.SetFieldInput import SetFieldInput
-from read_and_set.set.SetLogInput import SetLogInput
+from read_and_set.read.ReadFieldRestartGenetic import ReadFieldRestartGenetic
+from read_and_set.read.ReadFieldRestartRabitz import ReadFieldRestartRabitz
 from read_and_set.set.SetMoleculeInput import SetMoleculeInput
-from read_and_set.set.SetOCInput import SetOCInput
 from read_and_set.set.SetPCMInput import SetPCMInput
+from read_and_set.set.SetOCInput import SetOCInput
+from read_and_set.set.SetGeneticOCInput import SetGeneticOCInput
+from read_and_set.set.SetNoConfOCInput import SetNoConfOCInput
 from read_and_set.set.SetSaveInput import SetSaveInput
-
-from read_and_set.set.ReadFieldRestartGenetic import ReadFieldRestartGenetic
-from read_and_set.set.ReadFieldRestartRabitz import ReadFieldRestartRabitz
-
+from read_and_set.set.SetLogInput import SetLogInput
 
 from molecule.Molecule import Molecule
 from field.Field import Field
 from pcm.DinamicPCM import DinamicPCM
 from pcm.FrozenSolventPCM import FrozenSolventPCM
 from OCManager import OCManager
-
 
 
 #The system contains Molecule, Field, PCM and OCManager objects.
@@ -51,12 +50,10 @@ class SystemManager():
 
 
 
-    def init_system(self, folder, name_file):
 
+    def init_system(self, folder, name_file):
         user_input = ReadNamelistOC() #tmp, after reading everithing apart system manager vanishes
         user_input.read_file(folder, name_file)
-
-
         self.init_molecule(user_input)
         self.init_starting_field(user_input)
         if user_input.env.section_dictionary['env'] != "vac":
@@ -93,11 +90,22 @@ class SystemManager():
     def init_optimal_control(self, user_input):
         set_oc = SetOCInput()
         set_oc.set(user_input)
+        if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
+            iterator_config_input = ReadNamelistGenetic()
+            iterator_config_input.read_file(user_input.save.section_dictionary['folder'],
+                                            user_input.oc.section_dictionary['iterator_config_file'])
+            set_iterator_config = SetGeneticOCInput()
+            set_iterator_config.set(iterator_config_input)
+        else:
+            set_iterator_config = SetNoConfOCInput()
+
         set_save = SetSaveInput()
         set_save.set(user_input)
         set_log_header = SetLogInput()
         set_log_header.set(user_input)
+
         self.oc.init_oc(set_oc.input_parameters,
+                        set_iterator_config.input_parameters,
                         set_save.input_parameters,
                         set_log_header.input_parameters,
                         self.mol,

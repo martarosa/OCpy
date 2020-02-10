@@ -106,8 +106,6 @@ def population_from_wf_matrix(wf):
     return out
 
 
-
-
 def remember_path(namefile):
     folder = os.path.split(str(namefile))[0]
     folder = folder.split("='")[1]

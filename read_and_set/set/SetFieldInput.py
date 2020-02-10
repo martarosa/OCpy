@@ -1,5 +1,5 @@
-from read_and_set.set.FieldInput import FieldInput
-from ABCSetInput import ABCSetInput
+from read_and_set.input.FieldInput import FieldInput
+from read_and_set.set.ABCSetInput import ABCSetInput
 from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
 
 

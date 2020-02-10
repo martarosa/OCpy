@@ -1,5 +1,5 @@
-from ABCSetInput import ABCSetInput
-from read_and_set.set.SaveInput import SaveInput
+from read_and_set.set.ABCSetInput import ABCSetInput
+from read_and_set.input.SaveInput import SaveInput
 
 
 class SetSaveInput(ABCSetInput):

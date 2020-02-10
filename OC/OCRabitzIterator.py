@@ -4,7 +4,7 @@ from propagator import PropagatorOCRabitz as rabitzI
 from read_and_set.read import auxiliary_functions as af
 
 from field.PropagatorFieldOC import PropagatorFieldOC
-from ABCOCIterator import ABCOCIterator, OCIteratorParameters, SimulationParameters
+from OC.ABCOCIterator import ABCOCIterator, OCIteratorParameters, SimulationParameters
 
 
 
@@ -21,9 +21,10 @@ class OCRabitzIterator(ABCOCIterator):
         self.dict_out = {}
 
         #Rabitz
+        self.prop_psi = rabitzI.PropagatorOCfwd()
+
         self.initial_c0 = None
         self.rabitz_iterator = None
-        self.prop_psi = rabitzI.PropagatorOCfwd()
         self.prop_chi = rabitzI.PropagatorOCbwd()
         self.prop_field = PropagatorFieldOC()
         # storage vector optimal control
@@ -78,12 +79,10 @@ class OCRabitzIterator(ABCOCIterator):
                                                                       self.simulation_par.nstep,
                                                                       self.field_psi_matrix[:,1:])
 
-
     def check_convergence(self):
         J_prev_tmp = np.copy(self.J)
         self.calc_J()
         self.par.convergence_t = self.J - J_prev_tmp
-
 
     def calc_J(self):
         if self.rabitz_iterator == "rabitzi":
@@ -93,6 +92,23 @@ class OCRabitzIterator(ABCOCIterator):
             self.par.J = np.real(2 * np.real(np.dot(self.par.target_state, self.prop_psi.propagator_terms.mol.wf.ci) \
                                              - af.alpha_field_J_integral(self.field_psi_matrix, self.par.alpha_t, self.simulation_par.dt)))
 
+    def init(self, molecule, starting_field, pcm, alpha_t, oc_input, iterator_config_input = None):
+        self.simulation_par.dt = oc_input.dt
+        self.simulation_par.nstep = oc_input.nstep
+        self.par.target_state = oc_input.target_state
+        self.par.alpha_t = alpha_t
+
+        self.J = 99999
+        self.convergence_t = 99999
+
+        self.init_rabitz(oc_input, molecule, pcm)
+
+        self.field_psi_matrix = np.copy(starting_field.get_full_field())
+        self.psi_coeff_t = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
+        self.init_output_dictionary()
+
+
+
 
     def init_output_dictionary(self):
         self.dict_out['log_file'] = self.get_log_file_out
@@ -100,29 +116,18 @@ class OCRabitzIterator(ABCOCIterator):
         self.dict_out['pop_t'] = self.get_pop_t
         self.dict_out['field_t'] = self.get_field_t
 
-    def init(self, oc_input, molecule, starting_field, pcm, alpha_t):
-        self.par.target_state = oc_input.target_state
-        self.par.alpha_t = alpha_t
-        self.J = 99999
-        self.convergence_t = 99999
 
-        self.simulation_par.dt = oc_input.dt
-        self.simulation_par.nstep = oc_input.nstep
+#init specific iterator
 
-        self.field_psi_matrix = np.copy(starting_field.get_full_field())
-        self.psi_coeff_t = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
-
+    def init_rabitz(self, oc_input, molecule, pcm):
         self.rabitz_iterator = oc_input.oc_iterator_name
-
         self.prop_psi.set_propagator(molecule, pcm)
         self.prop_chi.set_propagator(molecule, pcm)
         self.chi_coeff_t = np.zeros([self.simulation_par.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
         self.field_chi_vector_t = np.zeros([self.simulation_par.nstep, 4], dtype=complex)
         self.field_chi_vector_t[:,0] = self.field_psi_matrix[:, 0]
-
         self.initial_c0 = self.prop_psi.propagator_terms.mol.wf.ci
         self.psi_coeff_t[0] =  self.initial_c0
-        self.init_output_dictionary()
 
 
 # methods inside dictionary return things to be saved

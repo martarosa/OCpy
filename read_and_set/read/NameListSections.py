@@ -83,7 +83,6 @@ class SectionSave(ABCNamelistSection):
         self.case_unsensitive_keys = ['append']
 
 
-
 class SectionOptimalControl(ABCNamelistSection):
     def __init__(self):
         super().__init__()
@@ -96,7 +95,7 @@ class SectionOptimalControl(ABCNamelistSection):
                                             'convergence_thr': '99999',
                                             'delta_ts': '0',
                                             'Ns': '0',
-                                            'iterator_config_file': 'None'}
+                                            'iterator_config_file': 'false'}
         self.section_dictionary = {}
         self.allowed_val = [['alpha', ['const', 'sin', 'quin']],
                             ['restart', ['true', 'false']]]
@@ -110,8 +109,8 @@ class SectionGenetic(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = "GENETIC"
-        self.section_default_dictionary = {'chromosomes': '120',
-                                           'n_evolver_chr': '20',
+        self.section_default_dictionary = {'n_chromosomes': '120',
+                                           'n_selected_chr': '20',
                                            'genetic_algorithm' : 'sequential',
                                            'amplitude_lim': '0.05'}
         self.section_dictionary = {}
@@ -125,7 +124,7 @@ class SectionMate(ABCNamelistSection):
         self.section_default_dictionary = {'mate' : 'cxUniform',
                                            'mate_probability': '1'}
         self.section_dictionary = {}
-        self.allowed_val = [['mate', ['DEAP_cxUniform']]]
+        self.allowed_val = [['mate', ['cxUniform']]]
         self.case_unsensitive_keys = []
 
 
@@ -140,7 +139,7 @@ class SectionMutate(ABCNamelistSection):
                                            'eta_thr': '0.6',
                                            'q': '0.9'}
         self.section_dictionary = {}
-        self.allowed_val = [['mutate',['DEAP_mutGaussian']]]
+        self.allowed_val = [['mutate',['mutGaussian']]]
         self.case_unsensitive_keys = []
 
 
@@ -150,7 +149,7 @@ class SectionSelect(ABCNamelistSection):
         self.section = "SELECT"
         self.section_default_dictionary = {'select':'selBest'}
         self.section_dictionary = {}
-        self.allowed_val = [['select',['DEAP_selBest']]]
+        self.allowed_val = [['select',['selBest']]]
         self.case_unsensitive_keys = []
 
 
