@@ -1,4 +1,4 @@
-import read.auxiliary_functions as af
+from read_and_set import read as af
 from abc import ABCMeta, abstractmethod
 
 

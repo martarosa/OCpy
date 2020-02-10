@@ -59,9 +59,6 @@ class LogHeader():
 
 
 
-
-
-
     def restart_rabitz(self, log_input):
         self.field_header = ""
         #everithing is already done in restart

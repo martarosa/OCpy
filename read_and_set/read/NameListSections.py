@@ -1,5 +1,5 @@
 import numpy as np
-from read.ABCNameListSection import ABCNamelistSection
+from read_and_set.read.ABCNameListSection import ABCNamelistSection
 
 
 class SectionSystem(ABCNamelistSection):
@@ -14,7 +14,7 @@ class SectionSystem(ABCNamelistSection):
         self.section_dictionary = {}
         self.allowed_val = [['oc_algorithm', ['eulero_1order_prop', 'eulero_2order_prop', 'rabitzi', 'rabitzii', 'genetic']]]
         self.case_unsensitive_keys = ['oc_algorithm']
-        self.not_implemented_val = []
+
 
     def init_default_folder(self, folder):
         self.section_default_dictionary['folder'] = folder
@@ -34,7 +34,7 @@ class SectionField(ABCNamelistSection):
         self.section_dictionary = {}
         self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'sum', 'sum_pip', 'genetic', 'test']]]
         self.case_unsensitive_keys = ['field_type']
-        self.not_implemented_val = []
+
 
     def convert_string_coefficients(self, key_string_coeff):
         self.section_dictionary[key_string_coeff] = np.asarray(self.section_dictionary[key_string_coeff].split()).astype(float)
@@ -52,7 +52,7 @@ class SectionWaveFunction(ABCNamelistSection):
         self.section_dictionary = {}
         self.allowed_val = []
         self.case_unsensitive_keys = []
-        self.not_implemented_val = []
+
 
 
 class SectionEnviron(ABCNamelistSection):
@@ -70,18 +70,18 @@ class SectionEnviron(ABCNamelistSection):
         self.section_dictionary = {}
         self.allowed_val = [['env', ['vac', 'sol', 'nanop']]]
         self.case_unsensitive_keys = ['env', 'read_qijn']
-        self.not_implemented_val = []
+
 
 
 class SectionSave(ABCNamelistSection):
     def __init__(self):
         super().__init__()
         self.section = "SAVE"
-        self.section_default_dictionary = {'restart_step': '10'}
+        self.section_default_dictionary = {'restart_step': '10', 'append': 'false'}
         self.section_dictionary = {}
-        self.allowed_val = []
-        self.case_unsensitive_keys = []
-        self.not_implemented_val = []
+        self.allowed_val = [['append', ['true', 'false']]]
+        self.case_unsensitive_keys = ['append']
+
 
 
 class SectionOptimalControl(ABCNamelistSection):

@@ -8,8 +8,7 @@ from pcm.ABCPCM import ABCPCM
 class DinamicPCM(ABCPCM):
     def __init__(self):
         super().__init__()
-        self.env = None
-        self.q_t = None
+
 
     def init_pcm(self, PCM_input, mol, field_t):
         mana = 1

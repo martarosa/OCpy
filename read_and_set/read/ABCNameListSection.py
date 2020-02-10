@@ -1,8 +1,6 @@
-import sys
 from copy import deepcopy
 from abc import ABCMeta
-import read.auxiliary_functions as af
-import read.NamelistTools as nt
+from read_and_set import read as af
 
 
 class ABCNamelistSection(metaclass=ABCMeta):
@@ -65,3 +63,7 @@ class ABCNamelistSection(metaclass=ABCMeta):
     def check_namelist_key_exist(self, key):
         if key in self.section_dictionary:
             return True
+
+
+    def add_key_and_value_to_namelist(self, key, value):
+        self.section_dictionary[key] = value

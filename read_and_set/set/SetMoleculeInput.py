@@ -1,6 +1,6 @@
 from ABCSetInput import ABCSetInput
-from molecule.MoleculeInput import MoleculeInput
-from read.ReadOutputGaussian import ReadOutputGaussian
+from read_and_set.set.MoleculeInput import MoleculeInput
+from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
 
 
 class SetMoleculeInput(ABCSetInput):

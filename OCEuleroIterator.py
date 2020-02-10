@@ -1,9 +1,9 @@
 import numpy as np
 
 from propagator import PropagatorsEulero as prop
-from read import auxiliary_functions as af
+from read_and_set.read import auxiliary_functions as af
 
-from ABCOCIterator import ABCOCIterator, OCIteratorParameters
+from ABCOCIterator import ABCOCIterator, OCIteratorParameters, SimulationParameters
 
 
 
@@ -11,37 +11,50 @@ from ABCOCIterator import ABCOCIterator, OCIteratorParameters
 class Eulero1PropagationIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
-        self.oc_iterator_parameters = OCIteratorParameters()
+        self.par = OCIteratorParameters()
+        self.simulation_par = SimulationParameters()
+
+        self.convergence_t = None
+        self.J = None
+        self.field_psi_matrix = None
+        self.psi_coeff_t = None
+        self.dict_out = {}
+
         self.prop_psi = prop.PropagatorEulero1Order()
 
 
     def iterate(self, current_iteration):
-        self.oc_iterator_parameters.psi_coeff_t = self.prop_psi.propagate_n_step(self.oc_iterator_parameters.nstep, self.oc_iterator_parameters.field_psi_matrix)
+        self.par.psi_coeff_t = self.prop_psi.propagate_n_step(self.simulation_par.dt,
+                                                              self.simulation_par.nstep,
+                                                              self.field_psi_matrix)
 
 
     def init(self, oc_input, molecule, starting_field, env, alpha_t):
-        self.oc_iterator_parameters.nstep = oc_input.nstep
-        self.oc_iterator_parameters.dt = oc_input.dt
-        self.oc_iterator_parameters.J = 99999
-        self.oc_iterator_parameters.convergence_t = 99999
+        self.par.target_state = oc_input.target_state
+        self.par.alpha_t = alpha_t
+        self.J = 99999
+        self.convergence_t = 99999
 
-        self.prop_psi.set_propagator(self.oc_iterator_parameters.dt, molecule, env)
-        self.oc_iterator_parameters.field_psi_matrix = np.copy(starting_field.field)
+        self.simulation_par.dt = oc_input.dt
+        self.simulation_par.nstep = oc_input.nstep
 
-        self.oc_iterator_parameters.psi_coeff_t = np.zeros([self.oc_iterator_parameters.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
+        self.prop_psi.set_propagator(molecule, env)
+        self.field_psi_matrix = np.copy(starting_field.get_full_field())
+
+        self.psi_coeff_t = np.zeros([self.simulation_par.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
 
 
     def init_output_dictionary(self):
-        self.oc_iterator_parameters.dict_out['pop_t'] = self.get_pop_t
+        self.dict_out['pop_t'] = self.get_pop_t
 
     def get_pop_t(self):
-        pop_t = np.real(af.population_from_wf_matrix(self.oc_iterator_parameters.psi_coeff_t))
+        pop_t = np.real(af.population_from_wf_matrix(self.psi_coeff_t))
         return pop_t
 
 
     def get_restart(self):
-        return self.oc_iterator_parameters.field_psi_matrix
+        return self.field_psi_matrix
 
 
     def check_convergence(self):
@@ -56,37 +69,47 @@ class Eulero1PropagationIterator(ABCOCIterator):
 class Eulero2PropagationIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
-        self.oc_iterator_parameters = OCIteratorParameters()
+        self.par = OCIteratorParameters()
+        self.simulation_par = SimulationParameters()
+
+        self.convergence_t = None
+        self.J = None
+        self.field_psi_matrix = None
+        self.psi_coeff_t = None
+        self.dict_out = {}
         self.prop_psi = prop.PropagatorEulero2Order()
 
 
     def iterate(self, current_iteration):
-        self.oc_iterator_parameters.psi_coeff_t = self.prop_psi.propagate_n_step(self.oc_iterator_parameters.nstep, self.oc_iterator_parameters.field_psi_matrix)
+        self.par.psi_coeff_t = self.prop_psi.propagate_n_step(self.simulation_par.dt,
+                                                              self.simulation_par.nstep,
+                                                              self.field_psi_matrix)
 
     def init(self, oc_input, molecule, starting_field, env, alpha_t):
-        self.oc_iterator_parameters.nstep = oc_input.nstep
-        self.oc_iterator_parameters.dt = oc_input.dt
-        self.oc_iterator_parameters.J = 99999
-        self.oc_iterator_parameters.convergence_t = 99999
+        self.par.target_state = oc_input.target_state
+        self.par.alpha_t = alpha_t
+        self.J = 99999
+        self.convergence_t = 99999
 
-        self.prop_psi.set_propagator(self.oc_iterator_parameters.dt, molecule, env)
-        self.oc_iterator_parameters.field_psi_matrix = np.copy(starting_field.field)
+        self.simulation_par.dt = oc_input.dt
+        self.simulation_par.nstep = oc_input.nstep
 
-        self.oc_iterator_parameters.psi_coeff_t = np.zeros([self.oc_iterator_parameters.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
+        self.prop_psi.set_propagator(molecule, env)
+        self.field_psi_matrix = np.copy(starting_field.get_full_field)
+
+        self.psi_coeff_t = np.zeros([self.simulation_par.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
 
 
     def init_output_dictionary(self):
-        self.oc_iterator_parameters.dict_out['pop_t'] = self.get_pop_t
+        self.dict_out['pop_t'] = self.get_pop_t
 
     def get_pop_t(self):
-        pop_t = np.real(af.population_from_wf_matrix(self.oc_iterator_parameters.psi_coeff_t))
+        pop_t = np.real(af.population_from_wf_matrix(self.psi_coeff_t))
         return pop_t
 
-
-
     def get_restart(self):
-        return self.oc_iterator_parameters.field_psi_matrix
+        return self.field_psi_matrix
 
 
     def check_convergence(self):

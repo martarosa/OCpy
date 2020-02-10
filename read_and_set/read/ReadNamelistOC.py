@@ -1,10 +1,8 @@
 import configparser
-import sys
 import os.path
-import read.auxiliary_functions as af
-from read import NameListSections as sec
-from read import ABCReadNamelist as readnamelist
-
+from read_and_set import read as af
+from read_and_set.read import NameListSections as sec
+from read_and_set.read import ABCReadNamelist as readnamelist
 
 
 class ReadNamelistOC(readnamelist.ABCReadNamelist):
@@ -19,7 +17,6 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
         self.env = sec.SectionEnviron()
         self.save = sec.SectionSave()
         self.oc = sec.SectionOptimalControl()
-
 
     def read_file(self, folder, namefile):
         if(not os.path.isfile(folder+namefile)):
@@ -54,12 +51,14 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
         self.field.convert_string_coefficients('omega')
         self.check_wavef_nml_consistency()
         self.wf.fill_empty_with_default()
-        self.check_save_nml_consistency()
-        self.save.fill_empty_with_default()
         self.check_environ_nml_consistency()
         self.env.fill_empty_with_default()
         self.check_optimalc_nml_consistency()
         self.oc.fill_empty_with_default()
+        self.check_save_nml_consistency()
+        self.set_save_dependent_default()
+        self.save.fill_empty_with_default()
+
 
         self.sys.check_keys()
         self.wf.check_keys()
@@ -68,6 +67,7 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
         self.oc.check_keys()
         self.save.check_keys()
 
+
     def check_system_nml_consistency(self):
         pass
 
@@ -75,14 +75,13 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
         pass
 
     def check_field_nml_consistency(self):
-        #if restart only name_field_file can be present in FIELD nml
-        #if(self.oc.section_dictionary('restart') in locals() or self.oc.section_dictionary('restart') in globals()):
-        #    if( self.oc.section_dictionary('restart') == 'true'):
+        #if calculation is restarted only "name_field_file" can be present in FIELD nml
         if(self.oc.check_namelist_key_exist_and_value('restart', 'true')):
+        #number of key is max equal to 1
             if len(self.field.section_dictionary.keys()) > 1:
                 af.exit_error("ERROR. Restarted calculation. field is read from file. "
                                  "Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
-
+        #and that one must be "name_field_file"
             elif len(self.field.section_dictionary.keys()) == 1:
                 if self.field.check_namelist_key_exist("name_field_file"):
                     pass
@@ -90,35 +89,38 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
                     af.exit_error(
                             "Error. Restarted calculation. "
                             "Field is read from file. Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
-            self.check_field_resart()
+            self.check_field_restart()
+        #if calculaion is with genetic oc algorithm only genetic field is allowed
         elif(self.sys.check_namelist_key_exist_and_value('oc_algorithm', 'genetic')):
                 #if oc optimizator genetic only options are genetic field or restart, all other keywords in FIELD must be empty
                 if (not self.field.check_namelist_key_exist_and_value('field_type', 'genetic')):
                     af.exit_error(
                         "Error. Genetic algorithm for optimal control optimization. "
                         "\"field_type\" in \"FIELD\" namelist must be \"genetic\"")
-                if len(self.field.section_dictionary.keys()) > 1:
-                    af.exit_error("Error. Genetic algorithm for optimal control optimization. "
-                             "\"FIELD\" namelist should be empty apart for  \"field_type\"")
         self.check_field_shape_parameters_warning()
 
 
-    def check_field_resart(self):
+    def check_field_restart(self):
+        #if there is a name for the restaring field check if it exist
         if self.field.check_namelist_key_exist('name_field_file'):
             if os.path.isfile(self.sys.section_dictionary['folder'] + self.field.section_dictionary['name_field_file']):
                 pass
+            #if it does not exist  checks if default name exist and make WARNiNG
             elif os.path.isfile(self.sys.section_dictionary['folder'] + self.sys.section_dictionary['name'] + '_field_bkp.dat'):
                 print("WARNING: restart from \"" + self.field.section_dictionary['name_field_file'] + "\" asked but file not found. \n"
                       "Restarting from " + self.sys.section_dictionary['name'] + '_field_bkp.dat')
                 self.field.section_dictionary['name_field_file'] = self.sys.section_dictionary['name'] + '_field_bkp.dat'
                 self.oc.section_dictionary['restart'] = "only_bkp_found"
+            # if a restart don't exist start from new and makes a WARNING
             else:
                 self.oc.section_dictionary['restart'] = 'norestart_found'
                 print("WARNING: restart from \"" + self.field.section_dictionary['name_field_file'] + "\" asked but file not found. \n"
                       "Starting calculation from default field")
                 self.field.section_dictionary['name_field_file'] = 'false'
+        #f there is no name directly checks if default restart exist
         elif os.path.isfile(self.sys.section_dictionary['folder'] + self.sys.section_dictionary['name'] + '_field_bkp.dat'):
                 self.field.section_dictionary['name_field_file'] = self.sys.section_dictionary['name'] + '_field_bkp.dat'
+        # if don't find a restart start from new field and make a WARNING
         else:
             self.oc.section_dictionary['restart'] = 'norestart_found'
             print("WARNING: restart asked but file not found. \n"
@@ -127,7 +129,7 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
 
 
     def check_field_shape_parameters_warning(self):
-
+        # if default (which is constant) or constant
         if(not self.field.check_namelist_key_exist('field_type')
                 or self.field.check_namelist_key_exist_and_value('field_type', 'const')):
             self.field.check_namelist_key_and_print('omega',
@@ -165,17 +167,21 @@ class ReadNamelistOC(readnamelist.ABCReadNamelist):
                 af.exit_error("ERROR: in \"ENVIRON\" key \"env\" is \"vac\". all other key in namelist ENVIRON are not used")
 
     def check_optimalc_nml_consistency(self):
-        #if propagation OPTIMALC namelist mus be empty
+        #if propagation OPTIMALC namelist must be empty
         if (self.sys.check_namelist_key_exist_and_list_value('oc_algorithm', ['eulero_1order_prop', 'eulero_2order_prop'])):
             if len(self.oc.section_dictionary.keys()) != 0:
                 af.exit_error("ERROR. \"oc_algorithm\" in namelist \"SYSTEM\" is a propagation without optimal control. "
                          "OPTIMALC namelist should be empty")
 
 
-
     def check_save_nml_consistency(self):
         pass
 
+
+    def set_save_dependent_default(self):
+        if (self.oc.check_namelist_key_exist_and_value('restart', 'true')):
+            if not(self.save.check_namelist_key_exist('append')):
+                self.save.add_key_and_value_to_namelist('append', 'true')
 
 
 

@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from propagator import PropagatorsEulero as prop
 from field.Field import Field
-from read import auxiliary_functions as af
+from read_and_set.read import auxiliary_functions as af
 
 class Chromosome():
     def __init__(self):

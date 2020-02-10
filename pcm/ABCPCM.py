@@ -10,11 +10,9 @@ class PCMParameters():
 
 class ABCPCM(metaclass=ABCMeta):
     def __init__(self):
-        self.env = None
-        self.q_t = None
+        self.par = PCMParameters()
 
-        self.cavity = None
-        self.muLF = 0
+        self.q_t = None
         self.qijn = None
         self.qijn_lf = None
         self.q00n = None

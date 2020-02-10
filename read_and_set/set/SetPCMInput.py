@@ -1,6 +1,6 @@
 from ABCSetInput import ABCSetInput
-from pcm.PCMInput import PCMInput
-from read.ReadOutputGaussian import ReadOutputGaussian
+from read_and_set.set.PCMInput import PCMInput
+from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
 
 
 class SetPCMInput(ABCSetInput):

@@ -12,27 +12,27 @@ class PropagatorOCfwd(ABCPropagator):
         self.propagator_terms = PropagatorTerms()
         self.propagator = []
 
-    def set_propagator(self, dt, molecule, env):
-        self.init_propagaror_terms(dt, molecule, env)
+    def set_propagator(self, molecule, env):
+        self.init_propagaror_terms(molecule, env)
         self.clean_propagator()
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
         self.add_term_to_propagator("eulero_field")
         if self.propagator_terms.pcm != None:
-            if self.propagator_terms.pcm.env == "sol":
+            if self.propagator_terms.pcm.par.env == "sol":
                 self.add_term_to_propagator("eulero_pcm")
 
 
-    def propagate_one_step(self, i, field):
+    def propagate_one_step(self, i, dt, field):
         for func in self.propagator:
-            func(i, 1, field)
+            func(i, 1, dt, field)
 
 
-    def propagate_n_step(self, nstep, field):
+    def propagate_n_step(self, dt, nstep, field):
         out = list()
         out.append(self.propagator_terms.mol.wf.ci)
         for i in range(nstep):
-            self.propagate_one_step(i, field[i])
+            self.propagate_one_step(i, dt, field[i])
             out.append(self.propagator_terms.mol.wf.ci)
         out = np.array(out)
         return out
@@ -44,26 +44,26 @@ class PropagatorOCbwd(ABCPropagator):
         self.propagator_terms = PropagatorTerms()
         self.propagator = []
 
-    def set_propagator(self, dt, molecule, env):
-        self.init_propagaror_terms(dt, molecule, env)
+    def set_propagator(self, molecule, env):
+        self.init_propagaror_terms(molecule, env)
         self.clean_propagator()
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
         self.add_term_to_propagator("eulero_field")
         if self.propagator_terms.pcm != None:
-            if (self.propagator_terms.pcm.env == "sol"):
+            if (self.propagator_terms.pcm.par.env == "sol"):
                 self.add_term_to_propagator("oc_pcm_bwd")
 
 
-    def propagate_one_step(self, i, field, wf_fwd):
+    def propagate_one_step(self, i, dt, field, wf_fwd):
         for func in self.propagator:
-            func(i, 1, field, wf_fwd)
+            func(i, 1, -dt, field, wf_fwd)
 
-    def propagate_n_step(self, nstep, field, wf_fwd):
+    def propagate_n_step(self, dt, nstep, field, wf_fwd):
         out = list()
         out.append(self.propagator_terms.mol.wf.ci)
         for i in range(nstep):
-            self.propagate_one_step(i, field[i], wf_fwd)
+            self.propagate_one_step(i, dt, field[i], wf_fwd)
             out.append(self.propagator_terms.mol.wf.ci)
         out = np.array(out)
         return out

@@ -16,8 +16,8 @@ class ABCPropagator(metaclass=ABCMeta):
         self.propagator = []
 
 
-    def init_propagaror_terms(self, dt, molecule, pcm):
-        self.propagator_terms.set_attributes(dt, molecule, pcm)
+    def init_propagaror_terms(self, molecule, pcm):
+        self.propagator_terms.set_attributes(molecule, pcm)
         self.propagator_terms.init_terms_dictionary()
 
     def add_term_to_propagator(self, term_name):
@@ -27,7 +27,7 @@ class ABCPropagator(metaclass=ABCMeta):
         self.propagator = []
 
     @abstractmethod
-    def set_propagator(self, dt, molecule, env):
+    def set_propagator(self, molecule, env):
         pass
 
     @abstractmethod

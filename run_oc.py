@@ -1,6 +1,4 @@
 import SystemManager as ini
-from read.ReadNamelistOC import ReadNamelistOC
-
 
 folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/"
 namefile = "input.dat"

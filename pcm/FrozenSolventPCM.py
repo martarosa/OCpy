@@ -1,7 +1,7 @@
 import numpy as np
 
-from pcm.ABCPCM import ABCPCM
-from read import auxiliary_functions as af
+from pcm.ABCPCM import ABCPCM, PCMParameters
+from read_and_set.read import auxiliary_functions as af
 
 # if the solvent is frozen qijn and qijn_lf are fixed, calculated once at the initialization
 #q_t dependence on time comes only from <psi(t)|qijn|psi(t)>
@@ -9,11 +9,9 @@ from read import auxiliary_functions as af
 class FrozenSolventPCM(ABCPCM):
     def __init__(self):
         super().__init__()
-        self.env = None
-        self.q_t = None
+        self.par = PCMParameters()
 
-        self.cavity = None
-        self.muLF = 0
+        self.q_t = None
         self.qijn = None
         self.qijn_lf = None
         self.q00n = None
@@ -23,17 +21,19 @@ class FrozenSolventPCM(ABCPCM):
 
 
     def init_pcm(self, PCM_input, mol, field_t):
-        self.env = PCM_input.env
-        self.cavity = PCM_input.cavity
-        self.init_static_matrices(PCM_input.Qnn_reactionfield, PCM_input.Qnn_localfield, mol)
-        self.muLF = -af.matrix_prod_tesserae_ijn_nn(self.qijn_lf, mol.Vijn)
+        self.par.env = PCM_input.env
+        self.par.cavity = PCM_input.cavity
+        self.par.muLF = -af.matrix_prod_tesserae_ijn_nn(self.qijn_lf, mol.Vijn)
+
         self.propagate(0, mol, field_t)
         self.qijn_fortran_flip = af.flip_3D_py2f(self.qijn)
+        self.init_static_matrices(PCM_input.Qnn_reactionfield, PCM_input.Qnn_localfield, mol)
 
     def propagate(self, i, mol, field_t):
         q_t_reactionf = af.double_summation(mol.wf.ci_prev[0], np.conj(mol.wf.ci_prev[0]), self.qijn)
         q_t_lf = np.dot(self.qijn_lf, field_t)
         self.q_t = np.array([q_t_reactionf, q_t_lf])
+
 
     def propagate_fortran(self, ci, field_t):
         q_t_reactionf = mf.propagate_q_frozen(ci, self.qijn_fortran_flip)
@@ -60,11 +60,11 @@ class FrozenSolventPCM(ABCPCM):
         self.calc_qijn_lf(Q_gamess_lf)
 
     def calc_qijn(self, Q_gamess, Vijn):
-        Q_tdplas = np.dot(Q_gamess, np.diag(self.cavity[:,3]))
+        Q_tdplas = np.dot(Q_gamess, np.diag(self.par.cavity[:,3]))
         self.qijn = af.matrix_prod_tesserae_ijn_nn(Q_tdplas, Vijn)
         self.q00n = self.qijn[0,0]
 
     def calc_qijn_lf(self, Q_gamess_lf):
-        Q_local_field_tdplas = np.dot(Q_gamess_lf, np.diag(self.cavity[:,3]))
-        qijn_lf = - np.dot(Q_local_field_tdplas, self.cavity[:,0:3])
+        Q_local_field_tdplas = np.dot(Q_gamess_lf, np.diag(self.par.cavity[:,3]))
+        qijn_lf = - np.dot(Q_local_field_tdplas, self.par.cavity[:,0:3])
         self.qijn_lf = qijn_lf.astype(float)

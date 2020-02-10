@@ -3,23 +3,27 @@ from abc import ABCMeta, abstractmethod
 
 
 class OCIteratorParameters():
+    def __init__(self):
+        self.target_state = None
+        self.alpha_t = None
 
+
+class SimulationParameters():
     def __init__(self):
         self.nstep = None
         self.dt = None
-        self.target_state = None
-        self.alpha_t = None
-        self.convergence_t =  99999
-        self.J = 99999
-        self.field_psi_matrix = None
-        self.psi_coeff_t = None
-        self.dict_out = {}
-
 
 
 class ABCOCIterator(metaclass=ABCMeta):
     def __init__(self):
-        self.oc_iterator_parameters = OCIteratorParameters()
+        self.par = OCIteratorParameters()
+        self.simulation_par = SimulationParameters()
+
+        self.convergence_t = None
+        self.J = None
+        self.field_psi_matrix = None
+        self.psi_coeff_t = None
+        self.dict_out = {}
 
 
     @abstractmethod

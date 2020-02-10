@@ -1,17 +1,19 @@
-from field.SetFieldInput import SetFieldInput
-from save.SetLogInput import SetLogInput
-from molecule.SetMoleculeInput import SetMoleculeInput
-from SetOCInput import SetOCInput
-from pcm.SetPCMInput import SetPCMInput
-from save.SetSaveInput import SetSaveInput
-from read.ReadNamelistOC import ReadNamelistOC
-from field.ReadFieldRestartGenetic import ReadFieldRestartGenetic
-from field.ReadFieldRestartRabitz import ReadFieldRestartRabitz
+from read_and_set.read import ReadNamelistOC
+
+
+from read_and_set.set.SetFieldInput import SetFieldInput
+from read_and_set.set.SetLogInput import SetLogInput
+from read_and_set.set.SetMoleculeInput import SetMoleculeInput
+from read_and_set.set.SetOCInput import SetOCInput
+from read_and_set.set.SetPCMInput import SetPCMInput
+from read_and_set.set.SetSaveInput import SetSaveInput
+
+from read_and_set.set.ReadFieldRestartGenetic import ReadFieldRestartGenetic
+from read_and_set.set.ReadFieldRestartRabitz import ReadFieldRestartRabitz
 
 
 from molecule.Molecule import Molecule
 from field.Field import Field
-from pcm.ABCPCM import ABCPCM
 from pcm.DinamicPCM import DinamicPCM
 from pcm.FrozenSolventPCM import FrozenSolventPCM
 from OCManager import OCManager
@@ -35,10 +37,7 @@ from OCManager import OCManager
 #         Parameters don't know any format, are only containers of informations
 #      3) Molecule.init_molecule(MoleculeParameters) initialize Molecule attributes from MoleculeParameters
 
-class SystemParameters():
-    def __init__(self):
-        self.nstep = None
-        self.dt = None
+
 
 
 class SystemManager():
@@ -48,7 +47,6 @@ class SystemManager():
         self.mol = Molecule()
         self.starting_field = Field()
         self.pcm = None #ABCPCM()
-        self.system_parameters = SystemParameters()
         self.oc = OCManager() # the possibility to perform a single propagation without OC is a special case of optimalControl (since this is a OC program
 
 
@@ -80,6 +78,7 @@ class SystemManager():
         set_field.set(user_input)
         self.starting_field.init_field(set_field.input_parameters)
 
+
     def init_pcm(self, user_input):
         set_pcm = SetPCMInput()
         set_pcm.set(user_input)
@@ -88,10 +87,6 @@ class SystemManager():
         elif user_input.env.section_dictionary['env'] == 'nanop':
             self.pcm = DinamicPCM()
         self.pcm.init_pcm(set_pcm.input_parameters, self.mol, self.starting_field.field[0])
-
-
-    def init_system_parameters(self, user_input):
-        init_system = SetSystemInput()
 
 
 

@@ -1,8 +1,6 @@
-import os.path
-
-from field.FieldInput import FieldInput
+from read_and_set.set.FieldInput import FieldInput
 from ABCSetInput import ABCSetInput
-from read.ReadOutputGaussian import ReadOutputGaussian
+from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
 
 
 class SetFieldInput(ABCSetInput):
@@ -26,10 +24,11 @@ class SetFieldInput(ABCSetInput):
         self.input_parameters.sigma = float(user_input.field.section_dictionary['sigma'])
         self.input_parameters.omega = user_input.field.section_dictionary['omega']
         self.input_parameters.t0 = float(user_input.field.section_dictionary['t0'])
+
         self.input_parameters.omega_sys = read_output.read_en_ci0(user_input.sys.section_dictionary['folder'] +
                                                                   user_input.wf.section_dictionary['name_ei'])
 
     def set_restart(self, user_input):
             self.read_restart.read_file(user_input.sys.section_dictionary['folder'], user_input.field.section_dictionary['name_field_file'])
-            self.input_parameters = self.read_restart.field_par
+            self.input_parameters = self.read_restart.input_parameters
 

@@ -26,7 +26,7 @@ def normalized_projector_mean_value(vector, vector_to_project):
 def field_J_integral(field_matrix, dt):
     ax_square=field_matrix.ndim-1
     ax_integral=field_matrix.ndim-2
-    f_square = np.sum(field_matrix*field_matrix,axis=ax_square)
+    f_square = np.sum(field_matrix[:,1:]*field_matrix[:,1:],axis=ax_square)
     f_integral = np.sum(f_square, axis=ax_integral)
     out_field = f_integral*dt
     return out_field
@@ -35,7 +35,7 @@ def field_J_integral(field_matrix, dt):
 def alpha_field_J_integral(field_matrix, alpha_t, dt):
     ax_square=field_matrix.ndim-1
     ax_integral=field_matrix.ndim-2
-    f_square = np.sum(field_matrix*field_matrix,axis=ax_square)*alpha_t
+    f_square = np.sum(field_matrix[:,1:]*field_matrix[:,1:],axis=ax_square)*alpha_t
     f_integral = np.sum(f_square, axis=ax_integral)
     out_integral = f_integral*dt
     return out_integral
@@ -129,9 +129,6 @@ def convert_pot_to_waveT_format(matrix, name_out_file, n_en):
                 np.savetxt(f, V_trilled[tril_index], fmt='%10.5e')
                 tril_index += 1
                 f.close()
-
-
-
 
 
 def calc_deltaJ_analitical_terms(psi_k, psi_km1, chi_k, eps_k, eps_km1, eps_tilde_k, Q, V, alpha, dt, nstep, ntessere):

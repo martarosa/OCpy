@@ -1,7 +1,7 @@
 import numpy as np
 
 from ABCSetInput import ABCSetInput
-from save.LogInput import LogInput
+from read_and_set.set.LogInput import LogInput
 
 
 class SetLogInput(ABCSetInput):

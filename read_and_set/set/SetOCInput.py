@@ -1,15 +1,12 @@
-from read import auxiliary_functions as af
-from ABCSetInput import ABCSetInput
-from OCInput import OCInput
+from read_and_set.read import auxiliary_functions as af
+from read_and_set.set.ABCSetInput import ABCSetInput
+from read_and_set.set.OCInput import OCInput
 from OCGeneticInput import OCGeneticInput
-
-from read.ReadNamelistGenetic import ReadOCConfigurationNamelistGenetic
 
 
 class SetOCInput(ABCSetInput):
     def __init__(self):
         self.input_parameters = OCInput()
-
 
 
     def set(self, user_input):
@@ -23,8 +20,6 @@ class SetOCInput(ABCSetInput):
         self.read_and_set_config_file(self.input_parameters.oc_iterator_name,
                                       user_input.oc.section_dictionary['iterator_config_file'],
                                       user_input.sys.section_dictionary['folder'])
-
-
 
 
 
@@ -42,6 +37,7 @@ class SetOCInput(ABCSetInput):
         self.input_parameters.target_state = af.normalize_vector([float(i) for i in user_input.oc.section_dictionary["target_state"].split(' ')])
         self.input_parameters.iterator_config_file = user_input.oc.section_dictionary['iterator_config_file']
 
+
     def read_and_set_config_file(self, oc_iterator_name, config_name, folder):
         if oc_iterator_name == "genetic":
             genetic_input = ReadOCConfigurationNamelistGenetic()
@@ -53,7 +49,7 @@ class SetOCInput(ABCSetInput):
             pass #rabitz ed eulero non fanno niente
 
 
-
+##############da sistemare#################
     def set_genetic(self, genetic_input):
         self.input_parameters.amplitude_min = float(genetic_input.genetic.section_dictionary['amplitude_min'])
         self.input_parameters.amplitude_max = float(genetic_input.genetic.section_dictionary['amplitude_max'])
