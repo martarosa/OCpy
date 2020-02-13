@@ -1,9 +1,10 @@
 import numpy as np
-
+from copy import deepcopy
 from propagator import PropagatorsEulero as prop
 from read_and_set.read import auxiliary_functions as af
 
-from OC.ABCOCIterator import ABCOCIterator, OCIteratorParameters, SimulationParameters
+from OC.ABCOCIterator import ABCOCIterator, OCIteratorParameters
+from SystemObj import DiscreteTimePar, Func_tMatrix
 
 
 
@@ -11,23 +12,23 @@ from OC.ABCOCIterator import ABCOCIterator, OCIteratorParameters, SimulationPara
 class Eulero1PropagationIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
+        #class attributes
         self.par = OCIteratorParameters()
-        self.simulation_par = SimulationParameters()
+        self.discrete_t_par = DiscreteTimePar()
 
-        self.convergence_t = None
-        self.J = None
-        self.field_psi_matrix = None
-        self.psi_coeff_t = None
+        self.field_psi_matrix = Func_tMatrix()
+        self.psi_coeff_t_matrix = Func_tMatrix()
+
         self.dict_out = {}
 
+        #eulero
         self.prop_psi = prop.PropagatorEulero1Order()
 
 
-    def iterate(self, current_iteration):
-        self.psi_coeff_t = self.prop_psi.propagate_n_step(self.simulation_par.dt,
-                                                              self.simulation_par.nstep,
-                                                              self.field_psi_matrix[:,1:])
 
+    def iterate(self, current_iteration):
+        self.psi_coeff_t_matrix = self.prop_psi.propagate_n_step(self.discrete_t_par,
+                                                                 self.field_psi_matrix)
 
     def check_convergence(self):
         pass
@@ -35,33 +36,35 @@ class Eulero1PropagationIterator(ABCOCIterator):
     def calc_J(self):
         pass
 
-
     def init(self, molecule, starting_field, env, alpha_t, oc_input, iterator_config_input = None):
-        self.simulation_par.dt = oc_input.dt
-        self.simulation_par.nstep = oc_input.nstep
+        self.discrete_t_par.dt = oc_input.dt
+        self.discrete_t_par.nstep = oc_input.nstep
+
         self.par.target_state = oc_input.target_state
         self.par.alpha_t = alpha_t
-
-        self.J = 99999
-        self.convergence_t = 99999
+        self.par.J = 99999
+        self.par.convergence_t = 99999
 
         self.prop_psi.set_propagator(molecule, env)
+        self.field_psi_matrix = deepcopy(starting_field.field)
 
-        self.field_psi_matrix = np.copy(starting_field.get_full_field())
-        self.psi_coeff_t = np.zeros([self.simulation_par.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
+
 
     def init_output_dictionary(self):
         self.dict_out['pop_t'] = self.get_pop_t
 
 
+
     def get_pop_t(self):
-        pop_t = np.real(af.population_from_wf_matrix(self.psi_coeff_t))
+        psi_coeff_t_matrix = np.insert(self.psi_coeff_t_matrix.f_xyz, 0, self.psi_coeff_t_matrix.time_axis, axis = 1)
+        pop_t = np.real(af.population_from_wf_matrix(psi_coeff_t_matrix))
         return pop_t
 
 
     def get_restart(self):
-        return self.field_psi_matrix
+        field_t_matrix = np.insert(self.field_psi_matrix.f_xyz, 0, self.field_psi_matrix.time_axis, axis = 1)
+        return field_t_matrix
 
 
 
@@ -72,13 +75,13 @@ class Eulero1PropagationIterator(ABCOCIterator):
 class Eulero2PropagationIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
+        #class attributes
         self.par = OCIteratorParameters()
-        self.simulation_par = SimulationParameters()
+        self.discrete_t_par = DiscreteTimePar()
 
-        self.convergence_t = None
-        self.J = None
-        self.field_psi_matrix = None
-        self.psi_coeff_t = None
+        self.field_psi_matrix = Func_tMatrix()
+        self.psi_coeff_t_matrix = Func_tMatrix()
+
         self.dict_out = {}
 
         #Eulero
@@ -86,9 +89,8 @@ class Eulero2PropagationIterator(ABCOCIterator):
 
 
     def iterate(self, current_iteration):
-        self.psi_coeff_t = self.prop_psi.propagate_n_step(self.simulation_par.dt,
-                                                              self.simulation_par.nstep,
-                                                              self.field_psi_matrix[:,1:])
+        self.psi_coeff_t_matrix = self.prop_psi.propagate_n_step(self.discrete_t_par,
+                                                                 self.field_psi_matrix)
 
     def check_convergence(self):
         pass
@@ -99,18 +101,18 @@ class Eulero2PropagationIterator(ABCOCIterator):
 
 
     def init(self, molecule, starting_field, env, alpha_t, oc_input, iterator_config_input = None):
-        self.simulation_par.dt = oc_input.dt
-        self.simulation_par.nstep = oc_input.nstep
+        self.discrete_t_par.dt = oc_input.dt
+        self.discrete_t_par.nstep = oc_input.nstep
+
         self.par.target_state = oc_input.target_state
         self.par.alpha_t = alpha_t
-
-        self.J = 99999
-        self.convergence_t = 99999
+        self.par.J = 99999
+        self.par.convergence_t = 99999
 
         self.prop_psi.set_propagator(molecule, env)
 
-        self.field_psi_matrix = np.copy(starting_field.get_full_field())
-        self.psi_coeff_t = np.zeros([self.simulation_par.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci], dtype=complex)
+        self.field_psi_matrix = deepcopy(starting_field.field)
+
         self.init_output_dictionary()
 
 
@@ -118,11 +120,14 @@ class Eulero2PropagationIterator(ABCOCIterator):
         self.dict_out['pop_t'] = self.get_pop_t
 
     def get_pop_t(self):
-        pop_t = np.real(af.population_from_wf_matrix(self.psi_coeff_t))
-        return pop_t
+        psi_coeff_t_matrix = np.insert(self.psi_coeff_t_matrix.f_xyz, 0, self.psi_coeff_t_matrix.time_axis, axis = 1)
+        pop_t_matrix = np.real(af.population_from_wf_matrix(psi_coeff_t_matrix))
+        return pop_t_matrix
 
     def get_restart(self):
-        return self.field_psi_matrix
+        field_t_matrix = np.insert(self.field_psi_matrix.f_xyz, 0, self.field_psi_matrix.time_axis, axis = 1)
+        return field_t_matrix
+
 
 
 

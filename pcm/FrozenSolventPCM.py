@@ -20,32 +20,33 @@ class FrozenSolventPCM(ABCPCM):
         self.qijn_lf_fortran_flipped = None
 
 
-    def init_pcm(self, PCM_input, mol, field_t):
+    def init_pcm(self, PCM_input, mol, field_dt_vector):
         self.par.env = PCM_input.env
         self.par.cavity = PCM_input.cavity
-
+        self.init_static_matrices(PCM_input.Qnn_reactionfield, PCM_input.Qnn_localfield, mol)
         self.par.muLF = -af.matrix_prod_tesserae_ijn_nn(self.qijn_lf, mol.par.Vijn)
 
 
-        self.propagate(0, mol, field_t)
+        self.propagate(0, mol, field_dt_vector)
         self.qijn_fortran_flip = af.flip_3D_py2f(self.qijn)
-        self.init_static_matrices(PCM_input.Qnn_reactionfield, PCM_input.Qnn_localfield, mol)
 
-    def propagate(self, i, mol, field_t):
+
+    def propagate(self, i, mol, field_dt_vector):
         q_t_reactionf = af.double_summation(mol.wf.ci_prev[0], np.conj(mol.wf.ci_prev[0]), self.qijn)
-        q_t_lf = np.dot(self.qijn_lf, field_t)
+        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
+        #print("propagate " + str(self.qijn_lf.shape) + " field " + str(field_dt_vector) + " charges " + str(q_t_reactionf.shape) + " " + str(q_t_lf.shape))
         self.q_t = np.array([q_t_reactionf, q_t_lf])
 
 
-    def propagate_fortran(self, ci, field_t):
+    def propagate_fortran(self, ci, field_dt_vector):
         q_t_reactionf = mf.propagate_q_frozen(ci, self.qijn_fortran_flip)
-        q_t_lf = np.dot(self.qijn_lf, field_t)
+        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
         self.q_t = np.array([q_t_reactionf, q_t_lf])
 
 
-    def propagate_bwd_oc(self, i, mol, field_t, ci):
+    def propagate_bwd_oc(self, i, mol, field_dt_vector, ci):
         q_t_reactionf = af.double_summation(ci, np.conj(ci), self.qijn)
-        q_t_lf = np.dot(self.qijn_lf, field_t)
+        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
         self.q_t = np.array([q_t_reactionf, q_t_lf])
 
     def get_q_t(self):
@@ -58,7 +59,7 @@ class FrozenSolventPCM(ABCPCM):
         return self.q_t[0] + self.q_t[1]
 
     def init_static_matrices(self, Q_gamess, Q_gamess_lf, mol):
-        self.calc_qijn(Q_gamess, mol.Vijn)
+        self.calc_qijn(Q_gamess, mol.par.Vijn)
         self.calc_qijn_lf(Q_gamess_lf)
 
     def calc_qijn(self, Q_gamess, Vijn):

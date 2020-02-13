@@ -32,7 +32,7 @@ class SaveOCRabitz(ABCSave):
                              'final_pop',
                              oc_iterator)
         pop_t = SaveFile("_pop_t.dat",
-                         "#pop(t) \n #fields: n_iteration, nstep, states population(t)  \n",
+                         "#pop(t) \n #fields: n_iteration, nstep, time, states population(t)  \n",
                          restart_step,
                          'pop_t',
                          oc_iterator)

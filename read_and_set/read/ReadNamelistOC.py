@@ -186,7 +186,8 @@ class ReadNamelistOC(ABCReadNamelist):
     def set_oc_dependent_default(self):
         #set default name of configuration file for oc iterator depending on algorithm
         if not self.oc.check_namelist_key_exist('iterator_config_file'):
-            if self.sys.check_namelist_key_exist_and_value('oc_iterator', 'genetic'):
+            if self.sys.check_namelist_key_exist_and_value('oc_algorithm', 'genetic'):
+
                 self.oc.add_key_and_value_to_namelist('iterator_config_file', 'genetic.conf')
 
 

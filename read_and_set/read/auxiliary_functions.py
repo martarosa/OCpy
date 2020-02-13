@@ -23,24 +23,6 @@ def normalized_projector_mean_value(vector, vector_to_project):
     return mean_value
 
 
-def field_J_integral(field_matrix, dt):
-    ax_square=field_matrix.ndim-1
-    ax_integral=field_matrix.ndim-2
-    f_square = np.sum(field_matrix[:,1:]*field_matrix[:,1:],axis=ax_square)
-    f_integral = np.sum(f_square, axis=ax_integral)
-    out_field = f_integral*dt
-    return out_field
-
-
-def alpha_field_J_integral(field_matrix, alpha_t, dt):
-    ax_square=field_matrix.ndim-1
-    ax_integral=field_matrix.ndim-2
-    f_square = np.sum(field_matrix[:,1:]*field_matrix[:,1:],axis=ax_square)*alpha_t
-    f_integral = np.sum(f_square, axis=ax_integral)
-    out_integral = f_integral*dt
-    return out_integral
-
-
 def smooth_fft_field(time_step, N_points, N_points_zero, field):
     zero = np.zeros([N_points_zero])
     longer_field = np.hstack((field, zero))
@@ -89,20 +71,14 @@ def matrix_prod_tesserae_ijn_nn(Mnm, Mijn):
     return prod.astype(float)
 
 
-
-def func(Mnr,Mijn):
-    prod = np.dot(Mijn, Mnr)
-    return prod
-
-
-
 def population_from_wf_vector(wf):
     out = (np.conj(wf)*wf)/np.dot(np.conj(wf), wf)
     return out
 
 
 def population_from_wf_matrix(wf):
-    out = np.apply_along_axis(population_from_wf_vector, 1, wf)
+    out = np.apply_along_axis(population_from_wf_vector, 1, wf[:,1:])
+    out = np.insert(out,0,wf[:,0], axis=1)
     return out
 
 

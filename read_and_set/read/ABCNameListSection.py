@@ -1,6 +1,6 @@
 from copy import deepcopy
 from abc import ABCMeta
-from read_and_set import read as af
+from read_and_set.read import auxiliary_functions as af
 
 
 class ABCNamelistSection(metaclass=ABCMeta):

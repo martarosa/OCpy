@@ -1,0 +1,36 @@
+[SYSTEM]
+dt=0.01
+nstep=25000
+name = out_rabitz 
+oc_algorithm = rabitzi 
+#folder=
+
+[WAVEFUNCTION]
+name_ci=ci_ini.inp
+name_ei=ci_energy.inp
+name_mut=ci_mut.inp
+
+[FIELD]
+field_type=pip
+fi=0.0 0.0 0.04
+sigma = 125
+t0 = 125
+omega = 0.32140573 0.32140573 0.32140573 
+
+[ENVIRON]
+env=vac
+#name_Vij=pot_gamess.inp
+#name_Q_tdplas=np_bem.mdy
+#read_qijn=False
+#name_file_qijn=./qijn.dat
+
+[OPTIMALC]
+restart=False
+alpha=const
+alpha0=1
+n_iterations=10
+target_state=0 1 0            
+#iterator_config_file = genetic.conf
+
+[SAVE]
+restart_step=1

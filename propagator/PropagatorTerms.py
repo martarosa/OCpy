@@ -45,21 +45,17 @@ class PropagatorTerms():
     def eulero_energy_term(self, i, order, dt, *args):
         self.mol.wf.ci += -order * 1j * dt * (self.mol.par.en_ci * self.mol.wf.ci_prev[0])
 
-    def eulero_field_term(self, i, order, dt, field, *args):
-        self.mol.wf.ci += -order * 1j * dt * (-np.dot(np.dot(self.mol.wf.ci_prev[0], self.mol.par.muT), field))
+    def eulero_field_term(self, i, order, dt, field_dt_vector, *args):
+        self.mol.wf.ci += -order * 1j * dt * (-np.dot(np.dot(self.mol.wf.ci_prev[0], self.mol.par.muT), field_dt_vector))
 
-
-
-    def eulero_PCM_term(self, i, order, dt, field, *args):
-        self.pcm.propagate(i, self.mol, field)
+    def eulero_PCM_term(self, i, order, dt, field_dt_vector, *args):
+        self.pcm.propagate(i, self.mol, field_dt_vector)
         self.mol.wf.ci += -order * 1j * dt \
                           * (np.dot(self.mol.wf.ci_prev[0],
                                     af.single_summation_tessere(self.pcm.get_q_t() - self.pcm.q00n, self.mol.par.Vijn)))
 
-
-
-    def bwd_PCM_term(self, i, order, field, dt, wf_fwd, *args):
-        self.pcm.propagate_bwd_oc(i, self.mol, field, wf_fwd)
+    def bwd_PCM_term(self, i, order, dt, field_dt_vector, wf_fwd, *args):
+        self.pcm.propagate_bwd_oc(i, self.mol, field_dt_vector, wf_fwd)
         self.mol.wf.ci += -order * 1j * dt \
                           * (np.dot(self.mol.wf.ci_prev[0],
                                     af.single_summation_tessere(self.pcm.get_q_t() - self.pcm.q00n,

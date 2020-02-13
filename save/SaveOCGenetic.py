@@ -41,7 +41,7 @@ class SaveOCGenetic(ABCSave):
 
         field_ampl = SaveFile("_field_ampl.dat",
                               "#field_amplitudes \n #field shape = a0 + sum(ai*sin(wi t)) \n "
-                              +"#omegas = "+np.array_repr(oc_iterator.omegas_matrix[:,0]).replace('\n', ''),
+                              +"#omegas = "+np.array_repr(oc_iterator.genetic_par.omegas_matrix[:,0]).replace('\n', ''),
                               restart_step,
                               'field_ampl',
                               oc_iterator)

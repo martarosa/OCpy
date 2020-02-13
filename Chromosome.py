@@ -38,8 +38,8 @@ class Chromosome():
         self.J = np.real(af.projector_mean_value(
                                        self.prop_psi.propagator_terms.mol.wf.ci,
                                        target_state)
-                         - af.alpha_field_J_integral(
-                                       self.field.field,
+                         -self.alpha_field_J_integral(
+                                       self.field.fieldaaaaaaaaaaaaaaaaaaa,
                                        alpha_t,
                                        dt))
         if self.J > Jprev:

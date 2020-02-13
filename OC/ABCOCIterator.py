@@ -1,28 +1,27 @@
+import numpy as np
+
 from abc import ABCMeta, abstractmethod
 
+from SystemObj import DiscreteTimePar
+from field.Field import Func_tMatrix
 
 
 class OCIteratorParameters():
     def __init__(self):
         self.target_state = None
         self.alpha_t = None
-
-
-class SimulationParameters():
-    def __init__(self):
-        self.nstep = None
-        self.dt = None
+        self.convergence_t = None
+        self.J = None
 
 
 class ABCOCIterator(metaclass=ABCMeta):
     def __init__(self):
         self.par = OCIteratorParameters()
-        self.simulation_par = SimulationParameters()
+        self.discrete_t_par = DiscreteTimePar()
 
-        self.convergence_t = None
-        self.J = None
-        self.field_psi_matrix = None
-        self.psi_coeff_t = None
+        self.field_psi_matrix = Func_tMatrix()
+        self.psi_coeff_t_matrix = Func_tMatrix()
+
         self.dict_out = {}
 
 
@@ -50,3 +49,21 @@ class ABCOCIterator(metaclass=ABCMeta):
     @abstractmethod
     def get_restart(self):
         pass
+
+
+    def field_J_integral(self):
+        ax_square = self.field_psi_matrix.f_xyz.ndim - 1
+        ax_integral= self.field_psi_matrix.f_xyz.ndim - 2
+        f_square = np.sum(self.field_psi_matrix.f_xyz * self.field_psi_matrix.f_xyz, axis=ax_square)
+        f_integral = np.sum(f_square, axis=ax_integral)
+        out_field = f_integral*self.discrete_t_par.dt
+        return out_field
+
+
+    def alpha_field_J_integral(self):
+        ax_square= self.field_psi_matrix.f_xyz.ndim - 1
+        ax_integral= self.field_psi_matrix.f_xyz.ndim - 2
+        f_square = np.sum(self.field_psi_matrix.f_xyz * self.field_psi_matrix.f_xyz, axis=ax_square) * self.par.alpha_t
+        f_integral = np.sum(f_square, axis=ax_integral)
+        out_integral = f_integral*self.discrete_t_par.dt
+        return out_integral

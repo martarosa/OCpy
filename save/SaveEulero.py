@@ -17,7 +17,7 @@ class SaveEulero(ABCSave):
 
     def init_save_file_list(self, oc_iterator, restart_step):
         pop_t = SaveFile("_pop_t.dat",
-                         "#Final states populations \n #fields: n_iteration, states population  \n",
+                         "#Final states populations \n #fields: n_iteration, nstep, time, states population  \n",
                          restart_step,
                          'pop_t',
                          oc_iterator)

@@ -135,7 +135,8 @@ class SectionMutate(ABCNamelistSection):
         self.section_default_dictionary = {'mutate':'mutGaussian',
                                            'mutate_probability': '0.2',
                                            'n_mutate': '20',
-                                           'starting_sigma': '0.01',
+                                           'mutate_mu':'0',
+                                           'mutate_starting_sigma': '0.01',
                                            'eta_thr': '0.6',
                                            'q': '0.9'}
         self.section_dictionary = {}

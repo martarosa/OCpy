@@ -4,6 +4,8 @@ import numpy as np
 from OC.OCEuleroIterator import  Eulero1PropagationIterator, Eulero2PropagationIterator
 from OC.OCRabitzIterator import OCRabitzIterator
 
+from SystemObj import Func_tMatrix
+
 from save.SaveOCRabitz import SaveOCRabitz
 from save.SaveEulero import SaveEulero
 from save.SaveOCGenetic import SaveOCGenetic
@@ -30,8 +32,8 @@ class OCManager:
         self.save = None
 
 
-        self.psi_coeff_t = None
-        self.field_psi_matrix = None
+        self.psi_coeff_t_matrix = Func_tMatrix()
+        self.field_psi_matrix = Func_tMatrix()
 
         self.current_iteration = 0
 
@@ -101,13 +103,13 @@ class OCManager:
 
 
     def iterate(self):
-        while (self.current_iteration <= self.par.n_iterations or self.par.convergence_thr < self.oc_iterator.convergence_t):
+        while (self.current_iteration <= self.par.n_iterations or self.par.convergence_thr < self.oc_iterator.par.convergence_t):
             self.oc_iterator.iterate(self.current_iteration)
             self.save.save(self.current_iteration)
             self.current_iteration += 1
-        self.psi_coeff_t = self.oc_iterator.psi_coeff_t
+        self.psi_coeff_t_matrix = self.oc_iterator.psi_coeff_t_matrix
         self.field_psi_matrix = self.oc_iterator.field_psi_matrix
-        self.convergence_t = self.oc_iterator.convergence_t
+        self.par.convergence_t = self.oc_iterator.par.convergence_t
 
 
 

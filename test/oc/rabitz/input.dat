@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = output_restart
+name = test
 oc_algorithm = rabitzi 
 #folder=
 
@@ -27,7 +27,7 @@ env=sol
 #name_file_qijn=./qijn.dat
 
 [OPTIMALC]
-restart=True
+restart=False
 alpha=sin
 alpha0=1
 n_iterations=10

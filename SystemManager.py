@@ -83,7 +83,8 @@ class SystemManager():
             self.pcm = FrozenSolventPCM()
         elif user_input.env.section_dictionary['env'] == 'nanop':
             self.pcm = DinamicPCM()
-        self.pcm.init_pcm(set_pcm.input_parameters, self.mol, self.starting_field.field[0])
+        print()
+        self.pcm.init_pcm(set_pcm.input_parameters, self.mol, self.starting_field.field.f_xyz[0])
 
 
 
@@ -92,7 +93,8 @@ class SystemManager():
         set_oc.set(user_input)
         if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
             iterator_config_input = ReadNamelistGenetic()
-            iterator_config_input.read_file(user_input.save.section_dictionary['folder'],
+            print(user_input.sys.section_dictionary['folder'] + user_input.oc.section_dictionary['iterator_config_file'])
+            iterator_config_input.read_file(user_input.sys.section_dictionary['folder'],
                                             user_input.oc.section_dictionary['iterator_config_file'])
             set_iterator_config = SetGeneticOCInput()
             set_iterator_config.set(iterator_config_input)
