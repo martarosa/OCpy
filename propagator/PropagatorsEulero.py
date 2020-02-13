@@ -15,6 +15,7 @@ class PropagatorEulero1Order(ABCPropagator):
         self.propagator_terms = PropagatorTerms()
         self.propagator = []
 
+
     def set_propagator(self, molecule, env):
         self.init_propagaror_terms(molecule, env)
         self.clean_propagator()
@@ -26,9 +27,11 @@ class PropagatorEulero1Order(ABCPropagator):
                 self.add_term_to_propagator("eulero_pcm")
         self.add_term_to_propagator("norm")
 
+
     def propagate_one_step(self, i, dt, field_dt_vector):
         for func in self.propagator:
             func(i, 1, dt, field_dt_vector)
+
 
     def propagate_n_step(self, discrete_time_par, field):
         if((field.time_axis[1] - field.time_axis[0]) - discrete_time_par.dt > discrete_time_par.dt *0.001):
@@ -44,6 +47,9 @@ class PropagatorEulero1Order(ABCPropagator):
             out.append(self.propagator_terms.mol.wf.ci)
         wf_matrix_out.f_xyz = np.array(out)
         return wf_matrix_out
+
+
+
 
 
 

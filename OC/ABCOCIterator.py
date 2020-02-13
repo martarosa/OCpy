@@ -14,6 +14,8 @@ class OCIteratorParameters():
         self.J = None
 
 
+
+
 class ABCOCIterator(metaclass=ABCMeta):
     def __init__(self):
         self.par = OCIteratorParameters()
@@ -49,6 +51,8 @@ class ABCOCIterator(metaclass=ABCMeta):
     @abstractmethod
     def get_restart(self):
         pass
+
+
 
 
     def field_J_integral(self):

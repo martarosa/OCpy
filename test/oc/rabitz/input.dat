@@ -27,7 +27,7 @@ env=sol
 #name_file_qijn=./qijn.dat
 
 [OPTIMALC]
-restart=False
+restart=True
 alpha=sin
 alpha0=1
 n_iterations=10

@@ -84,6 +84,7 @@ class Eulero2PropagationIterator(ABCOCIterator):
 
         self.dict_out = {}
 
+
         #Eulero
         self.prop_psi = prop.PropagatorEulero2Order()
 

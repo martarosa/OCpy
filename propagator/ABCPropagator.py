@@ -17,10 +17,6 @@ class ABCPropagator(metaclass=ABCMeta):
 
 
 
-
-
-
-
     def init_propagaror_terms(self, molecule, pcm):
         self.propagator_terms.set_attributes(molecule, pcm)
         self.propagator_terms.init_terms_dictionary()
@@ -36,10 +32,16 @@ class ABCPropagator(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    #takes vector and matricise (field) relative to the specific time of the propagation
+    #and gives back a n_states vector of the propagated wavefunction
     def propagate_one_step(self, *args):
         pass
 
     @abstractmethod
+
+    #takest objects of tipe Func_t with a vector with values of the time axes and a matrix of the values in each time step
+    #e.g. field is fx, fy,fz and returns an object Func_t for the wavefuncion, with the time axis and a matrix of the
+    # wf in all the states
     def propagate_n_step(self, *args):
         pass
 

@@ -65,13 +65,12 @@ class OCGeneticIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
         self.par = OCIteratorParameters()
-        self.simulation_par = DiscreteTimePar()
+        self.discrete_t_par = DiscreteTimePar()
         self.genetic_par = GeneticParameters()
 
-        self.convergence_t = None
-        self.J = None
+
         self.field_psi_matrix = Func_tMatrix()
-        self.psi_coeff_t_matrix = None
+        self.psi_coeff_t_matrix = Func_tMatrix()
         self.dict_out = {}
 
         #self.prop_psi = prop.PropagatorEulero2Order()
@@ -108,24 +107,18 @@ class OCGeneticIterator(ABCOCIterator):
         self.dict_out['field_ampl'] = self.get_field_ampl
 
 
-
     def init(self, molecule, starting_field, pcm, alpha_t, oc_input, iterator_config_input):
-        self.simulation_par.nstep = oc_input.nstep
-        self.simulation_par.dt = oc_input.dt
+        self.discrete_t_par.nstep = oc_input.nstep
+        self.discrete_t_par.dt = oc_input.dt
         self.par.target_state = oc_input.target_state
         self.par.alpha_t = alpha_t
-
-        self.convergence_t = 99999
-        self.J = 99999
+        self.par.convergence_t = 99999
+        self.par.J = 99999
 
         self.field_psi_matrix = deepcopy(starting_field.field)
 
-        self.psi_coeff_t_matrix = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
+        #self.psi_coeff_t_matrix = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
-
-#        self.psi_coeff_t = np.zeros([self.simulation_par.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci + 1], dtype=complex)
-#        self.psi_coeff_t[:, 0] = np.linspace(0, self.simulation_par.dt * self.simulation_par.nstep , self.simulation_par.nstep + 1)
-#        self.psi_coeff_t[0, 1:] =  self.initial_c0
 
         self.init_genetic(molecule, starting_field, pcm, iterator_config_input)
 
@@ -159,9 +152,11 @@ class OCGeneticIterator(ABCOCIterator):
     def init_chromosomes(self, molecule, starting_field, pcm):
             self.init_DEAP_chromosomes(molecule, starting_field, pcm)
 
+
     def create_random_ampl_rounded(self):
         number = round(random.uniform(-0.005, 0.005),4)
         return number
+
 
     def init_DEAP_chromosomes(self, molecule, starting_field, pcm):
         print("init_chromo")
@@ -210,17 +205,16 @@ class OCGeneticIterator(ABCOCIterator):
     # prende l'array di Chromosme e lo mette nel campo come ampiezze
         chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
     #genera il campo con forma sum
-        chro.field.chose_field('sum_pip', simulation_par = self.simulation_par)
+        chro.field.chose_field('sum_pip', discrete_t_par = self.discrete_t_par)
         chro.field.chose_field()
         #chro.field.chose_field('sum_pip')
     #setto il propagatore e lo propago con il campo appena generato
         chro.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
-        chro.prop_psi.propagate_n_step(self.simulation_par.nstep, chro.field.get_full_field())
+        chro.prop_psi.propagate_n_step(self.discrete_t_par.nstep, chro.field.get_full_field())
     #calcolo popolazione e integrale del campo, per debug
         pop= np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
                                              self.par.target_state))
-        field = np.real(self.alpha_field_J_integral(chro.field,
-                                                  self.par.alpha_t))
+        field = np.real(self.alpha_field_J_integral())
     #calcolo J
         J = np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
                                             self.par.target_state)
@@ -364,7 +358,7 @@ class OCGeneticIterator(ABCOCIterator):
 
 
     def get_log_file_out(self):
-        integral_field = np.real(self.field_J_integral(self.field_psi_matrix, self.simulation_par.dt))
+        integral_field = np.real(self.field_J_integral(self.field_psi_matrix, self.discrete_t_par.dt))
         norm_proj = np.real(af.projector_mean_value(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci,
                                                     self.par.target_state) /
                             (np.dot(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci,
@@ -379,7 +373,7 @@ class OCGeneticIterator(ABCOCIterator):
 
     def get_pop_t(self):
         self.chromosomes[0].prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
-        self.par.psi_coeff_t = self.chromosomes[0].prop_psi.propagate_n_step(self.simulation_par.nstep,
+        self.par.psi_coeff_t = self.chromosomes[0].prop_psi.propagate_n_step(self.discrete_t_par.nstep,
                                                                              self.chromosomes[0].field.field)
         pop_t = np.real(af.population_from_wf_matrix(self.par.psi_coeff_t))
         return pop_t

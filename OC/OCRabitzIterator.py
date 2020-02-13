@@ -23,6 +23,8 @@ class OCRabitzIterator(ABCOCIterator):
 
         self.dict_out = {}
 
+
+
         #Rabitz
         self.prop_psi = rabitzI.PropagatorOCfwd()
 
@@ -73,19 +75,16 @@ class OCRabitzIterator(ABCOCIterator):
                         self.chi_coeff_t_matrix.f_xyz[i],
                         self.prop_psi.propagator_terms.mol.par.muT + self.prop_psi.propagator_terms.pcm.par.muLF,
                         self.par.alpha_t[i])
-
                     self.prop_psi.propagate_one_step(i, self.discrete_t_par.dt, self.prop_field.field_dt_vector)
-                    print("one step")
-                    print(self.prop_psi.propagator_terms.mol.wf.ci)
                     self.psi_coeff_t_matrix.f_xyz[i + 1] = self.prop_psi.propagator_terms.mol.wf.ci  # coefficients are stored
-                print(self.psi_coeff_t_matrix.f_xyz)
                 self.check_convergence( )
 
             else:
                 self.psi_coeff_t_matrix = self.prop_psi.propagate_n_step(self.discrete_t_par,
                                                                          self.field_psi_matrix)
 
-                self.chi_coeff_t_matrix = self.psi_coeff_t_matrix
+                self.chi_coeff_t_matrix = deepcopy(self.psi_coeff_t_matrix)
+
 
 
 
@@ -115,11 +114,15 @@ class OCRabitzIterator(ABCOCIterator):
 
         self.init_rabitz(oc_input, molecule, pcm)
 
-        #self.psi_coeff_t_matrix = np.zeros([self.discrete_t_par.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci + 1], dtype=complex)
-        #self.psi_coeff_t_matrix[:, 0] = np.linspace(0, self.discrete_t_par.dt * self.discrete_t_par.nstep, self.discrete_t_par.nstep + 1)
-        #self.psi_coeff_t_matrix[0, 1:] =  self.initial_c0
-
         self.init_output_dictionary()
+
+    # init specific iterator
+    def init_rabitz(self, oc_input, molecule, pcm):
+        self.rabitz_iterator = oc_input.oc_iterator_name
+        self.prop_psi.set_propagator(molecule, pcm)
+        self.prop_chi.set_propagator(molecule, pcm)
+        self.field_chi_matrix = deepcopy(self.field_psi_matrix)
+        self.initial_c0 = self.prop_psi.propagator_terms.mol.wf.ci
 
 
     def init_output_dictionary(self):
@@ -129,18 +132,9 @@ class OCRabitzIterator(ABCOCIterator):
         self.dict_out['field_t'] = self.get_field_t
 
 
-#init specific iterator
 
-    def init_rabitz(self, oc_input, molecule, pcm):
-        self.rabitz_iterator = oc_input.oc_iterator_name
-        self.prop_psi.set_propagator(molecule, pcm)
-        self.prop_chi.set_propagator(molecule, pcm)
-        #self.chi_coeff_t_matrix = np.zeros([self.discrete_t_par.nstep + 1, self.prop_psi.propagator_terms.mol.wf.n_ci + 1], dtype=complex)
-        #self.chi_coeff_t_matrix[:, 0] = np.linspace(0, self.discrete_t_par.dt * self.discrete_t_par.nstep, self.discrete_t_par.nstep + 1)
-        #self.field_chi_matrix.f_xyz = np.zeros([self.discrete_t_par.nstep, 3], dtype=complex)
-        self.field_chi_matrix = self.field_psi_matrix
 
-        self.initial_c0 = self.prop_psi.propagator_terms.mol.wf.ci
+
 
 
 # methods inside dictionary return things to be saved
