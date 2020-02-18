@@ -1,5 +1,7 @@
 import numpy as np
 
+from propagator import math_functions as mf
+
 from pcm.ABCPCM import ABCPCM, PCMParameters
 from read_and_set.read import auxiliary_functions as af
 
@@ -17,7 +19,6 @@ class FrozenSolventPCM(ABCPCM):
         self.q00n = None
 
         self.qijn_fortran_flip = None
-        self.qijn_lf_fortran_flipped = None
 
 
     def init_pcm(self, PCM_input, mol, field_dt_vector):
@@ -34,20 +35,25 @@ class FrozenSolventPCM(ABCPCM):
     def propagate(self, i, mol, field_dt_vector):
         q_t_reactionf = af.double_summation(mol.wf.ci_prev[0], np.conj(mol.wf.ci_prev[0]), self.qijn)
         q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
-        #print("propagate " + str(self.qijn_lf.shape) + " field " + str(field_dt_vector) + " charges " + str(q_t_reactionf.shape) + " " + str(q_t_lf.shape))
         self.q_t = np.array([q_t_reactionf, q_t_lf])
 
 
-    def propagate_fortran(self, ci, field_dt_vector):
-        q_t_reactionf = mf.propagate_q_frozen(ci, self.qijn_fortran_flip)
+    def propagate_fortran(self, i, mol, field_dt_vector):
+        q_t_reactionf = mf.propagate_q_frozen(mol.wf.ci_prev[0], self.qijn_fortran_flip)
         q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
         self.q_t = np.array([q_t_reactionf, q_t_lf])
 
 
-    def propagate_bwd_oc(self, i, mol, field_dt_vector, ci):
-        q_t_reactionf = af.double_summation(ci, np.conj(ci), self.qijn)
+    def propagate_bwd_oc(self, i, chi_ci, field_dt_vector):
+        q_t_reactionf = af.double_summation(chi_ci, np.conj(chi_ci), self.qijn)
         q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
         self.q_t = np.array([q_t_reactionf, q_t_lf])
+
+    def propagate_bwd_oc_fortran(self, i, chi_ci, field_dt_vector):
+        q_t_reactionf = mf.propagate_q_frozen(chi_ci, self.qijn_fortran_flip)
+        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
+        self.q_t = np.array([q_t_reactionf, q_t_lf])
+
 
     def get_q_t(self):
         # q_tmp= self.q_t.q_t[0]+self.q_t.q_t[1]

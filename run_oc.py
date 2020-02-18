@@ -1,6 +1,6 @@
 import SystemManager as ini
 
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/2levels/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/fortran_pcm_prop/"
 namefile = "input.dat"
 
 
