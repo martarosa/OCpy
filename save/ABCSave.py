@@ -3,12 +3,22 @@ from save.LogHeader import LogHeader
 from abc import ABCMeta, abstractmethod
 
 
-class ABCSave(metaclass=ABCMeta):
 
+
+class SaveParameters():
     def __init__(self):
         self.folder = None
         self.filename = None
         self.restart_calculation = None
+        self.append = None
+
+
+
+class ABCSave(metaclass=ABCMeta):
+
+    def __init__(self):
+        self.par = SaveParameters()
+
         self.save_files = []                #list of files produced and saved in the case of specific calculation.
                                             # Attributes are assigned upon initialization
         self.restart_file = None
@@ -30,7 +40,7 @@ class ABCSave(metaclass=ABCMeta):
     def print_log_header(self, log_input):
         log_header = LogHeader()
         log_header.init_log_header(log_input)
-        f = open(self.folder + self.filename + ".log", 'a')
+        f = open(self.par.folder + self.par.filename + ".log", 'a')
         f.write(log_header.header)
         f.close()
 

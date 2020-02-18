@@ -18,6 +18,16 @@ class SaveTools():
                 os.rename(name_file + "." + str(i - 1), name_file + "." + str(i))
             os.rename(name_file, name_file + ".1")
 
+
+    def creation_save_files(self, folder_name, save_file, append):
+        name = folder_name + save_file.name
+        if append == "true":
+            if not os.path.isfile(name):
+                print("WARNING: file " + save_file.name + " not found in folder. Writing in new file")
+        else:
+            self.create_bkp_file(name)
+        self.print_date_header(name, save_file.header)
+
     def print_date_header(self, name_file, header):
         try:
             f = open(name_file, 'a')
@@ -44,20 +54,14 @@ class SaveTools():
             np.savetxt(f, np.insert(matrix, 0, iteration)[None], delimiter=' ', header='', footer='', fmt='%1.8f')
         f.close()
 
-    def creation_save_files(self, folder_name, save_file, restart):
-        name = folder_name + save_file.name
-        if restart == "false" or restart == "norestart_found":
-            self.create_bkp_file(name)
-        self.print_date_header(name, save_file.header)
-
     def save_every_n_iterations(self, iteration, folder_name, save_file):
         name = folder_name + save_file.name
-        if iteration % save_file.nstep == 0:
+        if iteration % save_file.save_step == 0:
             self.save_iteration_matrix(name, iteration, save_file.out())
 
     def save_restart(self, iteration, folder_name, save_restart):
         name = folder_name + save_restart.name
-        if iteration % save_restart.nstep == 0:
+        if iteration % save_restart.restart_step == 0:
             np.savetxt(name, save_restart.out(), delimiter =' ', header ='', footer ='')
 
     def save_3D_matrix(self, Mijn, name_file):

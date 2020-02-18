@@ -1,10 +1,8 @@
 import numpy as np
 
-from read import auxiliary_functions as af
+from read_and_set.read import auxiliary_functions as af
 from molecule.Molecule import Molecule
-from pcm.ABCPCM import ABCPCM
-
-
+from propagator import math_functions as mf
 
 # all posible propagator term. Some use PCM methods specific of FrozenSolventPCM child class, If/when
 # DinamicPCM(PCM) will have rabitz implemented, it will have a propagate_bwd_oc term, while the propagation in
@@ -12,14 +10,12 @@ from pcm.ABCPCM import ABCPCM
 # terms are added to the propagator that is used for the wave function propagation
 class PropagatorTerms():
     def __init__(self):
-        self.dt = None
         self.mol = Molecule()
-        self.pcm = None #ABCPCM()
+        self.pcm = None
         self.dict_terms = {}
 
 
-    def set_attributes(self, dt, molecule, pcm):
-        self.dt = dt
+    def set_attributes(self, molecule, pcm):
         self.mol = molecule
         self.pcm = pcm
 
@@ -46,45 +42,59 @@ class PropagatorTerms():
         self.mol.wf.ci_prev[0] = np.copy(self.mol.wf.ci)
         self.mol.wf.ci = np.copy(self.mol.wf.ci_prev[1])
 
-    def eulero_energy_term(self, i, order, *args):
-        self.mol.wf.ci += -order * 1j * self.dt * (self.mol.en_ci * self.mol.wf.ci_prev[0])
+    def eulero_energy_term(self, i, order, dt, *args):
+        self.mol.wf.ci += -order * 1j * dt * (self.mol.par.en_ci * self.mol.wf.ci_prev[0])
 
-    def eulero_field_term(self, i, order, field, *args):
-        self.mol.wf.ci += -order * 1j * self.dt * (-np.dot(np.dot(self.mol.wf.ci_prev[0], self.mol.muT), field))
+    def eulero_field_term(self, i, order, dt, field_dt_vector, *args):
+        self.mol.wf.ci += -order * 1j * dt * (-np.dot(np.dot(self.mol.wf.ci_prev[0], self.mol.par.muT), field_dt_vector))
 
 
-
-    def eulero_PCM_term(self, i, order, field, *args):
-        self.pcm.propagate(i, self.mol, field)
-        self.mol.wf.ci += -order * 1j * self.dt \
+    def eulero_PCM_term(self, i, order, dt, field_dt_vector, *args):
+        self.pcm.propagate(i, self.mol, field_dt_vector)
+        self.mol.wf.ci += -order * 1j * dt \
                           * (np.dot(self.mol.wf.ci_prev[0],
-                                    af.single_summation_tessere(self.pcm.get_q_t() - self.pcm.q00n, self.mol.Vijn)))
+                                    af.single_summation_tessere(self.pcm.get_q_t() - self.pcm.q00n, self.mol.par.Vijn)))
 
 
-
-
-    def bwd_PCM_term(self, i, order, field, wf_fwd, *args):
-        self.pcm.propagate_bwd_oc(i, self.mol, field, wf_fwd)
-        self.mol.wf.ci += -order * 1j * self.dt \
+    def bwd_PCM_term(self, i, order, dt, field_dt_vector, wf_fwd, *args):
+        self.pcm.propagate_bwd_oc(i, wf_fwd, field_dt_vector)
+        self.mol.wf.ci += -order * 1j * dt \
                           * (np.dot(self.mol.wf.ci_prev[0],
                                     af.single_summation_tessere(self.pcm.get_q_t() - self.pcm.q00n,
-                                                                self.mol.Vijn))
+                                                                self.mol.par.Vijn))
                              + np.dot(wf_fwd,
                                       af.single_summation_tessere(
                                             af.double_summation(self.mol.wf.ci_prev[0],
                                                                 np.conj(wf_fwd),
-                                                                self.mol.Vijn),
+                                                                self.mol.par.Vijn),
                                             self.pcm.qijn))
                              - np.dot(wf_fwd,
                                       af.single_summation_tessere(
                                             af.double_summation(wf_fwd,
                                                                 np.conj(self.mol.wf.ci_prev[0]),
-                                                                self.mol.Vijn),
+                                                                self.mol.par.Vijn),
                                             self.pcm.qijn)))
 
 
+    def eulero_PCM_term_fortran(self, i, order, dt, field_dt_vector, *args):
+        self.pcm.propagate_fortran(i, self.mol, field_dt_vector)
+        q_t = self.pcm.get_q_t() - self.pcm.q00n
+        self.mol.wf.ci += -order * 1j * dt \
+                          *mf.eulero_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
+                                         np.asfortranarray(q_t, dtype=np.complex128),
+                                         np.asfortranarray(self.mol.par.Vijn_fortran_flip, dtype=np.complex128))
 
 
+
+    def bwd_PCM_term_fortran(self, i, order, dt, field_dt_vector, wf_fwd, *args):
+        self.pcm.propagate_bwd_oc_fortran(i, wf_fwd, field_dt_vector)
+        q_t = self.pcm.get_q_t() - self.pcm.q00n
+        self.mol.wf.ci += -order * 1j * dt \
+                          * (mf.bwd_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
+                                        np.asfortranarray(wf_fwd, dtype=np.complex128),
+                                        np.asfortranarray(q_t, dtype=np.complex128),
+                                        np.asfortranarray(self.mol.par.Vijn_fortran_flip, dtype=np.complex128),
+                                        np.asfortranarray(self.pcm.qijn_fortran_flip, dtype=np.complex128)))
 
 
 

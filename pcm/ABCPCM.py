@@ -10,21 +10,14 @@ class PCMParameters():
 
 class ABCPCM(metaclass=ABCMeta):
     def __init__(self):
-        self.env = None
-        self.q_t = None
-
-        self.cavity = None
-        self.muLF = 0
-        self.qijn = None
-        self.qijn_lf = None
-        self.q00n = None
+        self.par = PCMParameters()
 
     @abstractmethod
-    def init_pcm(self, PCM_input, mol, field_t):
+    def init_pcm(self, PCM_input, mol, field_dt_vector):
         pass
 
     @abstractmethod
-    def propagate(self, i, mol, field_t):
+    def propagate(self, i, mol, field_dt_vector):
         pass
 
     @abstractmethod

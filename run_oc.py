@@ -1,8 +1,6 @@
 import SystemManager as ini
-from read.ReadNamelistOC import ReadNamelistOC
 
-
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/fortran_pcm_prop/"
 namefile = "input.dat"
 
 

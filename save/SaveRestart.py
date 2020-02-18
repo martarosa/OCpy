@@ -1,5 +1,5 @@
 class SaveRestart():
-    def __init__(self, name, nstep, oc_iterator):
+    def __init__(self, name, restart_step, oc_iterator):
         self.name = name
-        self.nstep = nstep
+        self.restart_step = restart_step
         self.out = oc_iterator.get_restart
