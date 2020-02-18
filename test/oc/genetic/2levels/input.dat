@@ -1,6 +1,6 @@
 [SYSTEM]
-dt=0.01
-nstep=25000
+dt=0.1
+nstep=2500
 name = test_genetic 
 oc_algorithm = genetic 
 #folder=

@@ -1,6 +1,6 @@
 import SystemManager as ini
 
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/2levels/"
 namefile = "input.dat"
 
 
