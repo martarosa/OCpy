@@ -2,7 +2,8 @@ import numpy as np
 
 from propagator import math_functions as mf
 
-from pcm.ABCPCM import ABCPCM, PCMParameters
+from pcm.ABCPCM import ABCPCM
+from parameters.PCMParameters import PCMParameters
 from read_and_set.read import auxiliary_functions as af
 
 # if the solvent is frozen qijn and qijn_lf are fixed, calculated once at the initialization

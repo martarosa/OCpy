@@ -12,6 +12,6 @@ class LogInput():
         self.t0 = None#field
         self.target_state = None#oc
         self.restart = None#oc
-
+        self.string_conf_file = None
 
 

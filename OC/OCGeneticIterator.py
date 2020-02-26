@@ -1,7 +1,9 @@
 import numpy as np
 
+from parameters.GeneticParameters import GeneticParameters
 from read_and_set.read import auxiliary_functions as af
-from OC.ABCOCIterator import ABCOCIterator, OCIteratorParameters
+from OC.ABCOCIterator import ABCOCIterator
+from parameters.OCIteratorParameters import OCIteratorParameters
 from SystemObj import DiscreteTimePar
 from Chromosome import Chromosome
 from field.Field import Field, Func_tMatrix
@@ -38,27 +40,6 @@ import random
 Evolutionary_Algorithm_dict = {'cxUniform': tools.cxUniform,
                                'mutGaussian': tools.mutGaussian,
                                'selBest': tools.selBest}
-
-
-class GeneticParameters():
-    def __init__(self):
-        self.n_chromosomes = None
-        self.n_selected_chr = None
-
-        self.amplitude_lim = None
-        self.n_amplitudes = None
-        self.omegas_matrix = None
-        self.mate = None
-        self.mate_probability = None
-
-        self.mutate = None
-        self.mutate_probability = None
-        self.n_mutate = None
-        self.mutate_mu = None
-        self.mutate_starting_sigma = None
-        self.eta_thr = None
-        self.q = None
-        self.select = None
 
 
 class OCGeneticIterator(ABCOCIterator):
@@ -124,6 +105,7 @@ class OCGeneticIterator(ABCOCIterator):
 
 
     def init_genetic(self, molecule, starting_field, pcm, genetic_input):
+        self.genetic_par.genetic_algorithm = genetic_input.genetic_algorithm
         self.genetic_par.n_chromosomes = genetic_input.n_chromosomes
         self.genetic_par.n_selected_chr = genetic_input.n_selected_chr
         self.genetic_par.amplitude_lim = genetic_input.amplitude_lim
@@ -140,6 +122,11 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.q = genetic_input.q
         self.genetic_par.select = genetic_input.select
 
+        #test purpose, fourier frequencies amplitudes comparison hard coded choice
+        #shape = "sin_cos"
+        #if shape == "sin_cos":
+        #   self.genetic_par.n_amplitudes = starting_field.par.fi.size*2
+        #else:
         self.genetic_par.n_amplitudes = starting_field.par.fi.size
         self.genetic_par.omegas_matrix = starting_field.par.omega
 
@@ -154,7 +141,8 @@ class OCGeneticIterator(ABCOCIterator):
 
 
     def create_random_ampl_rounded(self):
-        number = round(random.uniform(-0.01, 0.01),4)
+        number = round(random.uniform(-self.genetic_par.amplitude_lim, self.genetic_par.amplitude_lim),4)
+        #number = round(random.uniform(-0.001, 0.001),4)
         return number
 
 
@@ -203,10 +191,19 @@ class OCGeneticIterator(ABCOCIterator):
 
     def evaluate_J_DEAP_chromosome(self, chro):
     # prende l'array di Chromosme e lo mette nel campo come ampiezze
+        #test purposes, check fourier frequencies amplitudes
+        #shape = 'sin_cos'
+        #if shape == 'sin_cos':
+        #    coeff = np.asarray(chro).reshape((-1, 3))
+        #    n_omega = chro.field.par.omega.shape[0]
+        #    chro.field.par.fi = coeff[:n_omega]
+        #    chro.field.par.fi_cos = coeff[n_omega:]
+        #    chro.field.chose_field('sin_cos', discrete_t_par=self.discrete_t_par)
+        #else:
         chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
     #genera il campo con forma sum
         chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
-        #chro.field.chose_field('sum_pip')
+
     #setto il propagatore e lo propago con il campo appena generato
         chro.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
         chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
@@ -227,10 +224,13 @@ class OCGeneticIterator(ABCOCIterator):
 
 
     def evolve(self):
-        self.evolve_subsequent_DEAP()
+        if self.genetic_par.genetic_algorithm == "mixed":
+            self.evolve_mixed_DEAP()
+        elif self.genetic_par.genetic_algorithm == "sequential":
+            self.evolve_sequential_DEAP()
 
 
-    def evolve_subsequent_DEAP(self):
+    def evolve_sequential_DEAP(self):
         n_children_each = self.genetic_par.n_chromosomes / self.genetic_par.n_selected_chr
         if n_children_each.is_integer() == False:
             n_children_each = int(n_children_each) + 1
@@ -265,6 +265,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.chromosomes[:] = new
 
 
+
     #quello del paper, con parte crossover e parte mutati
     def evolve_mixed_DEAP(self):
         n_mate = self.genetic_par.n_chromosomes-(self.genetic_par.n_selected_chr * self.genetic_par.n_mutate)
@@ -296,7 +297,10 @@ class OCGeneticIterator(ABCOCIterator):
                 new_mutation.append(deepcopy(selected[i]))
                 self.genetic_algorithms.mutate(new_mutation[-1])
         #self.check_bounds(new_mutation)
-
+        for mutant in new_mutation:
+            if random.random() < self.genetic_par.mutate_probability:
+                self.genetic_algorithms.mutate(mutant)
+        self.check_bounds(new_mutation)
         #calcolo la J del crossover e la J della mutazione
         J_crossover = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new_crossover))
         self.n_mutation_succes = 0
@@ -319,13 +323,11 @@ class OCGeneticIterator(ABCOCIterator):
         print("eta:")
         eta = self.n_mutation_succes/(self.genetic_par.n_mutate * self.genetic_par.n_selected_chr)
         print(eta)
-        #print(eta)
-        #print(self.mutate_sigma)
         if eta <= self.genetic_par.eta_thr:
-            self.mutate_sigma = self.mutate_sigma*q
+            self.genetic_par.mutate_starting_sigma = self.genetic_par.mutate_starting_sigma*self.genetic_par.q
         else:
-            self.mutate_sigma = self.mutate_sigma / q
-        self.genetic_algorithms.mutate.keywords['sigma'] = self.mutate_sigma
+            self.genetic_par.mutate_starting_sigma = self.genetic_par.mutate_starting_sigma / self.genetic_par.q
+        self.genetic_algorithms.mutate.keywords['sigma'] = self.genetic_par.mutate_starting_sigma
         self.n_mutation_succes = 0
 
     def check_bounds(self, matrix):
@@ -387,8 +389,9 @@ class OCGeneticIterator(ABCOCIterator):
 
 
     def get_field_ampl(self):
-        return self.chromosomes[0].field.par.fi
+        #return self.chromosomes[0].field.par.fi
 
+        return np.hstack((self.chromosomes[0].field.par.fi, self.chromosomes[0].field.par.fi_cos))
 
     def get_restart(self):
         out = np.concatenate((self.genetic_par.omegas_matrix, self.chromosomes[0].field.par.fi))
@@ -404,7 +407,7 @@ class OCGeneticIterator(ABCOCIterator):
         for i in range(self.genetic_par.n_chromosomes):
             rand = []
             for j in range(self.genetic_par.n_amplitudes):
-                rand.append(random.uniform(-0.01, 0.01))
+                rand.append(random.uniform(-0.0001, 0.0001))
             self.chromosomes[i].amplitudes = deepcopy(rand)
 
 

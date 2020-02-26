@@ -3,7 +3,7 @@ from read_and_set.read import NameListSections as sec
 from read_and_set.read.ABCReadNamelist import ABCReadNamelist
 import os.path
 from read_and_set.read import auxiliary_functions as af
-
+from copy import deepcopy
 
 class ReadNamelistGenetic(ABCReadNamelist):
     def __init__(self):
@@ -14,7 +14,7 @@ class ReadNamelistGenetic(ABCReadNamelist):
         self.mate = sec.SectionMate()
         self.mutate = sec.SectionMutate()
         self.select = sec.SectionSelect()
-
+        self.string_file_config = None
 
 
     def read_file(self, folder, namefile):
@@ -50,6 +50,19 @@ class ReadNamelistGenetic(ABCReadNamelist):
         self.mate.check_keys()
         self.mutate.check_keys()
         self.select.check_keys()
+
+        self.create_print_string()
+
+    def create_print_string(self):
+        self.string_file_config = deepcopy(self.genetic.section_dictionary)
+        self.string_file_config.update(self.mate.section_dictionary)
+        self.string_file_config.update(self.mutate.section_dictionary)
+        self.string_file_config.update(self.select.section_dictionary)
+        if self.string_file_config['genetic_algorithm'] != 'mixed':
+            del self.string_file_config['eta_thr']
+            del self.string_file_config['q']
+        self.string_file_config = str(self.string_file_config)
+
 
 
     def check_genetic_nml_consistency(self):

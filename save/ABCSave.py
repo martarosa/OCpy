@@ -1,17 +1,7 @@
+from parameters.SaveParameters import SaveParameters
 from save.SaveTools import SaveTools
 from save.LogHeader import LogHeader
 from abc import ABCMeta, abstractmethod
-
-
-
-
-class SaveParameters():
-    def __init__(self):
-        self.folder = None
-        self.filename = None
-        self.restart_calculation = None
-        self.append = None
-
 
 
 class ABCSave(metaclass=ABCMeta):

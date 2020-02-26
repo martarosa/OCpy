@@ -28,3 +28,6 @@ class SetLogInput(ABCSetInput):
         self.input_parameters.t0 = user_input.field.section_dictionary['t0']
 
 
+    def set_conf_log(self, conf_input):
+        self.input_parameters.string_conf_file = conf_input
+

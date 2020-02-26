@@ -50,12 +50,16 @@ class LogHeader():
             'sin': lambda: self.sin_pulse(log_input),
             'gau': lambda: self.gau_pulse(log_input),
             'sum': lambda: self.sum_pulse(log_input),
-            'genetic': lambda: self.sum_pulse(log_input),
+            'genetic': lambda: self.genetic_pulse(log_input),
             # only internal values
             'restart_rabitz': lambda: self.restart_rabitz(log_input),
-            'restart_genetic': lambda: self.sum_pulse(log_input)
+            'restart_genetic': lambda: self.genetic_pulse(log_input)
         }
         return field.get(log_input.field_type, lambda: "Inexistent field type")()
+
+
+
+
 
 
 
@@ -92,3 +96,11 @@ class LogHeader():
         self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n"
                              "#fi: " + log_input.fi + "\n" +
                              "#omega: " + log_input.omega + "\n\n")
+
+    def genetic_pulse(self, log_input):
+        self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n" 
+                             "#omega: fourier frequencies \n\n"
+                             "#genetic algorithm input: " + log_input.string_conf_file + "\n\n")
+
+
+

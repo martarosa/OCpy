@@ -3,7 +3,8 @@ from copy import deepcopy
 from propagator import PropagatorsEulero as prop
 from read_and_set.read import auxiliary_functions as af
 
-from OC.ABCOCIterator import ABCOCIterator, OCIteratorParameters
+from OC.ABCOCIterator import ABCOCIterator
+from parameters.OCIteratorParameters import OCIteratorParameters
 from SystemObj import DiscreteTimePar, Func_tMatrix
 
 

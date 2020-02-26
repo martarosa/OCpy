@@ -5,7 +5,8 @@ from propagator import PropagatorOCRabitz as rabitzI
 from read_and_set.read import auxiliary_functions as af
 
 from field.PropagatorFieldOC import PropagatorFieldOC
-from OC.ABCOCIterator import ABCOCIterator, OCIteratorParameters
+from OC.ABCOCIterator import ABCOCIterator
+from parameters.OCIteratorParameters import OCIteratorParameters
 from SystemObj import DiscreteTimePar
 
 from field.Field import Func_tMatrix

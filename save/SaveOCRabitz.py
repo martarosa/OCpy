@@ -2,7 +2,8 @@ import numpy as np
 
 
 from save.SaveFile import SaveFile
-from save.ABCSave import ABCSave, SaveParameters
+from save.ABCSave import ABCSave
+from parameters.SaveParameters import SaveParameters
 from save.SaveRestart import SaveRestart
 from save.SaveTools import SaveTools
 from save.LogHeader import LogHeader

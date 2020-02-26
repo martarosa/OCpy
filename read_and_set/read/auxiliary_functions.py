@@ -32,6 +32,11 @@ def smooth_fft_field(time_step, N_points, N_points_zero, field):
     fourier_plot = np.array([xf, np.abs(yf)])
     return fourier_plot
 
+def fft_matrix(time_step,N_points,field):
+    xf = np.linspace(0.0, np.pi*2/(N_points*time_step)*N_points, N_points)
+    yf = fft(field)
+    return np.array([xf, yf]).T
+
 
 
 def single_summation_tessere(ket, M):
@@ -105,20 +110,20 @@ def convert_pot_to_waveT_format(matrix, name_out_file, n_en):
                 f.close()
 
 
-def calc_deltaJ_analitical_terms(psi_k, psi_km1, chi_k, eps_k, eps_km1, eps_tilde_k, Q, V, alpha, dt, nstep, ntessere):
-    t1 = alpha_field_J_integral(np.real(eps_k-eps_tilde_k), alpha, dt)
-    t2 = alpha_field_J_integral(np.real(eps_tilde_k-eps_km1), alpha, dt)
-    t3_t = np.zeros((nstep, ntessere), dtype=complex)
-    t4_t = np.zeros((nstep, ntessere), dtype=complex)
-    for i in range(nstep):
-        t3_t[i] = (2*np.imag(double_summation(psi_k[i], np.conj(chi_k[i]), V))*(double_summation(psi_k[i], np.conj(psi_k[i]), Q)-
-                                                              double_summation(psi_km1[i],np.conj(psi_km1[i]),Q)))
-        t4_t[i] = (2*np.imag(double_summation(psi_km1[i], np.conj(psi_k[i]), Q))
-               *2*np.real(double_summation(psi_km1[i], np.conj(chi_k[i]), V)))
-    t3 = np.sum(t3_t)*dt
-    t4 = np.sum(t4_t)*dt
-    deltaJ = t1+t2+t3+t4
-    return deltaJ
+#def calc_deltaJ_analitical_terms(psi_k, psi_km1, chi_k, eps_k, eps_km1, eps_tilde_k, Q, V, alpha, dt, nstep, ntessere):
+#    t1 = alpha_field_J_integral(np.real(eps_k-eps_tilde_k), alpha, dt)
+#    t2 = alpha_field_J_integral(np.real(eps_tilde_k-eps_km1), alpha, dt)
+#    t3_t = np.zeros((nstep, ntessere), dtype=complex)
+#    t4_t = np.zeros((nstep, ntessere), dtype=complex)
+#    for i in range(nstep):
+#        t3_t[i] = (2*np.imag(double_summation(psi_k[i], np.conj(chi_k[i]), V))*(double_summation(psi_k[i], np.conj(psi_k[i]), Q)-
+#                                                              double_summation(psi_km1[i],np.conj(psi_km1[i]),Q)))
+#        t4_t[i] = (2*np.imag(double_summation(psi_km1[i], np.conj(psi_k[i]), Q))
+#               *2*np.real(double_summation(psi_km1[i], np.conj(chi_k[i]), V)))
+#    t3 = np.sum(t3_t)*dt
+#    t4 = np.sum(t4_t)*dt
+#    deltaJ = t1+t2+t3+t4
+#    return deltaJ
 
 def flip_3D_py2f(Mpy):
     tmp = np.swapaxes(Mpy, 1, 2)

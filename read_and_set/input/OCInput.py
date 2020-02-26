@@ -10,7 +10,7 @@ class OCInput:
         self.convergence_thr = None
         self.restart = None
         self.target_state = None
-        self.iterator_config_file = None
+        self.iterator_config_file_name = None
 
 
 

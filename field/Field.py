@@ -2,19 +2,10 @@ import numpy as np
 
 from SystemObj import DiscreteTimePar, Func_tMatrix
 
-
 #---------------------------------------------
 #field matrix at different times to be read or created
 #---------------------------------------------
-
-class FieldParameters():
-    def __init__(self):
-        self.field_type = None
-        self.fi = None
-        self.omega = None
-        self.sigma = None
-        self.t0 =  None
-        self.omega_sys = None
+from parameters.FieldParameters import FieldParameters
 
 
 class Field():
@@ -51,6 +42,7 @@ class Field():
             'gau': lambda: self.gau_pulse(discrete_t_par),
             'sum': lambda: self.sum_pulse(discrete_t_par),
             'genetic' : lambda: self.genetic_pulse(discrete_t_par),
+            'sin_cos': lambda : self.sin_cos_pulse(discrete_t_par),
              #only internal values
             'restart_rabitz' : lambda: self.restart_rabitz(field),
             'restart_genetic' : lambda: self.sum_pulse(discrete_t_par)
@@ -118,21 +110,34 @@ class Field():
                     self.field.f_xyz[i] = self.field.f_xyz[i] \
                                           + self.par.fi[j] * np.sin(self.par.omega[j] * i * discrete_t_par.dt)
 
+    def sin_cos_pulse(self, discrete_t_par):
+        self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
+        self.field.f_xyz = np.zeros([discrete_t_par.nstep, 3])
+        # f0+fi*sin(wi*t)
+        for i in range(discrete_t_par.nstep):
+            self.field.f_xyz[i] = self.par.fi[0]
+            for j in range(self.par.omega.shape[0]):
+                    self.field.f_xyz[i] = self.field.f_xyz[i] + self.par.fi_cos[j] * np.cos(self.par.omega[j] * i * discrete_t_par.dt) - self.par.fi[j] * np.sin(self.par.omega[j] * i * discrete_t_par.dt)
+
+
 
     def genetic_pulse(self, discrete_t_par):
-        self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
         self.chose_omega_fourier(discrete_t_par)
-        self.par.fi = np.full([self.par.omega.shape[0]+1, 3], self.par.fi[0])
+        self.par.fi = np.full([self.par.omega.shape[0], 3], self.par.fi[0])
+        self.par.fi_cos = np.full([self.par.omega.shape[0], 3], self.par.fi[0])
+        #self.par.fi = np.zeros([self.par.omega.shape[0]+1, 3])
+        #self.par.fi_cos = np.zeros([self.par.omega.shape[0]+1, 3])
+        #self.par.fi[3,0] = 0.02
+        #self.par.fi[5,0] =0.04
+        #self.par.fi_cos[2,0]=0.01
         self.sum_pulse(discrete_t_par)
 
 
     def chose_omega_fourier(self, discrete_t_par):
-        n_fourier_omega_min = 0
-        n_fourier_omega_max = int(2 + self.par.omega_sys[-1]*discrete_t_par.dt*discrete_t_par.nstep/(2*np.pi))
-        n_fourier_omega = n_fourier_omega_max - n_fourier_omega_min
+        n_fourier_omega = int(2 + self.par.omega_sys[-1]*discrete_t_par.dt*discrete_t_par.nstep/(2*np.pi))
         self.par.omega = np.zeros([n_fourier_omega, 3])
         for n in range(n_fourier_omega):
-            omega_n = (np.pi*2*(n + n_fourier_omega_min))/(discrete_t_par.dt*discrete_t_par.nstep)
+            omega_n = (np.pi*2*n)/(discrete_t_par.dt*discrete_t_par.nstep)
             self.par.omega[n] = [omega_n, omega_n, omega_n]
 
 

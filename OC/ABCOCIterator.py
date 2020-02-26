@@ -4,16 +4,7 @@ from abc import ABCMeta, abstractmethod
 
 from SystemObj import DiscreteTimePar
 from field.Field import Func_tMatrix
-
-
-class OCIteratorParameters():
-    def __init__(self):
-        self.target_state = None
-        self.alpha_t = None
-        self.convergence_t = None
-        self.J = None
-
-
+from parameters.OCIteratorParameters import OCIteratorParameters
 
 
 class ABCOCIterator(metaclass=ABCMeta):

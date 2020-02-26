@@ -16,6 +16,7 @@ from molecule.Molecule import Molecule
 from field.Field import Field
 from pcm.DinamicPCM import DinamicPCM
 from pcm.FrozenSolventPCM import FrozenSolventPCM
+from pcm.VacPCM import VacPCM
 from OCManager import OCManager
 
 
@@ -56,8 +57,7 @@ class SystemManager():
         user_input.read_file(folder, name_file)
         self.init_molecule(user_input)
         self.init_starting_field(user_input)
-        if user_input.env.section_dictionary['env'] != "vac":
-            self.init_pcm(user_input)
+        self.init_pcm(user_input)
         self.init_optimal_control(user_input)
 
 
@@ -77,13 +77,14 @@ class SystemManager():
 
 
     def init_pcm(self, user_input):
+        print(user_input.env.section_dictionary['env'])
         set_pcm = SetPCMInput()
-        set_pcm.set(user_input)
         if user_input.env.section_dictionary['env'] == 'sol':
             self.pcm = FrozenSolventPCM()
         elif user_input.env.section_dictionary['env'] == 'nanop':
             self.pcm = DinamicPCM()
-        print()
+        elif user_input.env.section_dictionary['env'] == 'vac':
+            self.pcm = VacPCM()
         self.pcm.init_pcm(set_pcm.input_parameters, self.mol, self.starting_field.field.f_xyz[0])
 
 
@@ -93,18 +94,21 @@ class SystemManager():
         set_oc.set(user_input)
         if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
             iterator_config_input = ReadNamelistGenetic()
-            print(user_input.sys.section_dictionary['folder'] + user_input.oc.section_dictionary['iterator_config_file'])
             iterator_config_input.read_file(user_input.sys.section_dictionary['folder'],
                                             user_input.oc.section_dictionary['iterator_config_file'])
             set_iterator_config = SetGeneticOCInput()
             set_iterator_config.set(iterator_config_input)
         else:
+            iterator_config_input =  None
             set_iterator_config = SetNoConfOCInput()
 
         set_save = SetSaveInput()
         set_save.set(user_input)
         set_log_header = SetLogInput()
         set_log_header.set(user_input)
+        if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
+            set_log_header.set_conf_log(iterator_config_input.string_file_config)
+
 
         self.oc.init_oc(set_oc.input_parameters,
                         set_iterator_config.input_parameters,

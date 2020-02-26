@@ -24,4 +24,4 @@ class SetGeneticOCInput(ABCSetInput):
         self.input_parameters.q = float(user_input.mutate.section_dictionary['q'])
         self.input_parameters.select = user_input.select.section_dictionary['select']
 
-
+        self.input_parameters.string_file_config = user_input.string_file_config
