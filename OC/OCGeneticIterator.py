@@ -1,4 +1,8 @@
+import time
+
 import numpy as np
+import multiprocessing as mp
+import concurrent.futures
 
 from parameters.GeneticParameters import GeneticParameters
 from read_and_set.read import auxiliary_functions as af
@@ -79,14 +83,12 @@ class OCGeneticIterator(ABCOCIterator):
         self.par.J = self.chromosomes[0].J.values
         self.field_psi_matrix = self.chromosomes[0].field.field
 
-
     def init_output_dictionary(self):
         self.dict_out['log_file'] = self.get_log_file_out
         self.dict_out['final_pop'] = self.get_final_pop
         self.dict_out['pop_t'] = self.get_pop_t
         self.dict_out['field_t'] = self.get_field_t
         self.dict_out['field_ampl'] = self.get_field_ampl
-
 
     def init(self, molecule, starting_field, pcm, alpha_t, oc_input, iterator_config_input):
         self.discrete_t_par.nstep = oc_input.nstep
@@ -102,7 +104,6 @@ class OCGeneticIterator(ABCOCIterator):
         self.init_output_dictionary()
 
         self.init_genetic(molecule, starting_field, pcm, iterator_config_input)
-
 
     def init_genetic(self, molecule, starting_field, pcm, genetic_input):
         self.genetic_par.genetic_algorithm = genetic_input.genetic_algorithm
@@ -134,17 +135,13 @@ class OCGeneticIterator(ABCOCIterator):
     #qui inizializzo l'algoritmo genetico che sto usando, che per adesso è solo uno
         self.init_evolutionary_algorithm(genetic_input)
 
-
-
     def init_chromosomes(self, molecule, starting_field, pcm):
             self.init_DEAP_chromosomes(molecule, starting_field, pcm)
-
 
     def create_random_ampl_rounded(self):
         number = round(random.uniform(-self.genetic_par.amplitude_lim, self.genetic_par.amplitude_lim),4)
         #number = round(random.uniform(-0.001, 0.001),4)
         return number
-
 
     def init_DEAP_chromosomes(self, molecule, starting_field, pcm):
         print("init_chromo")
@@ -187,7 +184,6 @@ class OCGeneticIterator(ABCOCIterator):
             self.chromosomes[i].prop_psi = deepcopy(prop_psi)
             self.chromosomes[i].J.values = [0.5]
         self.par.J = [99999]
-
 
     def evaluate_J_DEAP_chromosome(self, chro):
     # prende l'array di Chromosme e lo mette nel campo come ampiezze
@@ -258,11 +254,20 @@ class OCGeneticIterator(ABCOCIterator):
         for mutant in new:
             if random.random() < self.genetic_par.mutate_probability:
                 self.genetic_algorithms.mutate(mutant)
-        self.check_bounds(new)
+        self.check_bounds_matrix(new)
+
+        #with concurrent.futures.ProcessPoolExecutor() as executor:
+        #    J = executor.map(self.genetic_algorithms.evaluate, new)
         J = self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new)
+
+
         for ind, fit in zip(new, J):
             ind.J.values = fit
         self.chromosomes[:] = new
+
+
+
+
 
 
 
@@ -330,7 +335,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_algorithms.mutate.keywords['sigma'] = self.genetic_par.mutate_starting_sigma
         self.n_mutation_succes = 0
 
-    def check_bounds(self, matrix):
+    def check_bounds_matrix(self, matrix):
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
                 if matrix[i][j] > self.genetic_par.amplitude_lim:
@@ -339,6 +344,14 @@ class OCGeneticIterator(ABCOCIterator):
                     matrix[i][j] = -self.genetic_par.amplitude_lim
                 #elif (matrix[i][j] < 0.0005 and matrix[i][j] > -0.0005):
                 #    matrix[i][j] = 0.0
+
+    def check_bounds_vector(self, vector):
+        for i in range(len(vector)):
+            if vector[i] > self.genetic_par.amplitude_lim:
+                vector[i] = self.genetic_par.amplitude_lim
+            elif vector[i] < -self.genetic_par.amplitude_lim:
+                vector[i] = -self.genetic_par.amplitude_lim
+
 
     def init_evolutionary_algorithm(self, iterator_parameters):
         self.genetic_algorithms = base.Toolbox()
@@ -412,6 +425,9 @@ class OCGeneticIterator(ABCOCIterator):
 
 
 
+
+
+
     def evaluate_J_general_chromosomes(self):
         for i in range(len(self.chromosomes)):
             self.chromosomes[i].amplitudes_to_field()
@@ -460,3 +476,41 @@ class OCGeneticIterator(ABCOCIterator):
         f_integral = np.sum(f_square, axis=ax_integral)
         out_integral = f_integral*self.discrete_t_par.dt
         return out_integral
+
+    def evolve_sequential_DEAP_parallel(self):
+        n_children_each = self.genetic_par.n_chromosomes / self.genetic_par.n_selected_chr
+        if n_children_each.is_integer() == False:
+            n_children_each = int(n_children_each) + 1
+        else:
+            n_children_each = int(n_children_each)
+        # Select the next generation individuals
+        selected = self.genetic_algorithms.select(self.chromosomes, fit_attr='J')
+        selected = self.genetic_algorithms.clone(selected)
+        # Apply crossover on the offspring
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            results = [executor.submit(self.crossover_for_parallel, selected) for _ in range(n_children_each)]
+        new = lambda l: [item for results in l for item in results]
+
+        new = new[:self.genetic_par.n_chromosomes]
+
+        # Apply mutation on the offspring
+        for mutant in new:
+            if random.random() < self.genetic_par.mutate_probability:
+                self.genetic_algorithms.mutate(mutant)
+        self.check_bounds(new)
+        J = self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new)
+        for ind, fit in zip(new, J):
+            ind.J.values = fit
+        self.chromosomes[:] = new
+
+    def crossover_for_parallel(self, selected_crossover):
+        random.shuffle(selected_crossover)
+        new_crossover = []
+        for first, second in zip(selected_crossover[::2], selected_crossover[1::2]):
+            if random.random() < self.genetic_par.mate_probability:
+                a, b = self.genetic_algorithms.mate(deepcopy(first), deepcopy(second))
+            else:
+                a, b = deepcopy(first), deepcopy(second)
+            new_crossover.append(deepcopy(a))
+            new_crossover.append(deepcopy(b))
+        return new_crossover
