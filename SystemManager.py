@@ -1,18 +1,23 @@
-from field.InitFieldPar import InitFieldPar
-from save.InitLogPar import InitLogPar
-from molecule.InitMolecularPar import InitMolecularPar
-from InitOCPar import InitOCPar
-from pcm.InitPCMPar import InitPCMPar
-from save.InitSavePar import InitSavePar
-from read.ReadNamelistOC import ReadNamelistOC
-from field.ReadFieldRestartGenetic import ReadFieldRestartGenetic
-from field.ReadFieldRestartRabitz import ReadFieldRestartRabitz
+from read_and_set.read.ReadNamelistOC import ReadNamelistOC
+from read_and_set.read.ReadNamelistGenetic import ReadNamelistGenetic
+
+from read_and_set.set.SetFieldInput import SetFieldInput
+from read_and_set.read.ReadFieldRestartGenetic import ReadFieldRestartGenetic
+from read_and_set.read.ReadFieldRestartRabitz import ReadFieldRestartRabitz
+from read_and_set.set.SetMoleculeInput import SetMoleculeInput
+from read_and_set.set.SetPCMInput import SetPCMInput
+from read_and_set.set.SetOCInput import SetOCInput
+from read_and_set.set.SetGeneticOCInput import SetGeneticOCInput
+from read_and_set.set.SetNoConfOCInput import SetNoConfOCInput
+from read_and_set.set.SetSaveInput import SetSaveInput
+from read_and_set.set.SetLogInput import SetLogInput
 
 from molecule.Molecule import Molecule
 from field.Field import Field
-from pcm.PCM import PCM, FrozenSolventPCM, DinamicPCM
+from pcm.DinamicPCM import DinamicPCM
+from pcm.FrozenSolventPCM import FrozenSolventPCM
+from pcm.VacPCM import VacPCM
 from OCManager import OCManager
-
 
 
 #The system contains Molecule, Field, PCM and OCManager objects.
@@ -33,60 +38,85 @@ from OCManager import OCManager
 #      3) Molecule.init_molecule(MoleculeParameters) initialize Molecule attributes from MoleculeParameters
 
 
+
+
 class SystemManager():
 
     def __init__(self):
 
         self.mol = Molecule()
         self.starting_field = Field()
-        self.pcm = PCM()
+        self.pcm = None #ABCPCM()
         self.oc = OCManager() # the possibility to perform a single propagation without OC is a special case of optimalControl (since this is a OC program
 
 
 
+
     def init_system(self, folder, name_file):
-        user_input = ReadNamelistOC()
+        user_input = ReadNamelistOC() #tmp, after reading everithing apart system manager vanishes
         user_input.read_file(folder, name_file)
         self.init_molecule(user_input)
         self.init_starting_field(user_input)
-        if user_input.env.par['env'] != "vac":
-            self.init_pcm(user_input)
+        self.init_pcm(user_input)
         self.init_optimal_control(user_input)
 
+
     def init_molecule(self, user_input):
-        init_mol = InitMolecularPar()
-        init_mol.init(user_input)
-        self.mol.init_molecule(init_mol.parameters)
+        init_mol = SetMoleculeInput()
+        init_mol.set(user_input)
+        self.mol.init_molecule(init_mol.input_parameters)
 
     def init_starting_field(self, user_input):
-        init_field = InitFieldPar()
-        if user_input.sys.par['propagation'] == 'genetic':
-            if(user_input.field.par['field_type']) != 'genetic':
-                user_input.field.par['internal_check_genetic_field'] = False
-                user_input.field.par['field_type'] = 'genetic'
-            init_field.read_restart = ReadFieldRestartGenetic()
+        set_field = SetFieldInput()
+        if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
+            set_field.read_restart = ReadFieldRestartGenetic()
         else:
-            init_field.read_restart = ReadFieldRestartRabitz()
-        init_field.init(user_input)
-        self.starting_field.init_field(init_field.parameters)
+            set_field.read_restart = ReadFieldRestartRabitz()
+        set_field.set(user_input)
+        self.starting_field.init_field(set_field.input_parameters)
+
 
     def init_pcm(self, user_input):
-        init_pcm = InitPCMPar()
-        init_pcm.init(user_input)
-        if user_input.env.par['env'] == 'sol':
+        print(user_input.env.section_dictionary['env'])
+        set_pcm = SetPCMInput()
+        if user_input.env.section_dictionary['env'] == 'sol':
             self.pcm = FrozenSolventPCM()
-        elif user_input.env.par['env'] == 'nanop':
+        elif user_input.env.section_dictionary['env'] == 'nanop':
             self.pcm = DinamicPCM()
-        self.pcm.init_pcm(init_pcm.parameters, self.mol, self.starting_field.field[0])
+        elif user_input.env.section_dictionary['env'] == 'vac':
+            self.pcm = VacPCM()
+        self.pcm.init_pcm(set_pcm.input_parameters, self.mol, self.starting_field.field.f_xyz[0])
+
+
 
     def init_optimal_control(self, user_input):
-        init_oc = InitOCPar()
-        init_oc.init(user_input)
-        init_save = InitSavePar()
-        init_save.init(user_input)
-        init_log_header = InitLogPar()
-        init_log_header.init(user_input)
-        self.oc.init_oc(init_oc.parameters, init_oc.iterator_parameters, init_save.parameters, init_log_header.parameters, self.mol, self.starting_field, self.pcm)
+        set_oc = SetOCInput()
+        set_oc.set(user_input)
+        if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
+            iterator_config_input = ReadNamelistGenetic()
+            iterator_config_input.read_file(user_input.sys.section_dictionary['folder'],
+                                            user_input.oc.section_dictionary['iterator_config_file'])
+            set_iterator_config = SetGeneticOCInput()
+            set_iterator_config.set(iterator_config_input)
+        else:
+            iterator_config_input =  None
+            set_iterator_config = SetNoConfOCInput()
+
+        set_save = SetSaveInput()
+        set_save.set(user_input)
+        set_log_header = SetLogInput()
+        set_log_header.set(user_input)
+        if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
+            set_log_header.set_conf_log(iterator_config_input.string_file_config)
+
+
+        self.oc.init_oc(set_oc.input_parameters,
+                        set_iterator_config.input_parameters,
+                        set_save.input_parameters,
+                        set_log_header.input_parameters,
+                        self.mol,
+                        self.starting_field,
+                        self.pcm)
 
 
 

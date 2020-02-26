@@ -7,15 +7,6 @@ class WaveFunction:
         self.ci_prev = None  # past wavefunction coefficients nx2
         self.n_ci = None
 
-    #@property
-    #def ci(self):
-    #    return self.__ci
-
-    #@ci.setter
-    #def ci(self, ci):
-    #    print(ci)
-    #    self.__ci = ci / np.sqrt(np.dot(np.conj(ci), ci))
-
     def set_wf(self, ci, norm):
         self.ci = ci
         self.n_ci = ci.size

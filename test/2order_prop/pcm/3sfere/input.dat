@@ -1,8 +1,8 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = output_2eulero_x
-propagation = eulero_2order 
+name = test_2order_prop 
+oc_algorithm = eulero_2order_prop 
 #folder=
 
 [WAVEFUNCTION]
@@ -15,7 +15,7 @@ field_type=pip
 omega=0.3239892104044628 0.3239892104044628 0.3239892104044628
 sigma=125
 t0=125
-fi=0.5 0 0.0
+fi=0.0 0 0.5
 #f_max= 0.0 0.0038 0.0 
 #name_field_file=
 
@@ -27,13 +27,11 @@ env=sol
 #name_file_qijn=./qijn.dat
 
 [OPTIMALC]
-restart=False
-alpha=sin
-alpha0=1
-n_iterations=10
-target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0          
+#restart=False
+#alpha=sin
+#alpha0=1
+#n_iterations=10
+#target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0          
 
 [SAVE]
 #save_restart_step=10
-#save_iteration_pop_step=10
-#save_iteration_field_step=10

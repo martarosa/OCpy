@@ -1,0 +1,1 @@
+ERROR. "oc_algorithm" in namelist "SYSTEM" is a propagation without optimal control. OPTIMALC namelist should be empty

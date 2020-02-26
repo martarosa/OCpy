@@ -1,22 +1,72 @@
 from molecule.WaveFunction import WaveFunction
-from read import auxiliary_functions as af
+from parameters.MoleculeParameters import MoleculeParameters
+from read_and_set.read import auxiliary_functions as af
+
 
 class Molecule:
     def __init__(self):
         self.wf = WaveFunction()
-        self.muT = None  # transition dipoles from external code
-        self.en_ci = None  # excitation energies from external code
-        self.Vijn = None   # potential from external code if PCM
-        self.Vijn_fortran_flip = None
+        self.par = MoleculeParameters()
+
+    def init_molecule(self, molecule_input):
+        self.wf.set_wf(molecule_input.wf_ci, True)
+        self.par.muT = molecule_input.muT
+        self.par.en_ci = molecule_input.en_ci
+        self.par.Vijn = molecule_input.Vijn
+        if(self.par.Vijn != None):
+            self.par.Vijn_fortran_flip = af.flip_3D_py2f(self.par.Vijn)
 
 
-    def init_molecule(self, molecule_parameters):
-        self.wf.set_wf(molecule_parameters.wf_ci, True)
-        self.muT = molecule_parameters.muT
-        self.en_ci = molecule_parameters.en_ci
-        self.Vijn = molecule_parameters.Vijn
-        if(self.Vijn.any()):
-            self.Vijn_fortran_flip = af.flip_3D_py2f(self.Vijn)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
