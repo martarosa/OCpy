@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="55efd99c-0da1-4ff7-b8ef-8191bd12be39" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OC/OCGeneticIterator.py" beforeDir="false" afterPath="$PROJECT_DIR$/OC/OCGeneticIterator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_oc.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_oc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/save/SaveOCGenetic.py" beforeDir="false" afterPath="$PROJECT_DIR$/save/SaveOCGenetic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/oc/genetic/2levels/genetic_mixed_ampl01_sigma005_mu05_final_pop.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/oc/genetic/2levels/genetic_mixed_ampl01_sigma005_mu05_final_pop.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/oc/genetic/2levels/genetic_sequential_ampl01_sigma001_mu05_final_pop.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/oc/genetic/2levels/genetic_sequential_ampl01_sigma001_mu05_final_pop.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/oc/genetic/2levels/genetic_sequential_ampl01_sigma005_final_pop.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/oc/genetic/2levels/genetic_sequential_ampl01_sigma005_final_pop.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/oc/genetic/2levels/genetic_sequential_init_001_ampl_lim_01_sigma001_final_pop.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/oc/genetic/2levels/genetic_sequential_init_001_ampl_lim_01_sigma001_final_pop.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/oc/genetic/2levels/genetic_sequential_init_ampl_lim_01_sigma001_final_pop.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/oc/genetic/2levels/genetic_sequential_init_ampl_lim_01_sigma001_final_pop.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/oc/genetic/2levels/rabitz_field_t.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/oc/genetic/2levels/rabitz_field_t.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/oc/genetic/2levels/rabitz_pop_t.dat" beforeDir="false" afterPath="$PROJECT_DIR$/test/oc/genetic/2levels/rabitz_pop_t.dat" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,8 +22,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/run_oc.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+            <state relative-caret-position="45">
+              <caret line="3" column="74" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="67" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
               </folding>
@@ -29,20 +34,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/OC/OCGeneticIterator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
+            <state relative-caret-position="3600">
               <caret line="260" column="8" selection-start-line="260" selection-start-column="8" selection-end-line="260" selection-end-column="8" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
-                <element signature="e#1965#2044#0" />
-                <element signature="e#2087#2257#0" />
-                <element signature="e#2289#2457#0" />
-                <element signature="e#2506#2769#0" />
-                <element signature="e#2873#3409#0" />
-                <element signature="e#3494#4961#0" />
-                <element signature="e#5150#5326#0" />
-                <element signature="e#5405#7719#0" />
-                <element signature="e#11161#13733#0" />
-                <element signature="e#13781#14327#0" />
               </folding>
             </state>
           </provider>
@@ -166,6 +161,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -177,7 +173,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -252,6 +247,9 @@
       <module name="OCpy" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -293,9 +291,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="24" width="1922" height="1032" extended-state="6" />
+    <frame x="-1" y="24" width="1402" height="1002" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7021041" visible="true" weight="0.16499737" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7021041" visible="true" weight="0.22730574" />
       <window_info id="Structure" order="1" sideWeight="0.2978959" side_tool="true" weight="0.18713759" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -308,7 +306,7 @@
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32914287" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="10" visible="true" weight="0.37873754" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="10" visible="true" weight="0.39175257" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -551,28 +549,18 @@
     <entry file="file://$PROJECT_DIR$/OCGeneticIterator.py" />
     <entry file="file://$PROJECT_DIR$/OC/OCGeneticIterator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
+        <state relative-caret-position="3600">
           <caret line="260" column="8" selection-start-line="260" selection-start-column="8" selection-end-line="260" selection-end-column="8" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <element signature="e#1965#2044#0" />
-            <element signature="e#2087#2257#0" />
-            <element signature="e#2289#2457#0" />
-            <element signature="e#2506#2769#0" />
-            <element signature="e#2873#3409#0" />
-            <element signature="e#3494#4961#0" />
-            <element signature="e#5150#5326#0" />
-            <element signature="e#5405#7719#0" />
-            <element signature="e#11161#13733#0" />
-            <element signature="e#13781#14327#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/run_oc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+        <state relative-caret-position="45">
+          <caret line="3" column="74" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="67" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
           </folding>

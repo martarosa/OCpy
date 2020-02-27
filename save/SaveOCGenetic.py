@@ -24,7 +24,7 @@ class SaveOCGenetic(ABCSave):
                        oc_iterator)
 
         final_pop = SaveFile("_final_pop.dat",
-                             "Final states populations \n #fields: n_iteration, final states population  \n",
+                             "#Final states populations \n #fields: n_iteration, final states population  \n",
                              1,
                              'final_pop',
                              oc_iterator)
