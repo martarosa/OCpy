@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="55efd99c-0da1-4ff7-b8ef-8191bd12be39" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/OCManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/OCManager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pcm/PCM.py" beforeDir="false" afterPath="$PROJECT_DIR$/pcm/PCM.py" afterDir="false" />
@@ -11,6 +12,9 @@
       <change beforePath="$PROJECT_DIR$/propagator/tdplas_env_wrapper.f90" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/save/SaveTools.py" beforeDir="false" afterPath="$PROJECT_DIR$/save/SaveTools.py" afterDir="false" />
     </list>
+=======
+    <list default="true" id="55efd99c-0da1-4ff7-b8ef-8191bd12be39" name="Default Changelist" comment="" />
+>>>>>>> bkp_problemi_git
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +24,7 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/propagator/PropagatorOCRabitz.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="285">
@@ -38,12 +43,21 @@
               <caret line="53" selection-start-line="53" selection-end-line="54" selection-end-column="30" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
+=======
+        <entry file="file://$PROJECT_DIR$/run_oc.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" column="74" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="67" />
+              <folding>
+                <element signature="e#0#27#0" expanded="true" />
+>>>>>>> bkp_problemi_git
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/OCGeneticIterator.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2175">
@@ -135,6 +149,12 @@
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
+=======
+        <entry file="file://$PROJECT_DIR$/OC/OCGeneticIterator.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" selection-start-line="4" selection-end-line="4" selection-end-column="25" />
+>>>>>>> bkp_problemi_git
             </state>
           </provider>
         </entry>
@@ -150,7 +170,10 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
+<<<<<<< HEAD
       <find>quii</find>
+=======
+>>>>>>> bkp_problemi_git
       <find>qui</find>
       <find>Restarted</find>
       <find>norestart</find>
@@ -180,6 +203,10 @@
       <find>print</find>
       <find>sys</find>
       <find>flip</find>
+<<<<<<< HEAD
+=======
+      <find>evaluate</find>
+>>>>>>> bkp_problemi_git
     </findStrings>
     <replaceStrings>
       <replace>.par</replace>
@@ -191,7 +218,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/ReadOutputGaussian.py" />
+=======
+>>>>>>> bkp_problemi_git
         <option value="$PROJECT_DIR$/Propagator.py" />
         <option value="$PROJECT_DIR$/NameListSections.py" />
         <option value="$PROJECT_DIR$/LogHeaderParameters.py" />
@@ -235,21 +265,36 @@
         <option value="$PROJECT_DIR$/read/auxiliary_functions.py" />
         <option value="$PROJECT_DIR$/propagator/math_functions.f90" />
         <option value="$PROJECT_DIR$/molecule/Molecule.py" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/run_oc.py" />
+=======
+>>>>>>> bkp_problemi_git
         <option value="$PROJECT_DIR$/pcm/PCM.py" />
         <option value="$PROJECT_DIR$/propagator/PropagatorTerms.py" />
         <option value="$PROJECT_DIR$/propagator/PropagatorsEulero.py" />
         <option value="$PROJECT_DIR$/propagator/Propagator.py" />
         <option value="$PROJECT_DIR$/OCManager.py" />
         <option value="$PROJECT_DIR$/save/SaveTools.py" />
+<<<<<<< HEAD
+=======
+        <option value="$PROJECT_DIR$/OC/OCGeneticIterator.py" />
+        <option value="$PROJECT_DIR$/run_oc.py" />
+>>>>>>> bkp_problemi_git
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
+<<<<<<< HEAD
     <option name="x" value="477" />
     <option name="y" value="185" />
     <option name="width" value="1308" />
     <option name="height" value="841" />
+=======
+    <option name="x" value="88" />
+    <option name="y" value="54" />
+    <option name="width" value="1070" />
+    <option name="height" value="1002" />
+>>>>>>> bkp_problemi_git
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -257,6 +302,10 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+<<<<<<< HEAD
+=======
+      <pane id="Scope" />
+>>>>>>> bkp_problemi_git
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -267,13 +316,20 @@
             <path>
               <item name="OCpy" type="b2602c69:ProjectViewProjectNode" />
               <item name="OCpy" type="462c0819:PsiDirectoryNode" />
+<<<<<<< HEAD
               <item name="save" type="462c0819:PsiDirectoryNode" />
+=======
+              <item name="OC" type="462c0819:PsiDirectoryNode" />
+>>>>>>> bkp_problemi_git
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+<<<<<<< HEAD
       <pane id="Scope" />
+=======
+>>>>>>> bkp_problemi_git
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -348,6 +404,12 @@
       <module name="OCpy" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+<<<<<<< HEAD
+=======
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+>>>>>>> bkp_problemi_git
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -389,6 +451,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
+<<<<<<< HEAD
     <frame x="-1" y="24" width="1922" height="1032" extended-state="6" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7021041" visible="true" weight="0.23668951" />
@@ -396,6 +459,16 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.31118494" />
+=======
+    <frame x="-1" y="24" width="1402" height="1002" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7021041" visible="true" weight="0.22730574" />
+      <window_info id="Structure" order="1" sideWeight="0.2978959" side_tool="true" weight="0.18713759" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.31118494" />
+>>>>>>> bkp_problemi_git
       <window_info anchor="bottom" id="Run" order="2" weight="0.32890365" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -404,7 +477,11 @@
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32914287" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+<<<<<<< HEAD
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.37873754" />
+=======
+      <window_info anchor="bottom" id="Python Console" order="10" visible="true" weight="0.39175257" />
+>>>>>>> bkp_problemi_git
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -444,6 +521,7 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+<<<<<<< HEAD
     <entry file="file:///usr/local/lib/python3.5/dist-packages/deap/tools/selection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
@@ -454,6 +532,8 @@
         </state>
       </provider>
     </entry>
+=======
+>>>>>>> bkp_problemi_git
     <entry file="file://$PROJECT_DIR$/save/SaveEulero.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
@@ -461,6 +541,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/save/InitLogPar.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -487,6 +568,11 @@
         </state>
       </provider>
     </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/save/InitLogPar.py" />
+    <entry file="file://$PROJECT_DIR$/read/ReadNamelistGenetic.py" />
+    <entry file="file://$PROJECT_DIR$/save/LogHeaderParameters.py" />
+>>>>>>> bkp_problemi_git
     <entry file="file://$PROJECT_DIR$/save/SaveFile.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -494,6 +580,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/OCParameters.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -511,6 +598,10 @@
         </state>
       </provider>
     </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/OCParameters.py" />
+    <entry file="file://$PROJECT_DIR$/run_genetic_DEAP_chr.py" />
+>>>>>>> bkp_problemi_git
     <entry file="file://$PROJECT_DIR$/save/SaveOCRabitz.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -521,6 +612,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/save/SaveParameters.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -545,6 +637,11 @@
         </state>
       </provider>
     </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/save/SaveParameters.py" />
+    <entry file="file://$PROJECT_DIR$/GeneticParameters.py" />
+    <entry file="file://$PROJECT_DIR$/InitOCPar.py" />
+>>>>>>> bkp_problemi_git
     <entry file="file:///usr/local/lib/python3.5/dist-packages/deap/creator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2460">
@@ -566,6 +663,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/run_genetic.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="477">
@@ -647,6 +745,17 @@
         </state>
       </provider>
     </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/run_genetic.py" />
+    <entry file="file://$PROJECT_DIR$/field/InitFieldPar.py" />
+    <entry file="file://$PROJECT_DIR$/field/FieldParameters.py" />
+    <entry file="file://$PROJECT_DIR$/InitPar.py" />
+    <entry file="file://$PROJECT_DIR$/OCEuleroIterator.py" />
+    <entry file="file://$PROJECT_DIR$/OCIterator.py" />
+    <entry file="file://$PROJECT_DIR$/field/ReadFieldRestartGenetic.py" />
+    <entry file="file://$PROJECT_DIR$/field/ReadFieldRestartRabitz.py" />
+    <entry file="file://$PROJECT_DIR$/read/ReadOutputGaussian.py" />
+>>>>>>> bkp_problemi_git
     <entry file="file://$PROJECT_DIR$/field/Field.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2220">
@@ -657,6 +766,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/OCRabitzIterator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
@@ -707,6 +817,14 @@
         </state>
       </provider>
     </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/OCRabitzIterator.py" />
+    <entry file="file://$PROJECT_DIR$/field/ReadFieldRestart.py" />
+    <entry file="file://$PROJECT_DIR$/read/ReadNamelistOC.py" />
+    <entry file="file://$PROJECT_DIR$/read/NameListSections.py" />
+    <entry file="file://$PROJECT_DIR$/molecule/MoleculeParameters.py" />
+    <entry file="file://$PROJECT_DIR$/molecule/InitMolecularPar.py" />
+>>>>>>> bkp_problemi_git
     <entry file="file://$PROJECT_DIR$/SystemManager.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -717,6 +835,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/propagator/tdplas_env_wrapper.f90">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-489" />
@@ -731,6 +850,10 @@
         </state>
       </provider>
     </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/propagator/tdplas_env_wrapper.f90" />
+    <entry file="file://$PROJECT_DIR$/pcm/InitPCMPar.py" />
+>>>>>>> bkp_problemi_git
     <entry file="file://$PROJECT_DIR$/propagator/math_functions.f90">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
@@ -741,6 +864,7 @@
     <entry file="file://$PROJECT_DIR$/propagator/math_functions.pyf">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/read/auxiliary_functions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
@@ -751,6 +875,9 @@
         </state>
       </provider>
     </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/read/auxiliary_functions.py" />
+>>>>>>> bkp_problemi_git
     <entry file="file://$PROJECT_DIR$/molecule/Molecule.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -761,6 +888,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/run_oc.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="386">
@@ -781,6 +909,9 @@
         </state>
       </provider>
     </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/pcm/PCM.py" />
+>>>>>>> bkp_problemi_git
     <entry file="file://$PROJECT_DIR$/propagator/PropagatorTerms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -811,6 +942,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/propagator/Propagator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -818,6 +950,9 @@
         </state>
       </provider>
     </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/propagator/Propagator.py" />
+>>>>>>> bkp_problemi_git
     <entry file="file://$PROJECT_DIR$/OCManager.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1140">
@@ -828,6 +963,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/save/SaveOC.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -835,6 +971,9 @@
         </state>
       </provider>
     </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/save/SaveOC.py" />
+>>>>>>> bkp_problemi_git
     <entry file="file://$PROJECT_DIR$/save/SaveTools.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -881,15 +1020,35 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/OCGeneticIterator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2175">
           <caret line="145" column="21" selection-start-line="145" selection-start-column="21" selection-end-line="145" selection-end-column="21" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+=======
+    <entry file="file://$PROJECT_DIR$/OCGeneticIterator.py" />
+    <entry file="file://$PROJECT_DIR$/run_oc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="74" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="67" />
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
+>>>>>>> bkp_problemi_git
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+=======
+    <entry file="file://$PROJECT_DIR$/OC/OCGeneticIterator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="4" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> bkp_problemi_git
   </component>
 </project>

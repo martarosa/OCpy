@@ -1,172 +1,152 @@
 import numpy as np
-from read import auxiliary_functions as af
 
-
-#-------------------------------------------
-#Field (x y z) components at time t: 3D vector
-#-------------------------------------------
-
-
-
-class PropagatorFieldOC():
-    def __init__(self):
-        self.field_dt = np.array(3)
-
-    def propagate_field_OC_Rabitz(self, ket, bra, muT, alpha):
-        f = af.double_summation(ket, np.conj(bra), muT)
-        self.field_dt = -1 * np.imag(f) / alpha
-        return self.field_dt
-
-    def propagate_field_OC_projector(self, coeff_ket, coeff_bra, muT, alpha):
-        f_old = np.dot(np.conj(coeff_bra), np.sum(muT*coeff_ket[np.newaxis, :, np.newaxis], axis=1))
-        f = np.dot(np.conj(coeff_ket), coeff_bra) * f_old
-        self.field_dt = -1 * np.imag(f) / alpha
-        return self.field_dt
-
-
-
-
+from SystemObj import DiscreteTimePar, Func_tMatrix
 
 #---------------------------------------------
 #field matrix at different times to be read or created
 #---------------------------------------------
+from parameters.FieldParameters import FieldParameters
+
+
 class Field():
     def __init__(self):
-        self.field_type = None
-        self.dt = None
-        self.nstep = None
-        self.parameters = dict({})
-        self.field = None
+        self.field = Func_tMatrix()
+        self.par = FieldParameters()
+
+
+    def init_field(self, field_input):
+        self.par.field_type = field_input.field_type
+        self.par.fi = field_input.fi
+        self.par.omega = field_input.omega
+        self.par.sigma = field_input.sigma
+        self.par.t0 = field_input.t0
+        self.par.omega_sys = field_input.omega_sys
+
+        discrete_t_par = DiscreteTimePar()
+        discrete_t_par.dt = field_input.dt
+        discrete_t_par.nstep = field_input.nstep
+
+        field = Func_tMatrix()
+        field.f_xyz = field_input.field
+        field.time_axis = field_input.field_time_axis
+
+        self.chose_field(self.par.field_type, discrete_t_par, field)
 
 
 
-    def init_field(self, field_parameters):
-        self.field_type = field_parameters.field_type
-        self.dt = field_parameters.dt
-        self.nstep = field_parameters.nstep
-        self.field = field_parameters.field
-        self.parameters['fi'] = field_parameters.fi
-        self.parameters['fi_cos'] = field_parameters.fi_cos
-        self.parameters['omega'] = field_parameters.omega
-        self.parameters['sigma'] = field_parameters.sigma
-        self.parameters['t0'] = field_parameters.t0
-        self.parameters['omega_sys'] = field_parameters.omega_sys
-        self.chose_field(self.field_type)
-
-
-
-
-    def chose_field(self, key):
-         field = {
-            'const': lambda : self.const_pulse(),
-            'pip': lambda : self.pip_pulse(),
-            'sin': lambda: self.sin_pulse(),
-            'gau': lambda: self.gau_pulse(),
-            'sum': lambda: self.sum_pulse(),
-            'sum_pip': lambda: self.sum_pip_pulse(),
-            'genetic' : lambda: self.genetic_pulse(),
-            'optimizedRabitz' : lambda: self.read_pulse(),
-            'restart_genetic' : lambda: self.sum_pulse()
+    def chose_field(self, key, discrete_t_par = None, field = None):
+         field_choice = {
+            'const': lambda : self.const_pulse(discrete_t_par),
+            'pip': lambda : self.pip_pulse(discrete_t_par),
+            'sin': lambda: self.sin_pulse(discrete_t_par),
+            'gau': lambda: self.gau_pulse(discrete_t_par),
+            'sum': lambda: self.sum_pulse(discrete_t_par),
+            'genetic' : lambda: self.genetic_pulse(discrete_t_par),
+            'sin_cos': lambda : self.sin_cos_pulse(discrete_t_par),
+             #only internal values
+            'restart_rabitz' : lambda: self.restart_rabitz(field),
+            'restart_genetic' : lambda: self.sum_pulse(discrete_t_par)
              }
-         return field.get(key, lambda: "Inexistent field type")()
+         return field_choice.get(key, lambda: "Inexistent field type")()
 
 
 
-    def read_pulse(self):
-        pass
-
-
-    def const_pulse(self):
-        self.field = np.zeros([self.nstep, 3])
-        self.field[:, 0] = self.parameters['fi'][0]
-        self.field[:, 1] = self.parameters['fi'][1]
-        self.field[:, 2] = self.parameters['fi'][2]
+    def restart_rabitz(self, field):
+        self.field = field
 
 
 
+    def const_pulse(self, discrete_t_par):
+        self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep-1), discrete_t_par.nstep)
+        self.field.f_xyz = np.zeros([discrete_t_par.nstep, 3])
+        self.field.f_xyz[:, 0] = self.par.fi[0]
+        self.field.f_xyz[:, 1] = self.par.fi[1]
+        self.field.f_xyz[:, 2] = self.par.fi[2]
 
-    def pip_pulse(self):
-        self.field = np.zeros([self.nstep, 3])
+
+
+
+    def pip_pulse(self, discrete_t_par):
+        self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
+        self.field.f_xyz = np.zeros([discrete_t_par.nstep, 3])
         # Pi pulse: fmax*(cos^2(pi(t-t0)/(2s)) * cos(w(t-t0)))
-        for i in range(self.nstep):
-            if abs(self.dt * i - self.parameters['t0']) < self.parameters['sigma']:
-                self.field[i] = self.parameters['fi'] \
-                                * np.square(
-                    np.cos(np.pi * (self.dt * i - self.parameters['t0']) / (2 * self.parameters['sigma']))) \
-                                * np.cos(self.parameters['omega'] * (self.dt * i - self.parameters['t0']))
+        for i in range(discrete_t_par.nstep):
+            if abs(discrete_t_par.dt * i - self.par.t0) < self.par.sigma:
+                self.field.f_xyz[i] = self.par.fi \
+                                      * np.square(
+                    np.cos(np.pi * (discrete_t_par.dt * i - self.par.t0) / (2 * self.par.sigma))) \
+                                      * np.cos(self.par.omega * (discrete_t_par.dt * i - self.par.t0))
 
 
-    def sin_pulse(self):
-        self.field = np.zeros([self.nstep, 3])
+    def sin_pulse(self, discrete_t_par):
+        self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
+        self.field.f_xyz = np.zeros([discrete_t_par.nstep, 3])
         # fmax*exp[-(t-t0)^2/s^2]*sin(wt)
-        for i in range(self.nstep):
-            self.field[i] = self.parameters['fi'] \
-                            * np.exp(-(self.dt * i - self.parameters['t0']) ** 2 / (2 * (self.parameters['sigma']) ** 2)) \
-                            * np.sin(self.parameters['omega'] * (self.dt * i))
+        for i in range(discrete_t_par.nstep):
+            self.field.f_xyz[i] = self.par.fi \
+                                  * np.exp(-(discrete_t_par.dt * i - self.par.t0) ** 2 / (2 * (self.par.sigma) ** 2)) \
+                                  * np.sin(self.par.omega * (discrete_t_par.dt * i))
 
-    def gau_pulse(self):
-        self.field = np.zeros([self.nstep, 3])
-        for i in range(self.nstep):
-            self.field[i] = self.parameters['fi'] \
-                            * np.exp(-(self.dt * i - self.parameters['t0']) ** 2 / (self.parameters['sigma']) ** 2)
 
-    def sum_pulse(self):
-        self.field = np.zeros([self.nstep, 3])
+    def gau_pulse(self, discrete_t_par):
+        self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
+        self.field.f_xyz = np.zeros([discrete_t_par.nstep, 3])
+        for i in range(discrete_t_par.nstep):
+            self.field.f_xyz[i] = self.par.fi \
+                                  * np.exp(-(discrete_t_par.dt * i - self.par.t0) ** 2 / (self.par.sigma) ** 2)
+
+    def sum_pulse(self, discrete_t_par):
+        self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
+        self.field.f_xyz = np.zeros([discrete_t_par.nstep, 3])
         # f0+fi*sin(wi*t)
-        if self.parameters['omega'].ndim == 1: #only one value of omega, 3D field [wx,wy,wz]
-            for i in range(self.nstep):
-                self.field[i] = self.parameters['fi'][0] - self.parameters['fi'][0] * np.sin(self.parameters['omega'] * i * self.dt) \
-                                + self.parameters['fi'] * np.sin(self.parameters['omega'] * i * self.dt)
-        elif self.parameters['omega'].ndim == 2: #matrix, N values of omega, 3D [w0x,w0y,w0z],[w1x,w1y,w1z]... il primo valore di omega deve essere sempre 0
-            for i in range(self.nstep):
-                self.field[i] = self.parameters['fi'][0]
-                for j in range(self.parameters['omega'].shape[0]):
-                    self.field[i] = self.field[i] \
-                                    + self.parameters['fi'][j+1] * np.sin(self.parameters['omega'][j] * i * self.dt)
+        if self.par.omega.ndim == 1: #only one value of omega, 3D field [wx,wy,wz]
+            for i in range(discrete_t_par.nstep):
+                self.field.f_xyz[i] = self.par.fi[0] - self.par.fi[0] * np.sin(self.par.omega * i * discrete_t_par.dt) \
+                                      + self.par.fi * np.sin(self.par.omega * i * discrete_t_par.dt)
+        elif self.par.omega.ndim == 2: #matrix, N values of omega, 3D [w0x,w0y,w0z],[w1x,w1y,w1z]... il primo valore di omega deve essere sempre 0
+            for i in range(discrete_t_par.nstep):
+                self.field.f_xyz[i] = self.par.fi[0]
+                for j in range(self.par.omega.shape[0]):
+                    self.field.f_xyz[i] = self.field.f_xyz[i] \
+                                          + self.par.fi[j] * np.sin(self.par.omega[j] * i * discrete_t_par.dt)
 
-
-
-    def sum_pip_pulse(self):
-        self.field = np.zeros([self.nstep, 3])
+    def sin_cos_pulse(self, discrete_t_par):
+        self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
+        self.field.f_xyz = np.zeros([discrete_t_par.nstep, 3])
         # f0+fi*sin(wi*t)
-        for i in range(self.nstep):
-            self.field[i] = self.parameters['fi'][0]
-            if abs(self.dt * i - self.parameters['t0']) < self.parameters['sigma']:
-                for j in range(self.parameters['omega'].shape[0]):
-                    self.field[i] = self.field[i] \
-                                    + self.parameters['fi'][j+1] \
-                                    * np.square( np.cos(np.pi * (self.dt * i - self.parameters['t0'])/(2 * self.parameters['sigma']))) \
-                                    * np.cos(self.parameters['omega'][j] * (i * self.dt - self.parameters['t0']))
+        for i in range(discrete_t_par.nstep):
+            self.field.f_xyz[i] = self.par.fi[0]
+            for j in range(self.par.omega.shape[0]):
+                    self.field.f_xyz[i] = self.field.f_xyz[i] + self.par.fi_cos[j] * np.cos(self.par.omega[j] * i * discrete_t_par.dt) - self.par.fi[j] * np.sin(self.par.omega[j] * i * discrete_t_par.dt)
 
 
 
-    def genetic_pulse(self):
-        self.chose_omega_fourier()
-        self.parameters['fi'] = np.full([self.parameters['omega'].shape[0]+1, 3], self.parameters['fi'][0])
-        #self.parameters['omega'] = np.array([[0,0,0],[0.26953409,0.26953409,0.26953409]])
-        #self.parameters['sigma'] = 0
-        #self.parameters['t0'] = 0
-        self.sum_pulse()
-        #self.sum_pip_pulse()
+    def genetic_pulse(self, discrete_t_par):
+        self.chose_omega_fourier(discrete_t_par)
+        self.par.fi = np.full([self.par.omega.shape[0], 3], self.par.fi[0])
+        self.par.fi_cos = np.full([self.par.omega.shape[0], 3], self.par.fi[0])
+        #self.par.fi = np.zeros([self.par.omega.shape[0]+1, 3])
+        #self.par.fi_cos = np.zeros([self.par.omega.shape[0]+1, 3])
+        #self.par.fi[3,0] = 0.02
+        #self.par.fi[5,0] =0.04
+        #self.par.fi_cos[2,0]=0.01
+        self.sum_pulse(discrete_t_par)
 
 
-    def chose_omega_fourier(self):
-        #n_fourier_omega_min = int(self.parameters['omega_sys'][1] * self.dt * self.nstep / (2 * np.pi)-1)
-        n_fourier_omega_min = 1
-        n_fourier_omega_max = int(2 + self.parameters['omega_sys'][-1]*self.dt*self.nstep/(2*np.pi))
-        n_fourier_omega = n_fourier_omega_max - n_fourier_omega_min
-        self.parameters['omega'] = np.zeros([n_fourier_omega, 3])
+    def chose_omega_fourier(self, discrete_t_par):
+        n_fourier_omega = int(2 + self.par.omega_sys[-1]*discrete_t_par.dt*discrete_t_par.nstep/(2*np.pi))
+        self.par.omega = np.zeros([n_fourier_omega, 3])
         for n in range(n_fourier_omega):
-            omega_n = (np.pi*2*(n + n_fourier_omega_min))/(self.dt*self.nstep)
-            self.parameters['omega'][n] = [omega_n, omega_n, omega_n]
+            omega_n = (np.pi*2*n)/(discrete_t_par.dt*discrete_t_par.nstep)
+            self.par.omega[n] = [omega_n, omega_n, omega_n]
 
 
     def chose_omega_energy(self):
         freq= []
-        for i in range(self.parameters['omega_sys'].shape[0]):
+        for i in range(self.par.omega_sys.shape[0]):
             for j in range(i):
-                freq.append(self.parameters['omega_sys'][i]-self.parameters['omega_sys'][j])
-        self.parameters['omega'] = np.zeros([len(freq), 3])
-        self.parameters['omega'][:,0] = freq
-        self.parameters['omega'][:, 1] = freq
-        self.parameters['omega'][:,2] = freq
+                freq.append(self.par.omega_sys[i]-self.par.omega_sys[j])
+        self.par.omega = np.zeros([len(freq), 3])
+        self.par.omega[:,0] = freq
+        self.par.omega[:, 1] = freq
+        self.par.omega[:,2] = freq
