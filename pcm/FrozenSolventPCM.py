@@ -74,6 +74,7 @@ class FrozenSolventPCM(ABCPCM):
         self.qijn = af.matrix_prod_tesserae_ijn_nn(Q_tdplas, Vijn)
         self.q00n = self.qijn[0,0]
 
+
     def calc_qijn_lf(self, Q_gamess_lf):
         Q_local_field_tdplas = np.dot(Q_gamess_lf, np.diag(self.par.cavity[:,3]))
         qijn_lf = - np.dot(Q_local_field_tdplas, self.par.cavity[:,0:3])

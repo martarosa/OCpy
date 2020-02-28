@@ -10,10 +10,12 @@ class SetPCMInput(ABCSetInput):
 
     def set(self, user_input):
         read_output = ReadOutputGaussian()
-        self.input_parameters.cavity = read_output.read_cavity_tesserae(user_input.sys.section_dictionary['folder'] + user_input.env.section_dictionary['name_file_cavity'])
         self.input_parameters.env = user_input.env.section_dictionary['env']
-        if self.input_parameters.env == 'sol':
-             self.input_parameters.Qnn_reactionfield = read_output.read_Q_matrix(user_input.sys.section_dictionary['folder'] +
+        if self.input_parameters.env != 'vac':
+            self.input_parameters.cavity = read_output.read_cavity_tesserae(user_input.sys.section_dictionary['folder'] +
+                                                                            user_input.env.section_dictionary['name_file_cavity'])
+            if self.input_parameters.env == 'sol':
+                 self.input_parameters.Qnn_reactionfield = read_output.read_Q_matrix(user_input.sys.section_dictionary['folder'] +
                                                                                  user_input.env.section_dictionary['name_q_tdplas'])
-             self.input_parameters.Qnn_localfield = read_output.read_Q_matrix(user_input.sys.section_dictionary['folder'] +
+                 self.input_parameters.Qnn_localfield = read_output.read_Q_matrix(user_input.sys.section_dictionary['folder'] +
                                                                               user_input.env.section_dictionary['name_q_local_field'])

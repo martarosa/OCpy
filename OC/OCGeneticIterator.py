@@ -259,21 +259,20 @@ class OCGeneticIterator(ABCOCIterator):
         #with concurrent.futures.ProcessPoolExecutor() as executor:
         #    J = executor.map(self.genetic_algorithms.evaluate, new)
         J = self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new)
-
-
         for ind, fit in zip(new, J):
             ind.J.values = fit
         self.chromosomes[:] = new
 
 
 
-
-
-
-
     #quello del paper, con parte crossover e parte mutati
     def evolve_mixed_DEAP(self):
-        n_mate = self.genetic_par.n_chromosomes-(self.genetic_par.n_selected_chr * self.genetic_par.n_mutate)
+    #fa la stessa cosa che nel sequential, fa crossover con tutti. La valutazione invece la fa solo nel sottoset dei mutati
+        n_mate_children_each = self.genetic_par.n_chromosomes / self.genetic_par.n_selected_chr
+        if n_mate_children_each.is_integer() == False:
+            n_mate_children_each = int(n_mate_children_each) + 1
+        else:
+            n_mate_children_each = int(n_mate_children_each)
         print("evolve")
         # Select the next generation individuals
         new_crossover = []
@@ -282,7 +281,7 @@ class OCGeneticIterator(ABCOCIterator):
         selected = self.genetic_algorithms.clone(selected)
     # Apply crossover on the offspring
     # li prendo tutti e ne genero quanti me ne servono mescolandoli
-        for i in range(n_mate):
+        for i in range(n_mate_children_each):
     #se tolgo questo il primo abbinamento me lo fa tra i vicini di J, se lo lascio è random
             random.shuffle(selected)
             for first, second in zip(selected[::2], selected[1::2]):
@@ -293,31 +292,27 @@ class OCGeneticIterator(ABCOCIterator):
                 new_crossover.append(deepcopy(a))
                 new_crossover.append(deepcopy(b))
     # Apply mutation on the offspring
-    # li prendo tutti in ordine e li muto le volte che mi serve
+    # solo il sottoset
         new_mutation = []
         print("sigma:")
         print(self.genetic_algorithms.mutate.keywords['sigma'])
-        for i in range(self.genetic_par.n_selected_chr):
-            for j in range(self.genetic_par.n_mutate):
-                new_mutation.append(deepcopy(selected[i]))
-                self.genetic_algorithms.mutate(new_mutation[-1])
-        #self.check_bounds(new_mutation)
-        for mutant in new_mutation:
+        for i in range(self.genetic_par.n_mutate):
+            new_mutation.append(deepcopy(selected[i]))
             if random.random() < self.genetic_par.mutate_probability:
-                self.genetic_algorithms.mutate(mutant)
-        self.check_bounds(new_mutation)
-        #calcolo la J del crossover e la J della mutazione
+                self.genetic_algorithms.mutate(new_mutation[-1])
+        self.check_bounds_matrix(new_mutation)
+        #calcolo la J del crossover e la J della mutazione. in entrambi i casi valuta il numero di successi
+        # ma resetto prima della mutazione perchè mi interessano solo quelli della mutazione
         J_crossover = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new_crossover))
         self.n_mutation_succes = 0
         J_mutation = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new_mutation))
-        print("mutation_success:")
-        print(self.n_mutation_succes)
         #updato sigma della mutazione secondo il successo di questa generazione
-
         self.update_sigma_mutation()
-        #genero il nuovo pool, lo zippo con le sue J
-        new = new_crossover + new_mutation
-        J = J_crossover + J_mutation
+        #genero il nuovo pool unendo mutation e crossover. prima mutazione perchè il crossover è troppo lungo e devo tagliarlo
+        new = new_mutation + new_crossover
+        J = J_mutation + J_crossover
+        new = new[:self.genetic_par.n_chromosomes]
+        J = J[:self.genetic_par.n_chromosomes]
         for ind, fit in zip(new, J):
             ind.J.values = fit
     #lo sostituisco all amia popolazione

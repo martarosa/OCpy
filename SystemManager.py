@@ -85,6 +85,7 @@ class SystemManager():
             self.pcm = DinamicPCM()
         elif user_input.env.section_dictionary['env'] == 'vac':
             self.pcm = VacPCM()
+        set_pcm.set(user_input)
         self.pcm.init_pcm(set_pcm.input_parameters, self.mol, self.starting_field.field.f_xyz[0])
 
 

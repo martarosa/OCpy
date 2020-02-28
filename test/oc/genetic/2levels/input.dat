@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.1
 nstep=2500
-name = genetic_mixed_ampl01_sigma005_mu05
+name = test_time_seq
 oc_algorithm = genetic 
 #folder=
 

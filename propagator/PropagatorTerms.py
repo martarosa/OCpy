@@ -24,9 +24,9 @@ class PropagatorTerms():
         self.dict_terms["eulero2_coeff"] = self.eulero2_coeff_term
         self.dict_terms["eulero_energy"] = self.eulero_energy_term
         self.dict_terms["eulero_field"] = self.eulero_field_term
-        self.dict_terms["eulero_pcm"] = self.eulero_PCM_term
+        self.dict_terms["eulero_pcm"] = self.eulero_PCM_term_fortran
         self.dict_terms["norm"] = self.norm
-        self.dict_terms["oc_pcm_bwd"] = self.bwd_PCM_term
+        self.dict_terms["oc_pcm_bwd"] = self.bwd_PCM_term_fortran
 
     # <editor-fold desc="H terms">
 

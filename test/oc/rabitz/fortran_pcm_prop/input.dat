@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = out_fortran 
+name = test 
 oc_algorithm = rabitzi 
 #folder=
 
