@@ -21,6 +21,7 @@ class Field():
         self.par.sigma = field_input.sigma
         self.par.t0 = field_input.t0
         self.par.omega_sys = field_input.omega_sys
+        self.par.restart_name = field_input.field_restart_name
 
         discrete_t_par = DiscreteTimePar()
         discrete_t_par.dt = field_input.dt
@@ -43,6 +44,7 @@ class Field():
             'sum': lambda: self.sum_pulse(discrete_t_par),
             'genetic' : lambda: self.genetic_pulse(discrete_t_par),
             'sin_cos': lambda : self.sin_cos_pulse(discrete_t_par),
+            'read': lambda : self.read_pulse(discrete_t_par),
              #only internal values
             'restart_rabitz' : lambda: self.restart_rabitz(field),
             'restart_genetic' : lambda: self.sum_pulse(discrete_t_par)
@@ -51,10 +53,19 @@ class Field():
 
 
 
+
     def restart_rabitz(self, field):
         self.field = field
 
+    def read_pulse(self, discrete_t_par):
+        self.field.time_axis = np.loadtxt(self.par.restart_name, usecols=(0))
+        self.field.f_xyz = np.loadtxt(self.par.restart_name, usecols = (0,1,2))
 
+        #add check nstep e dt
+
+    def restart_genetic(self, discrete_t_par):
+        #check consistency with file read
+        pass
 
     def const_pulse(self, discrete_t_par):
         self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep-1), discrete_t_par.nstep)

@@ -5,6 +5,7 @@ from OC.OCEuleroIterator import  Eulero1PropagationIterator, Eulero2PropagationI
 from OC.OCRabitzIterator import OCRabitzIterator
 
 from SystemObj import Func_tMatrix
+from parameters.OCManagerParameters import OCManagerParameters
 
 from save.SaveOCRabitz import SaveOCRabitz
 from save.SaveEulero import SaveEulero
@@ -14,14 +15,6 @@ from OC.OCGeneticIterator import OCGeneticIterator
 # OCmanager is only one, and deals with the different OC_iterators (propagation, rapitz, genetic...) Depending
 # on the iterator, the SaveOC class is differently initialized. The restart method is inside Save and is also differently initialized
 # depending on the algorithm (e.g. for the genetic it reads the field parameters, while for Rabitz it reads the field point by point
-
-class OCManagerParameters:
-    def __init__(self):
-        self.oc_iterator_name = None
-        self.convergence_thr = None
-        self.n_iterations = None
-        self.alpha0 = None
-        self.alpha = None
 
 
 class OCManager:

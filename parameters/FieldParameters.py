@@ -7,3 +7,4 @@ class FieldParameters():
         self.sigma = None
         self.t0 =  None
         self.omega_sys = None
+        self.restart_name = None

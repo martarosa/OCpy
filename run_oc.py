@@ -1,8 +1,9 @@
 import SystemManager as ini
 import time
 
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/2levels/"
-namefile = "input.dat"
+folder = "/home/mana/Desktop/OC/cianidina/"
+#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/vac/"
+namefile = "input_genetic.dat"
 
 
 

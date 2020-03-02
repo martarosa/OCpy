@@ -27,6 +27,7 @@ class SetFieldInput(ABCSetInput):
 
         self.input_parameters.omega_sys = read_output.read_en_ci0(user_input.sys.section_dictionary['folder'] +
                                                                   user_input.wf.section_dictionary['name_ei'])
+        self.input_parameters.field_restart_name = user_input.sys.section_dictionary['folder'] + user_input.field.section_dictionary['name_field_file']
 
     def set_restart(self, user_input):
             self.read_restart.read_file(user_input.sys.section_dictionary['folder'], user_input.field.section_dictionary['name_field_file'])
