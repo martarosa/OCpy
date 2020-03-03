@@ -5,6 +5,8 @@ folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/2leve
 namefile = "input.dat"
 
 
+variabile = 5
+
 
 
 OC_system=ini.SystemManager()
