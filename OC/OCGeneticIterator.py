@@ -255,12 +255,11 @@ class OCGeneticIterator(ABCOCIterator):
             if random.random() < self.genetic_par.mutate_probability:
                 self.genetic_algorithms.mutate(mutant)
         self.check_bounds_matrix(new)
-
-        #with concurrent.futures.ProcessPoolExecutor() as executor:
-        #    J = executor.map(self.genetic_algorithms.evaluate, new)
-        J = self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new)
-        for ind, fit in zip(new, J):
-            ind.J.values = fit
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            J = list(executor.map(self.genetic_algorithms.evaluate, new))
+        #J = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new))
+        for i in range (len(new)):
+            new[i].J.values = J[i]
         self.chromosomes[:] = new
 
 
@@ -291,6 +290,10 @@ class OCGeneticIterator(ABCOCIterator):
                     a, b = deepcopy(first), deepcopy(second)
                 new_crossover.append(deepcopy(a))
                 new_crossover.append(deepcopy(b))
+
+        len_cross = self.genetic_par.n_chromosomes - self.genetic_par.n_mutate
+        new_crossover = new_crossover[:len_cross]
+
     # Apply mutation on the offspring
     # solo il sottoset
         new_mutation = []
@@ -303,19 +306,24 @@ class OCGeneticIterator(ABCOCIterator):
         self.check_bounds_matrix(new_mutation)
         #calcolo la J del crossover e la J della mutazione. in entrambi i casi valuta il numero di successi
         # ma resetto prima della mutazione perchè mi interessano solo quelli della mutazione
-        J_crossover = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new_crossover))
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            J_crossover = list(executor.map(self.genetic_algorithms.evaluate, new_crossover))
+        print("crossover len:" + str(len(list(J_crossover))) + "and " + str(list(J_crossover)))
         self.n_mutation_succes = 0
-        J_mutation = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new_mutation))
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            J_mutation = list(executor.map(self.genetic_algorithms.evaluate, new_mutation))
+        print("mutation len:" + str(len(list(J_mutation))) + "and " + str(J_mutation))
+        print("mutation_success:")
+        print(self.n_mutation_succes)
         #updato sigma della mutazione secondo il successo di questa generazione
         self.update_sigma_mutation()
-        #genero il nuovo pool unendo mutation e crossover. prima mutazione perchè il crossover è troppo lungo e devo tagliarlo
-        new = new_mutation + new_crossover
-        J = J_mutation + J_crossover
-        new = new[:self.genetic_par.n_chromosomes]
-        J = J[:self.genetic_par.n_chromosomes]
-        for ind, fit in zip(new, J):
-            ind.J.values = fit
-    #lo sostituisco all amia popolazione
+        #genero il nuovo pool, lo zippo con le sue J
+        new = new_crossover + new_mutation
+        J = J_crossover + J_mutation
+        for i in range (len(new)):
+            new[i].J.values = J[i]
+        self.chromosomes[:] = new
+    #lo sostituisco alla mia popolazione
         self.chromosomes[:] = new
 
 
