@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from copy import deepcopy
 
 from propagator import PropagatorOCRabitz as rabitzI
@@ -160,7 +161,11 @@ class OCRabitzIterator(ABCOCIterator):
         return field_t_matrix
 
     def get_restart(self):
-        return self.get_field_t()
+        header = np.array([["#time","field x","field y", "field z"],["###","###","###","###"]])
+        out = pd.DataFrame(header)
+        field_t_matrix = pd.DataFrame(self.get_field_t())
+        out = out.append(field_t_matrix)
+        return out
 
 
 

@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from copy import deepcopy
 from propagator import PropagatorsEulero as prop
 from read_and_set.read import auxiliary_functions as af
@@ -65,6 +66,7 @@ class Eulero1PropagationIterator(ABCOCIterator):
 
     def get_restart(self):
         field_t_matrix = np.insert(self.field_psi_matrix.f_xyz, 0, self.field_psi_matrix.time_axis, axis = 1)
+
         return field_t_matrix
 
 
@@ -128,6 +130,7 @@ class Eulero2PropagationIterator(ABCOCIterator):
 
     def get_restart(self):
         field_t_matrix = np.insert(self.field_psi_matrix.f_xyz, 0, self.field_psi_matrix.time_axis, axis = 1)
+        field_t_matrix = pd.DataFrame(field_t_matrix)
         return field_t_matrix
 
 

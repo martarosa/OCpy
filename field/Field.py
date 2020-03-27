@@ -30,7 +30,6 @@ class Field():
         field = Func_tMatrix()
         field.f_xyz = field_input.field
         field.time_axis = field_input.field_time_axis
-
         self.chose_field(self.par.field_type, discrete_t_par, field)
 
 
@@ -47,7 +46,7 @@ class Field():
             'read': lambda : self.read_pulse(discrete_t_par),
              #only internal values
             'restart_rabitz' : lambda: self.restart_rabitz(field),
-            'restart_genetic' : lambda: self.sum_pulse(discrete_t_par)
+            'restart_genetic' : lambda: self.restart_genetic(discrete_t_par)
              }
          return field_choice.get(key, lambda: "Inexistent field type")()
 
@@ -63,9 +62,6 @@ class Field():
 
         #add check nstep e dt
 
-    def restart_genetic(self, discrete_t_par):
-        #check consistency with file read
-        pass
 
     def const_pulse(self, discrete_t_par):
         self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep-1), discrete_t_par.nstep)
@@ -121,6 +117,10 @@ class Field():
                     self.field.f_xyz[i] = self.field.f_xyz[i] \
                                           + self.par.fi[j] * np.sin(self.par.omega[j] * i * discrete_t_par.dt)
 
+
+
+
+
     def sin_cos_pulse(self, discrete_t_par):
         self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
         self.field.f_xyz = np.zeros([discrete_t_par.nstep, 3])
@@ -136,11 +136,10 @@ class Field():
         self.chose_omega_fourier(discrete_t_par)
         self.par.fi = np.full([self.par.omega.shape[0], 3], self.par.fi[0])
         self.par.fi_cos = np.full([self.par.omega.shape[0], 3], self.par.fi[0])
-        #self.par.fi = np.zeros([self.par.omega.shape[0]+1, 3])
-        #self.par.fi_cos = np.zeros([self.par.omega.shape[0]+1, 3])
-        #self.par.fi[3,0] = 0.02
-        #self.par.fi[5,0] =0.04
-        #self.par.fi_cos[2,0]=0.01
+        self.sum_pulse(discrete_t_par)
+
+
+    def restart_genetic(self, discrete_t_par):
         self.sum_pulse(discrete_t_par)
 
 
