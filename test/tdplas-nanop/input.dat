@@ -1,0 +1,54 @@
+[SYSTEM]
+dt=0.01
+nstep=25000
+name = rabitz_ref_alpha10
+oc_algorithm = rabitzi
+#folder=
+#new_computer_prop = classical or quantum
+
+
+[WAVEFUNCTION]
+name_ci=ci_ini.inp
+name_ei=ci_energy.inp
+name_mut=ci_mut.inp
+
+#[MOLECULE]
+#read o create with software
+#parametri per software
+#nomi file per leggere
+
+
+[FIELD]
+field_type=const
+fi=0.01 0.01 0.01
+#sigma = 125
+#t0 = 125
+#omega = 0.32140573 0.32140573 0.32140573
+
+[ENVIRON]
+env=vac  #sol nanop
+#new_pcm_model = frozn o dinamic
+#[cavity]
+#mat_sd
+#cavity ecc
+#name_Vij=pot_gamess.inp
+#name_Q_tdplas=np_bem.mdy
+#read_qijn=False
+#name_file_qijn=./qijn.dat
+#[eps_function]
+#dielctric model drl o read
+#parametri per il modello
+
+
+[OPTIMALC]
+restart=False
+alpha=const
+alpha0=10
+n_iterations=100
+target_state=0 1 0 0 0 0 0 0 0 0 0
+#iterator_config_file = genetic.conf
+#optimization operator (ce ne saranno aluni disponibili
+#e invece del target state ci sarà direttamente J o qualcosa di simile
+[SAVE]
+#restart_step=1
+

@@ -38,7 +38,6 @@ class ABCPropagator(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-
     #takest objects of tipe Func_t with a vector with values of the time axes and a matrix of the values in each time step
     #e.g. field is fx, fy,fz and returns an object Func_t for the wavefuncion, with the time axis and a matrix of the
     # wf in all the states
