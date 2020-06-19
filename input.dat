@@ -1,0 +1,39 @@
+[SYSTEM]
+dt=1
+nstep=25
+name = test_genetic_classic_10lev_50_50_7070
+oc_algorithm = scipy
+propagation_type = quantum
+scipy_method = nelder-mead
+folder = 
+
+[WAVEFUNCTION]
+name_ci=ci_ini3.inp
+name_ei=ci_energy3.inp
+name_mut=ci_mut3.inp
+
+[FIELD]
+field_type=genetic
+#name_field_file = test_genetic_classic_10lev_50_50_7070_field_bkp.dat
+#fi=0.01 0.01 0.01
+#sigma = 125
+#t0 = 125
+#omega = 0.32140573 0.32140573 0.32140573 
+
+[ENVIRON]
+env=vac
+#name_Vij=pot_gamess.inp
+#name_Q_tdplas=np_bem.mdy
+#read_qijn=False
+#name_file_qijn=./qijn.dat
+
+[OPTIMALC]
+restart=False
+alpha=const
+alpha0=1
+n_iterations=4
+target_state= 0 1 0  
+#iterator_config_file = genetic.conf
+
+[SAVE]
+restart_step=1

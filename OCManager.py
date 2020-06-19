@@ -3,13 +3,15 @@ import numpy as np
 
 from OC.OCEuleroIterator import  Eulero1PropagationIterator, Eulero2PropagationIterator
 from OC.OCRabitzIterator import OCRabitzIterator
-
+from OC.OCScipyOptimizeGradFreeIterator import OCScipyOptimizeGradFreeIterator
 from SystemObj import Func_tMatrix
 
 from save.SaveOCRabitz import SaveOCRabitz
 from save.SaveEulero import SaveEulero
 from save.SaveOCGenetic import SaveOCGenetic
+from save.SaveOCScipyOptimize import SaveOCScipyOptimize
 from OC.OCGeneticIterator import OCGeneticIterator
+import sys
 
 # OCmanager is only one, and deals with the different OC_iterators (propagation, rapitz, genetic...) Depending
 # on the iterator, the SaveOC class is differently initialized. The restart method is inside Save and is also differently initialized
@@ -68,6 +70,9 @@ class OCManager:
         elif self.par.oc_iterator_name == "genetic":
             self.oc_iterator = OCGeneticIterator()
             self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input, iterator_config_input)
+        elif self.par.oc_iterator_name == "scipy":
+            self.oc_iterator = OCScipyOptimizeGradFreeIterator()
+            self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input)
         elif self.par.oc_iterator_name == "eulero_1order_prop":
             self.oc_iterator = Eulero1PropagationIterator()
             self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input)
@@ -86,6 +91,9 @@ class OCManager:
             self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
         elif self.par.oc_iterator_name == "genetic":
             self.save = SaveOCGenetic()
+            self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
+        elif self.par.oc_iterator_name == "scipy":
+            self.save = SaveOCScipyOptimize()
             self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
 
 
@@ -110,6 +118,8 @@ class OCManager:
         self.psi_coeff_t_matrix = self.oc_iterator.psi_coeff_t_matrix
         self.field_psi_matrix = self.oc_iterator.field_psi_matrix
         self.par.convergence_t = self.oc_iterator.par.convergence_t
+        if self.par.oc_iterator_name in ['scipy']:
+            np.save(self.save.par.folder + self.save.par.filename + "result.npy", [self.oc_iterator.result, self.oc_iterator.par.J])
 
 
 

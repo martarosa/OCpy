@@ -62,7 +62,8 @@ class SaveTools():
     def save_restart(self, iteration, folder_name, save_restart):
         name = folder_name + save_restart.name
         if iteration % save_restart.restart_step == 0:
-            np.savetxt(name, save_restart.out(), delimiter =' ', header ='', footer ='')
+            save_restart.out().to_csv(name, index=False, header=None, sep = " ")
+          #  np.savetxt(name, save_restart.out(), delimiter =' ', header ='', footer ='')
 
     def save_3D_matrix(self, Mijn, name_file):
         f = open(name_file, 'w+')
@@ -71,3 +72,6 @@ class SaveTools():
                 f.write(str(i)+" "+str(j)+"\n")
                 np.savetxt(f, Mijn[i,j])
         f.close()
+        
+    def save_to_npy(self, name_file, file):
+        np.save(name_file, file)

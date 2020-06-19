@@ -5,6 +5,9 @@ from save.ABCSave import ABCSave
 from parameters.SaveParameters import SaveParameters
 from save.SaveRestart import SaveRestart
 from save.SaveTools import SaveTools
+from read_and_set.read import NamelistTools as nmtool
+import sys
+
 
 class SaveOCGenetic(ABCSave):
     def __init__(self):
@@ -22,17 +25,17 @@ class SaveOCGenetic(ABCSave):
                        1,
                        'log_file',
                        oc_iterator)
-
-        final_pop = SaveFile("_final_pop.dat",
-                             "#Final states populations \n #fields: n_iteration, final states population  \n",
-                             1,
-                             'final_pop',
+        if oc_iterator.par.propagation_type != 'quantum':
+            final_pop = SaveFile("_final_pop.dat",
+                                 "#Final states populations \n #fields: n_iteration, final states population  \n",
+                                 1,
+                                 'final_pop',
+                                 oc_iterator)
+            pop_t = SaveFile("_pop_t.dat",
+                             "#pop(t) \n #fields: n_iteration, nstep, states population(t)  \n",
+                             restart_step,
+                             'pop_t',
                              oc_iterator)
-        pop_t = SaveFile("_pop_t.dat",
-                         "#pop(t) \n #fields: n_iteration, nstep, states population(t)  \n",
-                         restart_step,
-                         'pop_t',
-                         oc_iterator)
 
         field_t = SaveFile("_field_t.dat",
                            "#field(t) \n#fields: n_iteration, nstep, time, field(t) x, y, z  \n",
@@ -46,8 +49,10 @@ class SaveOCGenetic(ABCSave):
                               restart_step,
                               'field_ampl',
                               oc_iterator)
-
-        self.save_files = [log, final_pop, pop_t, field_t, field_ampl]
+        if 'qiskit' in sys.modules == False:
+            self.save_files = [log, final_pop, pop_t, field_t, field_ampl]
+        else:
+            self.save_files = [log, field_t, field_ampl]
         self.restart_file = SaveRestart("_field_bkp.dat", restart_step, oc_iterator)
 
 

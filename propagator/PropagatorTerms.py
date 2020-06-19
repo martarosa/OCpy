@@ -2,7 +2,10 @@ import numpy as np
 
 from read_and_set.read import auxiliary_functions as af
 from molecule.Molecule import Molecule
-from propagator import math_functions as mf
+#from propagator import math_functions as mf
+
+import sys
+
 
 # all posible propagator term. Some use PCM methods specific of FrozenSolventPCM child class, If/when
 # DinamicPCM(PCM) will have rabitz implemented, it will have a propagate_bwd_oc term, while the propagation in
@@ -13,8 +16,11 @@ class PropagatorTerms():
         self.mol = Molecule()
         self.pcm = None
         self.dict_terms = {}
-
-
+        self.is_quantum = None
+        self.qbits = None
+        self.cbits = None
+        self.qcircuit = None
+            
     def set_attributes(self, molecule, pcm):
         self.mol = molecule
         self.pcm = pcm
@@ -24,9 +30,9 @@ class PropagatorTerms():
         self.dict_terms["eulero2_coeff"] = self.eulero2_coeff_term
         self.dict_terms["eulero_energy"] = self.eulero_energy_term
         self.dict_terms["eulero_field"] = self.eulero_field_term
-        self.dict_terms["eulero_pcm"] = self.eulero_PCM_term_fortran
+    #    self.dict_terms["eulero_pcm"] = self.eulero_PCM_term_fortran
         self.dict_terms["norm"] = self.norm
-        self.dict_terms["oc_pcm_bwd"] = self.bwd_PCM_term_fortran
+    #    self.dict_terms["oc_pcm_bwd"] = self.bwd_PCM_term_fortran
 
     # <editor-fold desc="H terms">
 
@@ -76,25 +82,26 @@ class PropagatorTerms():
                                             self.pcm.qijn)))
 
 
-    def eulero_PCM_term_fortran(self, i, order, dt, field_dt_vector, *args):
-        self.pcm.propagate_fortran(i, self.mol, field_dt_vector)
-        q_t = self.pcm.get_q_t() - self.pcm.q00n
-        self.mol.wf.ci += -order * 1j * dt \
-                          *mf.eulero_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
-                                         np.asfortranarray(q_t, dtype=np.complex128),
-                                         np.asfortranarray(self.mol.par.Vijn_fortran_flip, dtype=np.complex128))
+#    def eulero_PCM_term_fortran(self, i, order, dt, field_dt_vector, *args):
+#        self.pcm.propagate_fortran(i, self.mol, field_dt_vector)
+#        q_t = self.pcm.get_q_t() - self.pcm.q00n
+#        self.mol.wf.ci += -order * 1j * dt \
+#                          *mf.eulero_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
+#                                         np.asfortranarray(q_t, dtype=np.complex128),
+#                                         np.asfortranarray(self.mol.par.Vijn_fortran_flip, dtype=np.complex128))
+#
+#
+#
+#    def bwd_PCM_term_fortran(self, i, order, dt, field_dt_vector, wf_fwd, *args):
+#        self.pcm.propagate_bwd_oc_fortran(i, wf_fwd, field_dt_vector)
+#        q_t = self.pcm.get_q_t() - self.pcm.q00n
+#        self.mol.wf.ci += -order * 1j * dt \
+#                          * (mf.bwd_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
+#                                        np.asfortranarray(wf_fwd, dtype=np.complex128),
+#                                        np.asfortranarray(q_t, dtype=np.complex128),
+#                                        np.asfortranarray(self.mol.par.Vijn_fortran_flip, dtype=np.complex128),
+#                                        np.asfortranarray(self.pcm.qijn_fortran_flip, dtype=np.complex128)))
 
 
-
-    def bwd_PCM_term_fortran(self, i, order, dt, field_dt_vector, wf_fwd, *args):
-        self.pcm.propagate_bwd_oc_fortran(i, wf_fwd, field_dt_vector)
-        q_t = self.pcm.get_q_t() - self.pcm.q00n
-        self.mol.wf.ci += -order * 1j * dt \
-                          * (mf.bwd_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
-                                        np.asfortranarray(wf_fwd, dtype=np.complex128),
-                                        np.asfortranarray(q_t, dtype=np.complex128),
-                                        np.asfortranarray(self.mol.par.Vijn_fortran_flip, dtype=np.complex128),
-                                        np.asfortranarray(self.pcm.qijn_fortran_flip, dtype=np.complex128)))
-
-
-
+            
+            

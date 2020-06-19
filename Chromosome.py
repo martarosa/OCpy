@@ -39,7 +39,7 @@ class Chromosome():
                                        self.prop_psi.propagator_terms.mol.wf.ci,
                                        target_state)
                          -self.alpha_field_J_integral(
-                                       self.field.fieldaaaaaaaaaaaaaaaaaaa,
+                                       self.field.field,
                                        alpha_t,
                                        dt))
         if self.J > Jprev:

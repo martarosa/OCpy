@@ -6,6 +6,7 @@ import concurrent.futures
 
 from parameters.GeneticParameters import GeneticParameters
 from read_and_set.read import auxiliary_functions as af
+from read_and_set.read import NamelistTools as nmtool
 from OC.ABCOCIterator import ABCOCIterator
 from parameters.OCIteratorParameters import OCIteratorParameters
 from SystemObj import DiscreteTimePar
@@ -13,6 +14,10 @@ from Chromosome import Chromosome
 from field.Field import Field, Func_tMatrix
 from copy import deepcopy
 from propagator import PropagatorsEulero as prop
+import sys
+import pandas as pd
+
+
 
 from deap import base
 from deap import creator
@@ -69,6 +74,8 @@ class OCGeneticIterator(ABCOCIterator):
 
     def iterate(self, current_iteration):
         print(current_iteration)
+        if self.par.propagation_type == 'quantum':
+            print("qiskit is in the uploaded modules")
         self.evolve()
         self.check_convergence()
 
@@ -85,8 +92,9 @@ class OCGeneticIterator(ABCOCIterator):
 
     def init_output_dictionary(self):
         self.dict_out['log_file'] = self.get_log_file_out
-        self.dict_out['final_pop'] = self.get_final_pop
-        self.dict_out['pop_t'] = self.get_pop_t
+        if self.par.propagation_type != 'quantum':     
+            self.dict_out['final_pop'] = self.get_final_pop 
+            self.dict_out['pop_t'] = self.get_pop_t
         self.dict_out['field_t'] = self.get_field_t
         self.dict_out['field_ampl'] = self.get_field_ampl
 
@@ -97,7 +105,8 @@ class OCGeneticIterator(ABCOCIterator):
         self.par.alpha_t = alpha_t
         self.par.convergence_t = 99999
         self.par.J = 99999
-
+        self.par.oc_iterator_prop = oc_input.oc_iterator_name
+        self.par.propagation_type = oc_input.propagation_type
         self.field_psi_matrix = deepcopy(starting_field.field)
 
         #self.psi_coeff_t_matrix = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
@@ -155,7 +164,14 @@ class OCGeneticIterator(ABCOCIterator):
     #    self. = []
     #    self.field = Field()
     #    self.prop_psi = prop.PropagatorEulero2Order()
-        creator.create("Chromosome", list, J=creator.J, field = Field(), prop_psi = prop.PropagatorEulero2Order())
+        if self.par.propagation_type == 'quantum':
+            print('importing the propagator')
+            from qiskit.tools.qi.qi import partial_trace
+            from propagator import PropagatorQuantum as qprop
+            creator.create("Chromosome", list, J=creator.J, field = Field(), prop_psi = qprop.PropagatorQuantum())
+            print("the propagator is quantum")
+        else:
+            creator.create("Chromosome", list, J=creator.J, field = Field(), prop_psi = prop.PropagatorEulero2Order())
         #toolbox.register("create_random_ampl", random.uniform, self.ampl_min, self.ampl_max)
         #toolbox.register("create_random_ampl_rounded", round, toolbox.create_random_ampl, ndigits=4)
 
@@ -174,16 +190,32 @@ class OCGeneticIterator(ABCOCIterator):
         self.chromosomes = toolbox.chromosomes_population(n=self.genetic_par.n_chromosomes) #create all chromosomes
 
     #creo un oggetto prop_psi ....
-        prop_psi = prop.PropagatorEulero2Order()
-        prop_psi.set_propagator(molecule, pcm)
-        self.initial_c0 = prop_psi.propagator_terms.mol.wf.ci
+        if self.par.propagation_type == 'quantum':
+            from qiskit import Aer
+            prop_psi = qprop.PropagatorQuantum()
+            print("the propagation is quantum")
+            prop_psi.set_propagator(molecule, pcm)
+            self.initial_c0 = prop_psi.propagator_terms.mol.wf.ci
+        else:
+            prop_psi = prop.PropagatorEulero2Order()
+            prop_psi.set_propagator(molecule, pcm)
+            self.initial_c0 = prop_psi.propagator_terms.mol.wf.ci
     #... e dentro a ogni cromosoma della mia lista inizializzo il campo, il propagatore e metto J = 0.5
     #Sono tutti uguali ma le ampiezze del mio vettore sono diverse perchè le ho fatte random prima
         for i in range(len(self.chromosomes)):
             self.chromosomes[i].field = deepcopy(starting_field)
+            #print(starting_field.par.omega)
+            #print(starting_field.par.fi)
             self.chromosomes[i].prop_psi = deepcopy(prop_psi)
             self.chromosomes[i].J.values = [0.5]
+            if (starting_field.par.field_type == "restart_genetic"):
+                self.assign_chromosome_values(self.chromosomes[i], starting_field.par.fi.reshape((1,-1)))
         self.par.J = [99999]
+        
+    def assign_chromosome_values(self, chromosome, reshaped_starting_field_fi):
+        n = reshaped_starting_field_fi.size
+        for j in range(n):
+            chromosome[j] = reshaped_starting_field_fi[0][j] + random.uniform(-self.genetic_par.mutate_starting_sigma/10, -self.genetic_par.mutate_starting_sigma/10)
 
     def evaluate_J_DEAP_chromosome(self, chro):
     # prende l'array di Chromosme e lo mette nel campo come ampiezze
@@ -201,22 +233,35 @@ class OCGeneticIterator(ABCOCIterator):
         chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
 
     #setto il propagatore e lo propago con il campo appena generato
-        chro.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
-        chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
+       # chro.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
 
-    #calcolo popolazione e integrale del campo, per debug
-        pop= np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
-                                             self.par.target_state))
-        field = np.real(self.alpha_field_J_integral_cromosome(chro.field.field))
-
-    #calcolo J
-        J = np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
-                                            self.par.target_state)
-                    - self.alpha_field_J_integral_cromosome(chro.field.field))
+     #   print(chro.prop_psi.propagator_terms.qcircuit.depth())
+        if self.par.propagation_type == 'quantum':
+           from qiskit import Aer 
+           from qiskit.tools.qi.qi import partial_trace #### al momento aspettiamo che aggiustino qiskit
+           chro.prop_psi.provider = Aer.get_backend("statevector_simulator")
+           chro.prop_psi.set_propagator(chro.prop_psi.propagator_terms.mol, chro.prop_psi.propagator_terms.pcm)
+           statevector = chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
+           p_tgt = np.real(partial_trace(statevector, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1]))[1,1])
+           field = np.real(self.alpha_field_J_integral_cromosome(chro.field.field))
+           J = p_tgt - field
+           chro.prop_psi.provider = None
+        else:
+           chro.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
+           chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
+           #calcolo popolazione e integrale del campo, per debug
+           pop= np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
+                                                 self.par.target_state))
+           field = np.real(self.alpha_field_J_integral_cromosome(chro.field.field))
+           #calcolo J
+           J = np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
+                                                self.par.target_state)
+                        - self.alpha_field_J_integral_cromosome(chro.field.field))
         success =  J - chro.J.values[0]
         if success > 0:
             self.n_mutation_succes +=1
-        return [J]
+        chro.J.values = [J]
+        return chro
 
 
     def evolve(self):
@@ -237,6 +282,8 @@ class OCGeneticIterator(ABCOCIterator):
         new = []
         selected = self.genetic_algorithms.select(self.chromosomes, fit_attr='J')
         selected = self.genetic_algorithms.clone(selected)
+      #  print(self.chromosomes[0].J)
+    #    print(new)
         # Apply crossover on the offspring
         for i in range(n_children_each):
             for first, second in zip(selected[::2], selected[1::2]):
@@ -246,9 +293,9 @@ class OCGeneticIterator(ABCOCIterator):
                     a, b = deepcopy(first), deepcopy(second)
                 new.append(deepcopy(a))
                 new.append(deepcopy(b))
-
             random.shuffle(selected)
         new = new[:self.genetic_par.n_chromosomes]
+#        print(new[0])
 
         # Apply mutation on the offspring
         for mutant in new:
@@ -256,12 +303,15 @@ class OCGeneticIterator(ABCOCIterator):
                 self.genetic_algorithms.mutate(mutant)
         self.check_bounds_matrix(new)
 
-        #with concurrent.futures.ProcessPoolExecutor() as executor:
-        #    J = executor.map(self.genetic_algorithms.evaluate, new)
-        J = self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new)
-        for ind, fit in zip(new, J):
-            ind.J.values = fit
+       # with concurrent.futures.ProcessPoolExecutor() as executor:            
+       #     new = list(executor.map(self.genetic_algorithms.evaluate, new))
+        new = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new))
+       # print(set(J))
+       # for ind, fit in zip(new, J):
+       #     ind.J.values = fit
         self.chromosomes[:] = new
+    #    print(self.chromosomes[0].J.values)
+    #    print(self.chromosomes[-1].J.values)
 
 
 
@@ -367,10 +417,13 @@ class OCGeneticIterator(ABCOCIterator):
 
     def get_log_file_out(self):
         integral_field = np.real(self.field_J_integral())
-        norm_proj = np.real(af.projector_mean_value(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci,
-                                                    self.par.target_state) /
-                            (np.dot(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci,
-                                    np.conj(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci))))
+        if self.par.propagation_type != 'quantum':
+            norm_proj = np.real(af.projector_mean_value(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci,
+                                                        self.par.target_state) /
+                                (np.dot(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci,
+                                        np.conj(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci))))
+        else:
+            norm_proj = self.par.J[0] + integral_field
         return np.array([self.par.convergence_t, self.par.J[0], norm_proj, integral_field])
 
 
@@ -397,12 +450,20 @@ class OCGeneticIterator(ABCOCIterator):
 
 
     def get_field_ampl(self):
-        #return self.chromosomes[0].field.par.fi
+        return self.chromosomes[0].field.par.fi
 
-        return np.hstack((self.chromosomes[0].field.par.fi, self.chromosomes[0].field.par.fi_cos))
+        #return np.hstack((self.chromosomes[0].field.par.fi, self.chromosomes[0].field.par.fi_cos))
 
     def get_restart(self):
-        out = np.concatenate((self.genetic_par.omegas_matrix, self.chromosomes[0].field.par.fi))
+        separate1 = np.array([["###", "omegas", "###"], ["###","###","###"]])
+        separate2 = np.array([["###", "fi", "###"], ["###","###","###"]])
+        out = pd.DataFrame(separate1)
+        out_tmp = pd.DataFrame(self.genetic_par.omegas_matrix)
+        out = out.append(out_tmp)
+        out_tmp = pd.DataFrame(separate2)
+        out = out.append(out_tmp)
+        out_tmp = pd.DataFrame(self.chromosomes[0].field.par.fi)
+        out = out.append(out_tmp)
         return out
 
 
@@ -430,30 +491,6 @@ class OCGeneticIterator(ABCOCIterator):
             self.n_mutation_succes += self.chromosomes[i].calc_J(self.par.target_state,
                                                                  self.par.alpha_t,
                                                                  self.discrete_t_par.dt)
-
-#    def evolve_general(self):
-#        n_children_each = self.n_chromosomes / self.n_selected_chr
-#        if n_children_each.is_integer() == False:
-#            sys.exit("wrong numer of chromosome to evolve, n_chromosomes/n_selected must be integer")
-#        print("evolve")
-#        # Select the next generation individuals
-#        selected = self.evolutionary_algorithms.select(self.chromosomes, fit_attr='J')
-#        selected = self.evolutionary_algorithms.clone(selected)
-#        new = []
-#        for i in range(int(n_children_each - n_mutate)):
-            # se tolgo questo il primo abbinamento me lo fa tra i vicini di J, se lo lascio è random
-#            random.shuffle(selected)
-#            for first, second in zip(selected[::2], selected[1::2]):
-#                if random.random() < mate_probability:
-#                    a, b = self.evolutionary_algorithms.mate(deepcopy(first.amplitudes), deepcopy(second.amplitudes))
-#                else:
-#                    a, b = deepcopy(first.amplitudes), deepcopy(second.amplitudes)
-#                new.append(deepcopy(a))
-#                new.append(deepcopy(b))
-#            random.shuffle(selected)
-
-
-
 
     def field_J_integral_chromosome(self, field):
         ax_square = field.f_xyz.ndim - 1

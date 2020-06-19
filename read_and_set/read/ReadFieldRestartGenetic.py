@@ -13,7 +13,7 @@ class ReadFieldRestartGenetic(ABCReadFieldRestart):
 
     def read_file(self, folder, namefile):
         load = np.loadtxt(folder + namefile) # w0, w1, ...wn \n a0 a1 ...an
-        n = load.shape[0]/2
+        n = int((load.shape[0])/2)
         self.input_parameters.omega = load[:n]
         self.input_parameters.fi = load[n:]
         self.input_parameters.field_type = 'restart_genetic'

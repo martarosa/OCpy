@@ -13,7 +13,9 @@ class SetOCInput(ABCSetInput):
         self.input_parameters.alpha0 = float(user_input.oc.section_dictionary['alpha0'])
         self.input_parameters.n_iterations = int(user_input.oc.section_dictionary['n_iterations'])
         self.input_parameters.convergence_thr = float(user_input.oc.section_dictionary['convergence_thr'])
-
+        
+        self.input_parameters.propagation_type = user_input.sys.section_dictionary['propagation_type']
+        self.input_parameters.optimization_method = user_input.sys.section_dictionary['scipy_method']
         self.input_parameters.restart = user_input.oc.section_dictionary['restart']
 
         self.input_parameters.nstep = int(user_input.sys.section_dictionary['nstep'])

@@ -18,7 +18,7 @@ from pcm.DinamicPCM import DinamicPCM
 from pcm.FrozenSolventPCM import FrozenSolventPCM
 from pcm.VacPCM import VacPCM
 from OCManager import OCManager
-
+import sys
 
 #The system contains Molecule, Field, PCM and OCManager objects.
 # Description of the molecule, starting field and pcm are stored separately outside the OCManager. They are never modified and practically useless, there just for
@@ -48,7 +48,7 @@ class SystemManager():
         self.starting_field = Field()
         self.pcm = None #ABCPCM()
         self.oc = OCManager() # the possibility to perform a single propagation without OC is a special case of optimalControl (since this is a OC program
-
+        self.is_quantum = None
 
 
 
@@ -59,6 +59,7 @@ class SystemManager():
         self.init_starting_field(user_input)
         self.init_pcm(user_input)
         self.init_optimal_control(user_input)
+        self.init_is_quantum(user_input)
 
 
     def init_molecule(self, user_input):
@@ -68,15 +69,20 @@ class SystemManager():
 
     def init_starting_field(self, user_input):
         set_field = SetFieldInput()
-        if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
+        if user_input.sys.section_dictionary['oc_algorithm'] in ['genetic', 'scipy']:
+            print("Read field restart genetic")
             set_field.read_restart = ReadFieldRestartGenetic()
+            if user_input.sys.section_dictionary['propagation_type'] == 'quantum':
+                import qiskit
         else:
             set_field.read_restart = ReadFieldRestartRabitz()
         set_field.set(user_input)
+        print(set_field.input_parameters.omega)
+        print(set_field.input_parameters.omega_sys)
         self.starting_field.init_field(set_field.input_parameters)
 
 
-    def init_pcm(self, user_input):
+    def init_pcm(self,user_input):
         print(user_input.env.section_dictionary['env'])
         set_pcm = SetPCMInput()
         if user_input.env.section_dictionary['env'] == 'sol':
@@ -93,7 +99,10 @@ class SystemManager():
     def init_optimal_control(self, user_input):
         set_oc = SetOCInput()
         set_oc.set(user_input)
-        if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
+        if user_input.sys.section_dictionary['oc_algorithm'] in ['genetic']:
+            if user_input.sys.section_dictionary['propagation_type'] == 'quantum':
+                import qiskit
+            print("Read name list genetic")
             iterator_config_input = ReadNamelistGenetic()
             iterator_config_input.read_file(user_input.sys.section_dictionary['folder'],
                                             user_input.oc.section_dictionary['iterator_config_file'])
@@ -107,7 +116,7 @@ class SystemManager():
         set_save.set(user_input)
         set_log_header = SetLogInput()
         set_log_header.set(user_input)
-        if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
+        if user_input.sys.section_dictionary['oc_algorithm'] in ['genetic']:
             set_log_header.set_conf_log(iterator_config_input.string_file_config)
 
 
@@ -118,6 +127,13 @@ class SystemManager():
                         self.mol,
                         self.starting_field,
                         self.pcm)
+        
+        
+    def init_is_quantum(self, user_input):
+        if user_input.sys.section_dictionary['oc_algorithm'] == 'quantum':
+            self.is_quantum == True
+        else:
+            self.is_quantum == False
 
 
 

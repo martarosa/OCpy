@@ -1,6 +1,6 @@
 import numpy as np
 
-from propagator import math_functions as mf
+#from propagator import math_functions as mf
 
 from pcm.ABCPCM import ABCPCM
 from parameters.PCMParameters import PCMParameters
@@ -39,21 +39,21 @@ class FrozenSolventPCM(ABCPCM):
         self.q_t = np.array([q_t_reactionf, q_t_lf])
 
 
-    def propagate_fortran(self, i, mol, field_dt_vector):
-        q_t_reactionf = mf.propagate_q_frozen(mol.wf.ci_prev[0], self.qijn_fortran_flip)
-        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
-        self.q_t = np.array([q_t_reactionf, q_t_lf])
-
-
-    def propagate_bwd_oc(self, i, chi_ci, field_dt_vector):
-        q_t_reactionf = af.double_summation(chi_ci, np.conj(chi_ci), self.qijn)
-        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
-        self.q_t = np.array([q_t_reactionf, q_t_lf])
-
-    def propagate_bwd_oc_fortran(self, i, chi_ci, field_dt_vector):
-        q_t_reactionf = mf.propagate_q_frozen(chi_ci, self.qijn_fortran_flip)
-        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
-        self.q_t = np.array([q_t_reactionf, q_t_lf])
+#    def propagate_fortran(self, i, mol, field_dt_vector):
+#        q_t_reactionf = mf.propagate_q_frozen(mol.wf.ci_prev[0], self.qijn_fortran_flip)
+#        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
+#        self.q_t = np.array([q_t_reactionf, q_t_lf])
+#
+#
+#    def propagate_bwd_oc(self, i, chi_ci, field_dt_vector):
+#        q_t_reactionf = af.double_summation(chi_ci, np.conj(chi_ci), self.qijn)
+#        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
+#        self.q_t = np.array([q_t_reactionf, q_t_lf])
+#
+#    def propagate_bwd_oc_fortran(self, i, chi_ci, field_dt_vector):
+#        q_t_reactionf = mf.propagate_q_frozen(chi_ci, self.qijn_fortran_flip)
+#        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
+#        self.q_t = np.array([q_t_reactionf, q_t_lf])
 
 
     def get_q_t(self):

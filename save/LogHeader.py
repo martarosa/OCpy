@@ -95,9 +95,14 @@ class LogHeader():
                              "#omega: " + log_input.omega + "\n\n")
 
     def genetic_pulse(self, log_input):
-        self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n" 
-                             "#omega: fourier frequencies \n\n"
-                             "#genetic algorithm input: " + log_input.string_conf_file + "\n\n")
+        if log_input.oc_algorithm == "genetic":
+            self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n" 
+                                 "#omega: fourier frequencies \n\n"
+                                 "#genetic algorithm input: " + log_input.string_conf_file + "\n\n")
+        else:
+            self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n" 
+                                 "#omega: fourier frequencies \n\n")
+             
 
 
 

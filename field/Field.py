@@ -45,7 +45,7 @@ class Field():
             'sin_cos': lambda : self.sin_cos_pulse(discrete_t_par),
              #only internal values
             'restart_rabitz' : lambda: self.restart_rabitz(field),
-            'restart_genetic' : lambda: self.sum_pulse(discrete_t_par)
+            'restart_genetic' : lambda: self.restart_genetic(discrete_t_par)
              }
          return field_choice.get(key, lambda: "Inexistent field type")()
 
@@ -98,6 +98,7 @@ class Field():
     def sum_pulse(self, discrete_t_par):
         self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
         self.field.f_xyz = np.zeros([discrete_t_par.nstep, 3])
+        #print(self.par.fi[0])
         # f0+fi*sin(wi*t)
         if self.par.omega.ndim == 1: #only one value of omega, 3D field [wx,wy,wz]
             for i in range(discrete_t_par.nstep):
@@ -125,11 +126,9 @@ class Field():
         self.chose_omega_fourier(discrete_t_par)
         self.par.fi = np.full([self.par.omega.shape[0], 3], self.par.fi[0])
         self.par.fi_cos = np.full([self.par.omega.shape[0], 3], self.par.fi[0])
-        #self.par.fi = np.zeros([self.par.omega.shape[0]+1, 3])
-        #self.par.fi_cos = np.zeros([self.par.omega.shape[0]+1, 3])
-        #self.par.fi[3,0] = 0.02
-        #self.par.fi[5,0] =0.04
-        #self.par.fi_cos[2,0]=0.01
+        self.sum_pulse(discrete_t_par)
+        
+    def restart_genetic(self, discrete_t_par):
         self.sum_pulse(discrete_t_par)
 
 

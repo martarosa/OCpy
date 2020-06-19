@@ -10,11 +10,13 @@ class SectionSystem(ABCNamelistSection):
                                            'name': 'output',
                                            'nstep': '10000',
                                            'dt': '0.01',
-                                           'oc_algorithm': 'rabitzi'}
+                                           'oc_algorithm': 'rabitzi',
+                                           'propagation_type': 'classic',
+                                           'scipy_method': 'nelder-mead'}
         self.section_dictionary = {}
-        self.allowed_val = [['oc_algorithm', ['eulero_1order_prop', 'eulero_2order_prop', 'rabitzi', 'rabitzii', 'genetic']]]
-        self.case_unsensitive_keys = ['oc_algorithm']
-
+        self.allowed_val = [['oc_algorithm', ['eulero_1order_prop', 'eulero_2order_prop', 'rabitzi', 'rabitzii', 'genetic', 'scipy']], ['scipy_method', ['nelder-mead', 'powell', 'cg', 'bfgs', 'newton-cg',
+                    'l-bfgs-b', 'tnc', 'cobyla', 'slsqp', 'trust-constr', 'dogleg', 'trust-ncg', 'trust-exact', 'trust-krylov']], ['propagation_type',['classic', 'quantum']]]
+        self.case_unsensitive_keys = ['oc_algorithm', 'scipy_method', 'propagation_type']
 
     def init_default_folder(self, folder):
         self.section_default_dictionary['folder'] = folder
