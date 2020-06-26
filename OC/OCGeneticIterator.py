@@ -92,7 +92,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.dict_out['field_t'] = self.get_field_t
         self.dict_out['field_ampl'] = self.get_field_ampl
 
-    def init(self, molecule, starting_field, pcm, alpha_t, oc_input, iterator_config_input):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input):
         self.discrete_t_par.nstep = oc_input.nstep
         self.discrete_t_par.dt = oc_input.dt
         self.par.target_state = oc_input.target_state
@@ -105,9 +105,9 @@ class OCGeneticIterator(ABCOCIterator):
         #self.psi_coeff_t_matrix = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
 
-        self.init_genetic(molecule, starting_field, pcm, iterator_config_input)
+        self.init_genetic(molecule, starting_field, medium, iterator_config_input)
 
-    def init_genetic(self, molecule, starting_field, pcm, genetic_input):
+    def init_genetic(self, molecule, starting_field, medium, genetic_input):
         self.genetic_par.genetic_algorithm = genetic_input.genetic_algorithm
         self.genetic_par.n_chromosomes = genetic_input.n_chromosomes
         self.genetic_par.n_selected_chr = genetic_input.n_selected_chr
@@ -132,19 +132,19 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.n_amplitudes = starting_field.par.fi.size
         self.genetic_par.omegas_matrix = starting_field.par.omega
 
-        self.init_chromosomes(molecule, starting_field, pcm)
+        self.init_chromosomes(molecule, starting_field, medium)
     #qui inizializzo l'algoritmo genetico che sto usando, che per adesso è solo uno
         self.init_evolutionary_algorithm(genetic_input)
 
-    def init_chromosomes(self, molecule, starting_field, pcm):
-        self.init_DEAP_chromosomes(molecule, starting_field, pcm)
+    def init_chromosomes(self, molecule, starting_field, medium):
+        self.init_DEAP_chromosomes(molecule, starting_field, medium)
 
     def create_random_ampl_rounded(self):
         number = round(random.uniform(-self.genetic_par.amplitude_lim, self.genetic_par.amplitude_lim),4)
         #number = round(random.uniform(-0.001, 0.001),4)
         return number
 
-    def init_DEAP_chromosomes(self, molecule, starting_field, pcm):
+    def init_DEAP_chromosomes(self, molecule, starting_field, medium):
         print("init_chromo")
         toolbox= base.Toolbox()
     # fitness è una classe astratta.
@@ -176,7 +176,7 @@ class OCGeneticIterator(ABCOCIterator):
 
     #creo un oggetto prop_psi ....
         prop_psi = prop.PropagatorEulero2Order()
-        prop_psi.set_propagator(molecule, pcm)
+        prop_psi.set_propagator(molecule, medium)
         self.initial_c0 = prop_psi.propagator_terms.mol.wf.ci
     #... e dentro a ogni cromosoma della mia lista inizializzo il campo, il propagatore e metto J = 0.5
     #Sono tutti uguali ma le ampiezze del mio vettore sono diverse perchè le ho fatte random prima

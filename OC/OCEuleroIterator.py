@@ -38,7 +38,7 @@ class Eulero1PropagationIterator(ABCOCIterator):
     def calc_J(self):
         pass
 
-    def init(self, molecule, starting_field, env, alpha_t, oc_input, iterator_config_input = None):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input = None):
         self.discrete_t_par.dt = oc_input.dt
         self.discrete_t_par.nstep = oc_input.nstep
 
@@ -47,7 +47,7 @@ class Eulero1PropagationIterator(ABCOCIterator):
         self.par.J = 99999
         self.par.convergence_t = 99999
 
-        self.prop_psi.set_propagator(molecule, env)
+        self.prop_psi.set_propagator(molecule, medium)
         self.field_psi_matrix = deepcopy(starting_field.field)
 
         self.init_output_dictionary()
@@ -104,7 +104,7 @@ class Eulero2PropagationIterator(ABCOCIterator):
         pass
 
 
-    def init(self, molecule, starting_field, env, alpha_t, oc_input, iterator_config_input = None):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input = None):
         self.discrete_t_par.dt = oc_input.dt
         self.discrete_t_par.nstep = oc_input.nstep
 
@@ -113,7 +113,7 @@ class Eulero2PropagationIterator(ABCOCIterator):
         self.par.J = 99999
         self.par.convergence_t = 99999
 
-        self.prop_psi.set_propagator(molecule, env)
+        self.prop_psi.set_propagator(molecule, medium)
 
         self.field_psi_matrix = deepcopy(starting_field.field)
 

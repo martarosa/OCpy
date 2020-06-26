@@ -1,0 +1,60 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module interface_tdplas ! in 
+    interface  ! in :interface_tdplas
+        module interface_tdplas ! in :interface_tdplas:interface_tdplas.f90
+            use tdplas
+            subroutine init_global_tdplas(dt,vts,n_tessere,n_states) ! in :interface_tdplas:interface_tdplas.f90:interface_tdplas
+                real*8 intent(in) :: dt
+                real*8 dimension(:,:,:),intent(in) :: vts
+                integer intent(in) :: n_tessere
+                integer intent(in) :: n_states
+            end subroutine init_global_tdplas
+            subroutine call_init_charges(ci,field_vector,n_states) ! in :interface_tdplas:interface_tdplas.f90:interface_tdplas
+                complex*16 dimension(n_states),intent(in) :: ci
+                real*8 dimension(3),intent(in) :: field_vector
+                integer, optional,check(len(ci)>=n_states),depend(ci) :: n_states=len(ci)
+            end subroutine call_init_charges
+            subroutine init_charges_int(ci,field_vector,n_states,n_tessere) ! in :interface_tdplas:interface_tdplas.f90:interface_tdplas
+                complex*16 dimension(n_states),intent(in) :: ci
+                real*8 dimension(3),intent(in) :: field_vector
+                integer, optional,intent(in),check(len(ci)>=n_states),depend(ci) :: n_states=len(ci)
+                integer intent(in) :: n_tessere
+            end subroutine init_charges_int
+            subroutine call_prop_charges(ci,field_vector,q_t,n_states,n_tessere) ! in :interface_tdplas:interface_tdplas.f90:interface_tdplas
+                complex*16 dimension(n_states),intent(in) :: ci
+                real*8 dimension(3),intent(in) :: field_vector
+                real*8 dimension(n_tessere),intent(inout) :: q_t
+                integer, optional,check(len(ci)>=n_states),depend(ci) :: n_states=len(ci)
+                integer, optional,check(len(q_t)>=n_tessere),depend(q_t) :: n_tessere=len(q_t)
+            end subroutine call_prop_charges
+            subroutine prop_charges(ci,field_vector,q_t,n_states,n_tessere) ! in :interface_tdplas:interface_tdplas.f90:interface_tdplas
+                complex*16 dimension(n_states),intent(in) :: ci
+                real*8 dimension(3),intent(in) :: field_vector
+                real*8 dimension(n_tessere),intent(out),depend(n_tessere) :: q_t
+                integer, optional,intent(in),check(len(ci)>=n_states),depend(ci) :: n_states=len(ci)
+                integer intent(in) :: n_tessere
+            end subroutine prop_charges
+            subroutine prepare_potentials(ci,field_vector,v_reactionf,v_localf,n_states,n_tessere) ! in :interface_tdplas:interface_tdplas.f90:interface_tdplas
+                complex*16 dimension(n_states),intent(in) :: ci
+                real*8 dimension(3),intent(in) :: field_vector
+                real*8 dimension(n_tessere),intent(inout) :: v_reactionf
+                real*8 dimension(n_tessere),intent(inout),depend(n_tessere) :: v_localf
+                integer, optional,intent(in),check(len(ci)>=n_states),depend(ci) :: n_states=len(ci)
+                integer, optional,intent(in),check(len(v_reactionf)>=n_tessere),depend(v_reactionf) :: n_tessere=len(v_reactionf)
+            end subroutine prepare_potentials
+            subroutine doublesum(ket,bra,m,states,tessere,prod) ! in :interface_tdplas:interface_tdplas.f90:interface_tdplas
+                complex*16 dimension(states),intent(in) :: ket
+                complex*16 dimension(states),intent(in),depend(states) :: bra
+                real*8 dimension(tessere,states,states),intent(in),depend(states,states) :: m
+                integer, optional,check(len(ket)>=states),depend(ket) :: states=len(ket)
+                integer, optional,check(shape(m,0)==tessere),depend(m) :: tessere=shape(m,0)
+                real*8 dimension(tessere),intent(out),depend(tessere) :: prod
+            end subroutine doublesum
+        end module interface_tdplas
+    end interface 
+end python module interface_tdplas
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/

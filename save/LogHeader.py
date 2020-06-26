@@ -26,7 +26,7 @@ class LogHeader():
         self.init_field_header(log_input)
         self.header = ( "#calculation: " + log_input.oc_algorithm + "\n" +
                         self.oc_header +
-                        "#dt: " + log_input.dt + " env: " + log_input.env + "\n" +
+                        "#dt: " + log_input.dt + " medium: " + log_input.medium + "\n" +
                         restart +
                         self.field_header)
 

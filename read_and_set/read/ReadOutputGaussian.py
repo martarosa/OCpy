@@ -26,53 +26,55 @@ class ReadOutputGaussian():
         muT = self.read_half_below_matrix_gaussian(n_en, 3, file)
         return muT
 
-    def read_N_tessere_env(self, name_file): #read N tessere from a file which has N tessere on the first row
-        n_tessere_env=pd.read_csv(name_file, nrows=1, header=None,engine='python')
-        return n_tessere_env.iloc[0, 0]
+    def read_N_tessere_cavity(self, name_file): #read N tessere from a file which has N tessere on the first row
+        n_tessere_cavity=pd.read_csv(name_file, nrows=1, header=None,engine='python')
+        return n_tessere_cavity.iloc[0, 0]
 
 
     def read_V(self, name_file, n_en): #n_en is total number of states, nexcited+1
         print(n_en)
-        n_tessere_env = self.read_N_tessere_env(name_file)
-        VN = pd.read_csv(name_file, header=None, skiprows=2, nrows=n_tessere_env, sep=r"\s+", engine='python')
+        n_tessere_cavity = self.read_N_tessere_cavity(name_file)
+        VN = pd.read_csv(name_file, header=None, skiprows=2, nrows=n_tessere_cavity, sep=r"\s+", engine='python')
         VN = self.convert_fortran_dble(VN[2])
         index=list()
-        index.append(n_tessere_env)
+        index.append(n_tessere_cavity)
         n = int(n_en*(n_en+1)/2) # total number of elements in gaussian format for triangular mat: 00 01 ..0n 11 21 22 31...
         for i in range(n-2):
-            index.append(index[-1] + n_tessere_env + 1) #identify headers. index[0]=n_tessere then always n_tessere+1
+            index.append(index[-1] + n_tessere_cavity + 1) #identify headers. index[0]=n_tessere then always n_tessere+1
         index = np.asarray(index)
         V = pd.read_csv(name_file, header=None, skiprows=2, sep=r"\s+", engine='python')
         V = V.drop(V.index[index]) #dropping separation header lines
         V = self.convert_fortran_dble(V[0])
-        V = V.reshape((n, n_tessere_env))
-        V_ijn_el = self.read_half_above_matrix_gaussian(n_en, n_tessere_env, V)
-        V_tot = -np.array(V_ijn_el)
-        for i in range(n_en):
-            V_tot[i,i,:] = -V_tot[i,i,:] + VN
-        #to compare with wt because gamess prints wrong potentials and wt does not know
-        #V_tot = np.array(V_ijn_el)
+        V = V.reshape((n, n_tessere_cavity))
+        V_ijn_el = self.read_half_above_matrix_gaussian(n_en, n_tessere_cavity, V)
+        #normal version
+        #V_tot = -np.array(V_ijn_el)
         #for i in range(n_en):
-        #    V_tot[i, i, :] = V_tot[i, i, :] - VN
+        #    V_tot[i,i,:] = -V_tot[i,i,:] + VN
+        #to compare with wt because gamess prints wrong potentials and wt does not know
+        V_tot = np.array(V_ijn_el)
+        for i in range(n_en):
+            V_tot[i, i, :] = V_tot[i, i, :] + VN
+        #end to compare
         return V_tot
 
 
     #read gamess format
     def read_V_gamess(self, name_file, n_en):
-        n_tessere_env =self.read_N_tessere_env(name_file)
-        VN = pd.read_csv(name_file, header=None, skiprows=2, nrows=n_tessere_env, sep=r"\s+",engine='python')
+        n_tessere_cavity =self.read_N_tessere_cavity(name_file)
+        VN = pd.read_csv(name_file, header=None, skiprows=2, nrows=n_tessere_cavity, sep=r"\s+",engine='python')
         VN = self.convert_fortran_dble(VN[2])
         index = list()
-        index.append(n_tessere_env)
+        index.append(n_tessere_cavity)
         n = int(n_en*(n_en+1)/2) #index allowing to identify separation header lines
         for i in range(n-2):
-            index.append(index[-1] + n_tessere_env + 1)
+            index.append(index[-1] + n_tessere_cavity + 1)
         index = np.asarray(index)
         V = pd.read_csv(name_file, header=None, skiprows=2, sep=r"\s+",engine='python')
         V = V.drop(V.index[index])  #dropping separation header lines
         V = self.convert_fortran_dble(V[0])
-        V = V.reshape((n, n_tessere_env))
-        V_ijn_el = self.read_half_below_matrix_gaussian(n_en, n_tessere_env, V)
+        V = V.reshape((n, n_tessere_cavity))
+        V_ijn_el = self.read_half_below_matrix_gaussian(n_en, n_tessere_cavity, V)
         V_tot = np.array(V_ijn_el)
         for i in range(n_en):
             V_tot[i,i,:] = V_tot[i,i,:] + VN
@@ -80,26 +82,26 @@ class ReadOutputGaussian():
 
 
     def read_V_gamess_noVN_sottr(self, name_file, n_en):
-        n_tessere_env =self.read_N_tessere_env(name_file)
+        n_tessere_cavity =self.read_N_tessere_cavity(name_file)
         index = list()
-        index.append(n_tessere_env)
+        index.append(n_tessere_cavity)
         n = int(n_en*(n_en+1)/2)
         for i in range(n-2):
-            index.append(index[-1] + n_tessere_env + 1)
+            index.append(index[-1] + n_tessere_cavity + 1)
         index = np.asarray(index)  #index allowing to identify separation header lines
         V = pd.read_csv(name_file, header=None, skiprows=2, sep=r"\s+", engine='python')
         V = V.drop(V.index[index]) #dropping separation header lines
         V = self.convert_fortran_dble(V[0])
-        V = V.reshape((n, n_tessere_env))
-        V_ijn_el = self.read_half_below_matrix_gaussian(n_en, n_tessere_env, V)
+        V = V.reshape((n, n_tessere_cavity))
+        V_ijn_el = self.read_half_below_matrix_gaussian(n_en, n_tessere_cavity, V)
         V_tot = np.array(V_ijn_el)
         return V_tot
 
     #funziona!!!
     def convertVgamess_to_VWaveT(self, namein, nameout, n_en):
-        n_tessere_env =self.read_N_tessere_env(namein)
+        n_tessere_cavity =self.read_N_tessere_cavity(namein)
         V = pd.read_csv(namein, header=None, skiprows=2, sep=r"\s+", engine='python')
-        n_0_pot = n_tessere_env * n_en + n_en-1
+        n_0_pot = n_tessere_cavity * n_en + n_en-1
         V0 = np.array(V[:n_0_pot])
         f = open(nameout, 'w+')
         V_gamess_exc = self.read_V_gamess_noVN_sottr(namein, n_en)

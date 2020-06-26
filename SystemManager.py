@@ -5,7 +5,7 @@ from read_and_set.set.SetFieldInput import SetFieldInput
 from read_and_set.read.ReadFieldRestartGenetic import ReadFieldRestartGenetic
 from read_and_set.read.ReadFieldRestartRabitz import ReadFieldRestartRabitz
 from read_and_set.set.SetMoleculeInput import SetMoleculeInput
-from read_and_set.set.SetPCMInput import SetPCMInput
+from read_and_set.set.SetMediumInput import SetMediumInput
 from read_and_set.set.SetOCInput import SetOCInput
 from read_and_set.set.SetGeneticOCInput import SetGeneticOCInput
 from read_and_set.set.SetNoConfOCInput import SetNoConfOCInput
@@ -14,19 +14,19 @@ from read_and_set.set.SetLogInput import SetLogInput
 
 from molecule.Molecule import Molecule
 from field.Field import Field
-from pcm.DinamicPCM import DinamicPCM
-from pcm.FrozenSolventPCM import FrozenSolventPCM
-from pcm.VacPCM import VacPCM
+from medium.DinamicMedium import DinamicMedium
+from medium.FrozenSolventMedium import FrozenSolventMedium
+from medium.VacMedium import VacMedium
 from OCManager import OCManager
 
 
 #The system contains Molecule, Field, PCM and OCManager objects.
-# Description of the molecule, starting field and pcm are stored separately outside the OCManager. They are never modified and practically useless, there just for
+# Description of the molecule, starting field and medium are stored separately outside the OCManager. They are never modified and practically useless, there just for
 # mental order and debugging
 
 # ReadNamelistOC reads the OCinput file (no gaussian output or other data files), performs checks and store all the parameters in separate dictionaries for each section:
-# sys, wf, field, env, save, oc
-# Files containingmolecule and pcm informations (energies, dipoles, potential, tessere etc) are read by a separate object which knows the format (right now only ReadOutputgaussian is implemented)
+# sys, wf, field, medium, save, oc
+# Files containingmolecule and medium informations (energies, dipoles, potential, tessere etc) are read by a separate object which knows the format (right now only ReadOutputgaussian is implemented)
 
 # Both SystemManager, and InitPar objects (InitMolecularpar, InitiFieldpar, etc) know user_input format
 
@@ -46,7 +46,7 @@ class SystemManager():
 
         self.mol = Molecule()
         self.starting_field = Field()
-        self.pcm = None #ABCPCM()
+        self.medium = None #ABCPCM()
         self.oc = OCManager() # the possibility to perform a single propagation without OC is a special case of optimalControl (since this is a OC program
 
 
@@ -57,7 +57,7 @@ class SystemManager():
         user_input.read_file(folder, name_file)
         self.init_molecule(user_input)
         self.init_starting_field(user_input)
-        self.init_pcm(user_input)
+        self.init_medium(user_input)
         self.init_optimal_control(user_input)
 
 
@@ -76,17 +76,17 @@ class SystemManager():
         self.starting_field.init_field(set_field.input_parameters)
 
 
-    def init_pcm(self, user_input):
-        print(user_input.env.section_dictionary['env'])
-        set_pcm = SetPCMInput()
-        if user_input.env.section_dictionary['env'] == 'sol':
-            self.pcm = FrozenSolventPCM()
-        elif user_input.env.section_dictionary['env'] == 'nanop':
-            self.pcm = DinamicPCM()
-        elif user_input.env.section_dictionary['env'] == 'vac':
-            self.pcm = VacPCM()
-        set_pcm.set(user_input)
-        self.pcm.init_pcm(set_pcm.input_parameters, self.mol, self.starting_field.field.f_xyz[0])
+    def init_medium(self, user_input):
+        print(user_input.medium.section_dictionary['medium'])
+        set_medium = SetMediumInput()
+        if user_input.medium.section_dictionary['medium'] == 'sol':
+            self.medium = FrozenSolventMedium()
+        elif user_input.medium.section_dictionary['medium'] == 'nanop':
+            self.medium = DinamicMedium()
+        elif user_input.medium.section_dictionary['medium'] == 'vac':
+            self.medium = VacMedium()
+        set_medium.set(user_input)
+        self.medium.init_medium(set_medium.input_parameters, self.mol, self.starting_field.field)
 
 
 
@@ -117,7 +117,7 @@ class SystemManager():
                         set_log_header.input_parameters,
                         self.mol,
                         self.starting_field,
-                        self.pcm)
+                        self.medium)
 
 
 

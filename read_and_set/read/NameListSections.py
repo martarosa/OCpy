@@ -55,21 +55,21 @@ class SectionWaveFunction(ABCNamelistSection):
 
 
 
-class SectionEnviron(ABCNamelistSection):
+class SectionMedium(ABCNamelistSection):
     def __init__(self):
         super().__init__()
-        self.section = 'ENVIRON'
-        self.section_default_dictionary ={ 'env': 'vac',
+        self.section = 'MEDIUM'
+        self.section_default_dictionary ={ 'medium': 'vac',
+                                           'polarization_charges': 'non-eq',
                                            'name_vij': 'ci_pot.inp',
-                                           'name_q_tdplas': 'np_bem.mdy',
-                                           'read_qijn': 'false',
-                                           'name_file_qijn': 'qijn.dat',
                                            'name_file_cavity': 'cavity.inp',
-                                           'name_q_local_field': 'np_bem.mld'}
+                                           'name_mat_SD':'mat_SD.inp',
+                                           'name_q_reaction_field_dyn': 'np_bem.mdy',
+                                           'name_q_local_field_dyn': 'np_bem.mld'}
 
         self.section_dictionary = {}
-        self.allowed_val = [['env', ['vac', 'sol', 'nanop']]]
-        self.case_unsensitive_keys = ['env', 'read_qijn']
+        self.allowed_val = [['medium', ['vac', 'sol', 'nanop']]]
+        self.case_unsensitive_keys = ['medium', 'read_qijn']
 
 
 

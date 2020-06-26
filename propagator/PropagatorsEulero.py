@@ -16,15 +16,15 @@ class PropagatorEulero1Order(ABCPropagator):
         self.propagator = []
 
 
-    def set_propagator(self, molecule, env):
-        self.init_propagaror_terms(molecule, env)
+    def set_propagator(self, molecule, medium):
+        self.init_propagator_terms(molecule, medium)
         self.clean_propagator()
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
         self.add_term_to_propagator("eulero_field")
-        if self.propagator_terms.pcm != None:
-            if self.propagator_terms.pcm.par.env == "sol":
-                self.add_term_to_propagator("eulero_pcm")
+        if self.propagator_terms.medium != None:
+            if self.propagator_terms.medium.par.medium == "sol":
+                self.add_term_to_propagator("eulero_medium")
         self.add_term_to_propagator("norm")
 
 
@@ -59,21 +59,21 @@ class PropagatorEulero2Order(ABCPropagator):
         self.propagator_terms = PropagatorTerms()
         self.propagator = []
 
-    def set_propagator(self, molecule, env):
-        self.init_propagaror_terms(molecule, env)
+    def set_propagator(self, molecule, medium):
+        self.init_propagator_terms(molecule, medium)
         self.clean_propagator()
         self.add_term_to_propagator("eulero2_coeff")
         self.add_term_to_propagator("eulero_energy")
         self.add_term_to_propagator("eulero_field")
-        if self.propagator_terms.pcm != None:
-            if self.propagator_terms.pcm.par.env == "sol":
-                self.add_term_to_propagator("eulero_pcm")
+        if self.propagator_terms.medium != None:
+            #if self.propagator_terms.medium.par.medium == "sol":
+                self.add_term_to_propagator("eulero_medium")
         self.add_term_to_propagator("norm")
 
 
-    def propagate_one_step(self, i, dt, field_dt_vector, order=2):
+    def propagate_one_step(self, dt, field_dt_vector, order=2):
         for func in self.propagator:
-            func(i, order, dt, field_dt_vector)
+            func(order, dt, field_dt_vector)
 
     def propagate_n_step(self, discrete_time_par, field):
         if((field.time_axis[1] - field.time_axis[0]) - discrete_time_par.dt > discrete_time_par.dt *0.001):
@@ -85,10 +85,13 @@ class PropagatorEulero2Order(ABCPropagator):
         out = list()
         out.append(self.propagator_terms.mol.wf.ci)
         for i in range(discrete_time_par.nstep):
+            print("python field")
+            print(i+1)
+            print(field.f_xyz[i][2])
             if i != 0:
-                self.propagate_one_step(i, discrete_time_par.dt, field.f_xyz[i])
+                self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i])
             else:
-                self.propagate_one_step(i, discrete_time_par.dt, field.f_xyz[i], order=1)
+                self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i], order=1)
             out.append(self.propagator_terms.mol.wf.ci)
         wf_matrix_out.f_xyz = np.array(out)
         return wf_matrix_out

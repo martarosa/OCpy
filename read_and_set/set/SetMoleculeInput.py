@@ -18,7 +18,7 @@ class SetMoleculeInput(ABCSetInput):
                                                               user_input.wf.section_dictionary['name_ei'])
         self.input_parameters.muT = read_output.read_muT(user_input.sys.section_dictionary['folder'] +
                                                          user_input.wf.section_dictionary['name_mut'], self.input_parameters.wf_ci.size)
-        if user_input.env.section_dictionary['env'] != 'vac':
+        if user_input.medium.section_dictionary['medium'] != 'vac':
             self.input_parameters.Vijn = read_output.read_V(user_input.sys.section_dictionary['folder'] +
-                                                            user_input.env.section_dictionary['name_vij'],
+                                                            user_input.medium.section_dictionary['name_vij'],
                                                             self.input_parameters.wf_ci.size)

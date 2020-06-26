@@ -10,8 +10,8 @@ class Propagator():
         self.propagator_terms = PropagatorTerms()
         self.propagator = []
 
-    def init_propagaror_terms(self, dt, molecule, pcm):
-        self.propagator_terms.set_attributes(dt, molecule, pcm)
+    def init_propagator_terms(self, molecule, medium):
+        self.propagator_terms.set_attributes(molecule, medium)
         self.propagator_terms.init_terms_dictionary()
 
     def add_term_to_propagator(self, term_name):
@@ -20,7 +20,7 @@ class Propagator():
     def clean_propagator(self):
         self.propagator = []
 
-    def set_propagator(self, dt, molecule, env):
+    def set_propagator(self, dt, molecule, medium):
         return
 
     def propagate_one_step(self, *args):
