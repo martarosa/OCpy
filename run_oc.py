@@ -16,8 +16,8 @@ import time
 
 
 
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/tdplas-nanop/"
-#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/pcm/3sfere/WTcomparison/check_test27-5-2020/"
+#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/tdplas-nanop/9-2020/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/pcm/3sfere/"
 namefile = "input.dat"
 
 

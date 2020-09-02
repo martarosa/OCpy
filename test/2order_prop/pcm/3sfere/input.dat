@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = test_2order_prop 
+name = 2020test_2order_prop 
 oc_algorithm = eulero_2order_prop 
 #folder=
 
@@ -19,8 +19,8 @@ fi=0.0 0 0.5
 #f_max= 0.0 0.0038 0.0 
 #name_field_file=
 
-[ENVIRON]
-env=sol
+[MEDIUM]
+medium=sol
 #name_Vij=pot_gamess.inp
 #name_Q_tdplas=np_bem.mdy
 #read_qijn=False

@@ -69,14 +69,13 @@ module interface_tdplas
                real*8, allocatable :: V_localf(:)
                integer, intent(in) :: n_states, n_tessere
 
+               call get_propagated_charges(q_t)
 
                allocate(V_reactionf(n_tessere))
                allocate(V_localf(n_tessere))
-
                call prepare_potentials(ci, field_vector, V_reactionf, V_localf,quantum_n_ci, n_tessere)
                call set_potential(V_reactionf, V_localf)
                call prop_chr
-               call get_propagated_charges(q_t)
                
            end subroutine
 

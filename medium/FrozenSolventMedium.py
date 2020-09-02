@@ -14,8 +14,7 @@ from read_and_set.read import auxiliary_functions as af
 class FrozenSolventMedium(ABCMedium):
     def __init__(self):
         super().__init__()
-        self.par = MediumParameters()
-
+        #self.par = MediumParameters()
         self.muLF = None
         self.qijn = None
         self.qijn_lf = None
@@ -64,7 +63,7 @@ class FrozenSolventMedium(ABCMedium):
         # delta_x_tessera = diff/self.q00n.shape[-1]
         # q_tot = q_tmp + delta_x_tessera
         # return q_tot
-        return self.par.q_t[0] + self.par.q_t[1] - self.medium.q00n
+        return self.par.q_t[0] + self.par.q_t[1] - self.q00n
 
     def init_static_matrices(self, Q_gamess, Q_gamess_lf, mol):
         self.calc_qijn(Q_gamess, mol.par.Vijn)

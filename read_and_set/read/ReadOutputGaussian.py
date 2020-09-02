@@ -59,25 +59,26 @@ class ReadOutputGaussian():
         return V_tot
 
 
-    #read gamess format
-    def read_V_gamess(self, name_file, n_en):
-        n_tessere_cavity =self.read_N_tessere_cavity(name_file)
-        VN = pd.read_csv(name_file, header=None, skiprows=2, nrows=n_tessere_cavity, sep=r"\s+",engine='python')
+    #read compare wavet gamess format
+    def read_V_wavet(self, name_file, n_en): #n_en is total number of states, nexcited+1
+        print(n_en)
+        n_tessere_cavity = self.read_N_tessere_cavity(name_file)
+        VN = pd.read_csv(name_file, header=None, skiprows=2, nrows=n_tessere_cavity, sep=r"\s+", engine='python')
         VN = self.convert_fortran_dble(VN[2])
-        index = list()
+        index=list()
         index.append(n_tessere_cavity)
-        n = int(n_en*(n_en+1)/2) #index allowing to identify separation header lines
+        n = int(n_en*(n_en+1)/2) # total number of elements in gaussian format for triangular mat: 00 01 ..0n 11 21 22 31...
         for i in range(n-2):
-            index.append(index[-1] + n_tessere_cavity + 1)
+            index.append(index[-1] + n_tessere_cavity + 1) #identify headers. index[0]=n_tessere then always n_tessere+1
         index = np.asarray(index)
-        V = pd.read_csv(name_file, header=None, skiprows=2, sep=r"\s+",engine='python')
-        V = V.drop(V.index[index])  #dropping separation header lines
+        V = pd.read_csv(name_file, header=None, skiprows=2, sep=r"\s+", engine='python')
+        V = V.drop(V.index[index]) #dropping separation header lines
         V = self.convert_fortran_dble(V[0])
         V = V.reshape((n, n_tessere_cavity))
         V_ijn_el = self.read_half_below_matrix_gaussian(n_en, n_tessere_cavity, V)
         V_tot = np.array(V_ijn_el)
         for i in range(n_en):
-            V_tot[i,i,:] = V_tot[i,i,:] + VN
+            V_tot[i, i, :] = V_tot[i, i, :] + VN
         return V_tot
 
 
