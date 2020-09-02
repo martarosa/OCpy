@@ -26,6 +26,7 @@ class FrozenSolventMedium(ABCMedium):
     def init_medium(self, medium_input, mol, field_object):
         self.par.medium = medium_input.medium
         self.par.cavity = medium_input.cavity
+
         self.init_static_matrices(medium_input.Qnn_reactionfield, medium_input.Qnn_localfield, mol)
         self.muLF = -af.matrix_prod_tesserae_ijn_nn(self.qijn_lf, mol.par.Vijn)
 

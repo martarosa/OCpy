@@ -85,9 +85,9 @@ class PropagatorEulero2Order(ABCPropagator):
         out = list()
         out.append(self.propagator_terms.mol.wf.ci)
         for i in range(discrete_time_par.nstep):
-            print("python field")
-            print(i+1)
-            print(field.f_xyz[i][2])
+            #print("python field")
+            #print(i+1)
+            #print(field.f_xyz[i][2])
             if i != 0:
                 self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i])
             else:
