@@ -50,8 +50,9 @@ class PropagatorTerms():
 
 
     def eulero_medium_term(self, order, dt, field_dt_vector, *args):
-        self.medium.propagate(self.mol, field_dt_vector)
-        self.mol.wf.ci += -order * 1j * dt \
+        if self.medium != "vac":
+            self.medium.propagate(self.mol, field_dt_vector)
+            self.mol.wf.ci += -order * 1j * dt \
                           * (np.dot(self.mol.wf.ci_prev[0],
                                     af.single_summation_tessere(self.medium.get_q_t() - self.medium.q00n, self.mol.par.Vijn)))
 
@@ -77,9 +78,10 @@ class PropagatorTerms():
 
 
     def eulero_medium_term_fortran(self, order, dt, field_dt_vector, *args):
-        self.medium.propagate_fortran(self.mol, field_dt_vector)
-        q_t = self.medium.get_q_t()
-        self.mol.wf.ci += -order * 1j * dt \
+        if self.medium.par.medium != "vac":
+            self.medium.propagate_fortran(self.mol, field_dt_vector)
+            q_t = self.medium.get_q_t()
+            self.mol.wf.ci += -order * 1j * dt \
                           *(mf.eulero_pcm(np.asfortranarray(self.mol.wf.ci_prev[0], dtype=np.complex128),
                                          np.asfortranarray(q_t, dtype=np.complex128),
                                          np.asfortranarray(self.mol.par.Vijn_fortran_flip, dtype=np.complex128)))

@@ -1,7 +1,7 @@
 import argparse
 import SystemManager as ini
 import time
-
+from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
 #parser = argparse.ArgumentParser()
 #parser.add_argument('-f', action='store', dest='input')
 #inputline=parser.parse_args()
@@ -16,8 +16,8 @@ import time
 
 
 
-#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/tdplas-nanop/9-2020/"
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/pcm/3sfere/"
+folder = "/home/mana/programmi/python/optimal_control/waveT_comparison/sol/wavet_V_sign/"
+#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/pcm/3sfere/"
 namefile = "input.dat"
 
 
@@ -26,6 +26,10 @@ namefile = "input.dat"
 OC_system=ini.SystemManager()
 OC_system.init_system(folder, namefile)
 
+#print(OC_system.mol.par.muT[3,4])
+#print(OC_system.mol.par.muT[7,1])
+
+
 
 
 #start=time.time()
@@ -33,3 +37,6 @@ OC_system.oc.iterate()
 #end=time.time()
 #print("serial: " + str(end-start))
 
+
+#read = ReadOutputGaussian()
+#read.convertVgamess_to_VWaveT(folder + "ci_pot.inp", folder + "ci_pot_transf.inp", 11)

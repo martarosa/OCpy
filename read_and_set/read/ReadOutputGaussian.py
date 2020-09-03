@@ -48,13 +48,13 @@ class ReadOutputGaussian():
         V = V.reshape((n, n_tessere_cavity))
         V_ijn_el = self.read_half_above_matrix_gaussian(n_en, n_tessere_cavity, V)
         #normal version
-        #V_tot = -np.array(V_ijn_el)
-        #for i in range(n_en):
-        #    V_tot[i,i,:] = -V_tot[i,i,:] + VN
-        #to compare with wt because gamess prints wrong potentials and wt does not know
-        V_tot = np.array(V_ijn_el)
+        V_tot = -np.array(V_ijn_el)
         for i in range(n_en):
-            V_tot[i, i, :] = V_tot[i, i, :] + VN
+            V_tot[i,i,:] = -V_tot[i,i,:] + VN
+        #to compare with wt because gamess prints wrong potentials and wt does not know
+        #V_tot = np.array(V_ijn_el)
+        #for i in range(n_en):
+        #    V_tot[i, i, :] = V_tot[i, i, :] + VN
         #end to compare
         return V_tot
 

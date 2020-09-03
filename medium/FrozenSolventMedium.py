@@ -32,6 +32,11 @@ class FrozenSolventMedium(ABCMedium):
 
         self.propagate(mol, field_object.f_xyz[0])
         self.qijn_fortran_flip = af.flip_3D_py2f(self.qijn)
+        print("mana")
+        print("q_t " + str(self.par.q_t[0,0]) + " " + str(self.par.q_t[0,10]) + " " + str(self.par.q_t[1,10]))
+        print("qijn "+  str(self.qijn[0,0,0]) + " " + str(self.qijn[10,10,0]) + " " +str(self.qijn[10,10,100]))
+        print("qijn_lf "+  str(self.qijn_lf[0,0]) + " " + str(self.qijn_lf[10,2]) )
+        print("q00n "+  str(self.q00n[0]) + " "  +str(self.q00n[10]))
 
 
     def propagate(self, mol, field_dt_vector):
@@ -72,11 +77,14 @@ class FrozenSolventMedium(ABCMedium):
 
     def calc_qijn(self, Q_gamess, Vijn):
         Q_tdplas = np.dot(Q_gamess, np.diag(self.par.cavity[:,3]))
+        print("Vijn "+  str(Vijn[0,0,0]) + " " + str(Vijn[10,10,0]) + " " +str(Vijn[10,10,100]))
         self.qijn = af.matrix_prod_tesserae_ijn_nn(Q_tdplas, Vijn)
         self.q00n = self.qijn[0,0]
+
 
 
     def calc_qijn_lf(self, Q_gamess_lf):
         Q_local_field_tdplas = np.dot(Q_gamess_lf, np.diag(self.par.cavity[:,3]))
         qijn_lf = - np.dot(Q_local_field_tdplas, self.par.cavity[:,0:3])
         self.qijn_lf = qijn_lf.astype(float)
+
