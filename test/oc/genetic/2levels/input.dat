@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.1
 nstep=2500
-name = test_time_seq
+name = prova_oggi 
 oc_algorithm = genetic 
 #folder=
 
@@ -17,8 +17,8 @@ field_type=genetic
 #t0 = 125
 #omega = 0.32140573 0.32140573 0.32140573 
 
-[ENVIRON]
-env=vac
+[MEDIUM]
+medium=vac
 #name_Vij=pot_gamess.inp
 #name_Q_tdplas=np_bem.mdy
 #read_qijn=False

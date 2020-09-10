@@ -133,6 +133,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.n_amplitudes = starting_field.par.fi.size
         self.genetic_par.omegas_matrix = starting_field.par.omega
 
+
         self.init_chromosomes(molecule, starting_field, medium)
     #qui inizializzo l'algoritmo genetico che sto usando, che per adesso è solo uno
         self.init_evolutionary_algorithm(genetic_input)

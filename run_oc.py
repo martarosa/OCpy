@@ -16,7 +16,7 @@ from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
 
 
 
-folder = "/home/mana/programmi/python/optimal_control/waveT_comparison/sol/wavet_V_sign/"
+folder = "/home/mana/programmi/python/optimal_control/waveT_comparison/np/"
 #folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/pcm/3sfere/"
 namefile = "input.dat"
 
@@ -26,7 +26,7 @@ namefile = "input.dat"
 OC_system=ini.SystemManager()
 OC_system.init_system(folder, namefile)
 
-#print(OC_system.mol.par.muT[3,4])
+#print(OC_system.mol.par.muT[2,7])
 #print(OC_system.mol.par.muT[7,1])
 
 

@@ -69,7 +69,7 @@ module interface_tdplas
                real*8, allocatable :: V_localf(:)
                integer, intent(in) :: n_states, n_tessere
 
-               call get_propagated_charges(q_t)
+               call get_corrected_propagated_charges(q_t)
 
                allocate(V_reactionf(n_tessere))
                allocate(V_localf(n_tessere))

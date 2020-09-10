@@ -143,8 +143,9 @@ class Field():
         self.sum_pulse(discrete_t_par)
 
 
-    def chose_omega_fourier(self, discrete_t_par):
-        n_fourier_omega = int(2 + self.par.omega_sys[-1]*discrete_t_par.dt*discrete_t_par.nstep/(2*np.pi))
+    def chose_omega_fourier(self, discrete_t_par, n_fourier_omega = 0):
+        if n_fourier_omega == 0:
+            n_fourier_omega = int(2 + self.par.omega_sys[-1]*discrete_t_par.dt*discrete_t_par.nstep/(2*np.pi))
         self.par.omega = np.zeros([n_fourier_omega, 3])
         for n in range(n_fourier_omega):
             omega_n = (np.pi*2*n)/(discrete_t_par.dt*discrete_t_par.nstep)

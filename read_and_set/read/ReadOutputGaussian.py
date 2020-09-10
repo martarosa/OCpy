@@ -18,12 +18,12 @@ class ReadOutputGaussian():
 
     def read_muT(self, name_file, n_en):
         muT_file = np.loadtxt(name_file, usecols=(4, 5, 6))
-        muT = self.read_half_above_matrix_gaussian(n_en, 3, muT_file)
+        muT = self.read_half_below_matrix(n_en, 3, muT_file)
         return muT
 
     def read_muT_gamess(self, name_file, n_en):
         file = np.loadtxt(name_file, usecols=(4, 5, 6))
-        muT = self.read_half_below_matrix_gaussian(n_en, 3, file)
+        muT = self.read_half_above_matrix(n_en, 3, file)
         return muT
 
     def read_N_tessere_cavity(self, name_file): #read N tessere from a file which has N tessere on the first row
@@ -46,16 +46,10 @@ class ReadOutputGaussian():
         V = V.drop(V.index[index]) #dropping separation header lines
         V = self.convert_fortran_dble(V[0])
         V = V.reshape((n, n_tessere_cavity))
-        V_ijn_el = self.read_half_above_matrix_gaussian(n_en, n_tessere_cavity, V)
-        #normal version
+        V_ijn_el = self.read_half_below_matrix(n_en, n_tessere_cavity, V)
         V_tot = -np.array(V_ijn_el)
         for i in range(n_en):
             V_tot[i,i,:] = -V_tot[i,i,:] + VN
-        #to compare with wt because gamess prints wrong potentials and wt does not know
-        #V_tot = np.array(V_ijn_el)
-        #for i in range(n_en):
-        #    V_tot[i, i, :] = V_tot[i, i, :] + VN
-        #end to compare
         return V_tot
 
 
@@ -75,7 +69,7 @@ class ReadOutputGaussian():
         V = V.drop(V.index[index]) #dropping separation header lines
         V = self.convert_fortran_dble(V[0])
         V = V.reshape((n, n_tessere_cavity))
-        V_ijn_el = self.read_half_below_matrix_gaussian(n_en, n_tessere_cavity, V)
+        V_ijn_el = self.read_half_below_matrix(n_en, n_tessere_cavity, V)
         V_tot = np.array(V_ijn_el)
         for i in range(n_en):
             V_tot[i, i, :] = V_tot[i, i, :] + VN
@@ -94,7 +88,7 @@ class ReadOutputGaussian():
         V = V.drop(V.index[index]) #dropping separation header lines
         V = self.convert_fortran_dble(V[0])
         V = V.reshape((n, n_tessere_cavity))
-        V_ijn_el = self.read_half_below_matrix_gaussian(n_en, n_tessere_cavity, V)
+        V_ijn_el = self.read_half_below_matrix(n_en, n_tessere_cavity, V)
         V_tot = np.array(V_ijn_el)
         return V_tot
 
@@ -144,7 +138,7 @@ class ReadOutputGaussian():
         return converted
 
 # read gaussian files with format: 00x 00y 00z, 01x 01y 01z...., 11x 11y 11z, 21x 21y 21z, 22x 22y 22z, 31x...
-    def read_half_above_matrix_gaussian(self, n_row, n_3D_col, half_matrix):
+    def read_half_below_matrix(self, n_row, n_3D_col, half_matrix):
         matrix = np.zeros(shape=(n_row, n_row, n_3D_col))
         trans_0i = half_matrix[0:n_row]
         tmp_ij = half_matrix[n_row:]
@@ -159,7 +153,8 @@ class ReadOutputGaussian():
         return matrix
 
 
-    def read_half_below_matrix_gaussian(self, n_row, n_3D_col, half_matrix):
+
+    def read_half_above_matrix(self, n_row, n_3D_col, half_matrix):
         matrix = np.zeros(shape=(n_row, n_row, n_3D_col))
         trans_0i = half_matrix[0:n_row]
         tmp_ij = half_matrix[n_row:]
@@ -168,7 +163,8 @@ class ReadOutputGaussian():
         trans_ij[iu] = tmp_ij
         matrix[0] = trans_0i
         matrix[1:, 1:] = trans_ij
-        matrix[:, 0] = matrix[0, :]
+        matrix[0, :] = matrix[:, 0]
         for i in np.arange(1, n_row):
             matrix[:, i] = matrix[i, :]
         return matrix
+

@@ -10,13 +10,14 @@ from medium import interface_tdplas as tdplas
 class DinamicMedium(ABCMedium):
     def __init__(self):
         super().__init__()
-        self.q_t_tot = None
+
+
 
 
     def init_medium(self, medium_input, mol, field_object):
         self.par.medium = medium_input.medium
         Vijn_mol_fortran_flip = af.flip_3D_py2f(mol.par.Vijn)
-        self.q_t_tot = np.zeros(mol.par.Vijn.shape[2])
+        self.par.q_t = np.zeros(mol.par.Vijn.shape[2])
         tdplas.interface_tdplas.init_global_tdplas(field_object.time_axis[1],
                                   Vijn_mol_fortran_flip,
                                   Vijn_mol_fortran_flip.shape[0],
@@ -33,18 +34,12 @@ class DinamicMedium(ABCMedium):
     def propagate_fortran(self, mol, field_dt_vector):
         tdplas.interface_tdplas.call_prop_charges(mol.wf.ci_prev[0],
                                                   field_dt_vector,
-                                                  self.q_t_tot)
-
-        self.par.q_t = np.array([self.q_t_tot, 0])
+                                                  self.par.q_t)
 
 
 
 
     def get_q_t(self):
-#        # q_tmp= self.q_t.q_t[0]+self.q_t.q_t[1]
-#        # diff= 0 - q_tmp
-#        # print(diff)
-#        # delta_x_tessera = diff/self.q00n.shape[-1]
-#        # q_tot = q_tmp + delta_x_tessera
-#        # return q_tot
-       return self.par.q_t[0]
+        return self.par.q_t
+
+
