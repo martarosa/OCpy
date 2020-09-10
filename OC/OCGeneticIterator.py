@@ -11,7 +11,6 @@ from read_and_set.read import auxiliary_functions as af
 from OC.ABCOCIterator import ABCOCIterator
 from parameters.OCIteratorParameters import OCIteratorParameters
 from SystemObj import DiscreteTimePar
-from Chromosome import Chromosome
 from field.Field import Field, Func_tMatrix
 from copy import deepcopy
 from propagator import PropagatorsEulero as prop
