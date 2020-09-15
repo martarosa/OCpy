@@ -1,25 +1,28 @@
-import time
 
 import numpy as np
 import pandas as pd
-import multiprocessing as mp
 import concurrent.futures
 
-
-from parameters.GeneticParameters import GeneticParameters
 from read_and_set.read import auxiliary_functions as af
 from OC.ABCOCIterator import ABCOCIterator
+
+from parameters.GeneticParameters import GeneticParameters
 from parameters.OCIteratorParameters import OCIteratorParameters
+
+from propagator.PropagatorDictionary import PropagatorDictionary as propDict
+
+
 from SystemObj import DiscreteTimePar
 from field.Field import Field, Func_tMatrix
 from copy import deepcopy
-from propagator import PropagatorsEulero as prop
+
 
 from deap import base
 from deap import creator
 from deap import tools
 
 import random
+
 
 ###################GENETIC ALGORITHMS#################
 #sequential: first mate with crossover, then mutate all chromosomes
@@ -42,7 +45,7 @@ import random
 
 
 
-Evolutionary_Algorithm_dict = {'cxUniform': tools.cxUniform,
+EvolutionaryAlgorithmDictionary = {'cxUniform': tools.cxUniform,
                                'mutGaussian': tools.mutGaussian,
                                'selBest': tools.selBest}
 
@@ -54,18 +57,19 @@ class OCGeneticIterator(ABCOCIterator):
         self.discrete_t_par = DiscreteTimePar()
         self.genetic_par = GeneticParameters()
 
-
         self.field_psi_matrix = Func_tMatrix()
         self.psi_coeff_t_matrix = Func_tMatrix()
         self.dict_out = {}
-
-        #self.prop_psi = prop.PropagatorEulero2Order()
 
         #genetic
         self.initial_c0 = None
         self.chromosomes = [] #can be a DEAP class or personal chromosome class
         self.n_mutation_succes = 0
         self.n_mutated = 0
+
+
+
+
 
 
     def iterate(self, current_iteration):
@@ -95,6 +99,7 @@ class OCGeneticIterator(ABCOCIterator):
     def init(self, molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input):
         self.discrete_t_par.nstep = oc_input.nstep
         self.discrete_t_par.dt = oc_input.dt
+        self.par.propagation = AAAAAAAAA
         self.par.target_state = oc_input.target_state
         self.par.alpha_t = alpha_t
         self.par.convergence_t = 99999
@@ -124,11 +129,6 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.eta_thr = genetic_input.eta_thr
         self.genetic_par.q = genetic_input.q
         self.genetic_par.select = genetic_input.select
-        #test purpose, fourier frequencies amplitudes comparison hard coded choice
-        #shape = "sin_cos"
-        #if shape == "sin_cos":
-        #   self.genetic_par.n_amplitudes = starting_field.par.fi.size*2
-        #else:
         self.genetic_par.n_amplitudes = starting_field.par.fi.size
         self.genetic_par.omegas_matrix = starting_field.par.omega
 
@@ -154,10 +154,7 @@ class OCGeneticIterator(ABCOCIterator):
     # Definisco un oggetto che chiamo Chromosome, come attributi ha J, un oggetto campo e un oggetto propagator.
     # E poi di default ha un vettore da riempire che quando chiami il cromosoma senza attributi viene fuori quello
     #def Chromosome()
-    #    self. = []
-    #    self.field = Field()
-    #    self.prop_psi = prop.PropagatorEulero2Order()
-        creator.create("Chromosome", list, J=creator.J, field = Field(), prop_psi = prop.PropagatorEulero2Order())
+        creator.create("Chromosome", list, J=creator.J, field = Field(), prop_psi = propPropagatorDictionary[self.par.propagation])
         #toolbox.register("create_random_ampl", random.uniform, self.ampl_min, self.ampl_max)
         #toolbox.register("create_random_ampl_rounded", round, toolbox.create_random_ampl, ndigits=4)
 
@@ -176,7 +173,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.chromosomes = toolbox.chromosomes_population(n=self.genetic_par.n_chromosomes) #create all chromosomes
 
     #creo un oggetto prop_psi ....
-        prop_psi = prop.PropagatorEulero2Order()
+        prop_psi = PropagatorDictionary[self.par.propagation]
         prop_psi.set_propagator(molecule, medium)
         self.initial_c0 = prop_psi.propagator_terms.mol.wf.ci
     #... e dentro a ogni cromosoma della mia lista inizializzo il campo, il propagatore e metto J = 0.5
@@ -213,7 +210,7 @@ class OCGeneticIterator(ABCOCIterator):
     #setto il propagatore e lo propago con il campo appena generato
         chro.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
         chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
-
+##############QUESTO VA ISOLATO PERCHé é DIVERSO PER OGNI PROBLEMA DI OC##################
     #calcolo popolazione e integrale del campo, per debug
         pop= np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
                                              self.par.target_state))
@@ -357,15 +354,15 @@ class OCGeneticIterator(ABCOCIterator):
 
     def init_evolutionary_algorithm(self, iterator_parameters):
         self.genetic_algorithms = base.Toolbox()
-        self.genetic_algorithms.register("mate", Evolutionary_Algorithm_dict[iterator_parameters.mate],
+        self.genetic_algorithms.register("mate", EvolutionaryAlgorithmDictionary[iterator_parameters.mate],
                                          indpb=self.genetic_par.mate_probability)
         self.genetic_algorithms.register("mutate",
-                                         Evolutionary_Algorithm_dict[iterator_parameters.mutate],
+                                         EvolutionaryAlgorithmDictionary[iterator_parameters.mutate],
                                          mu=self.genetic_par.mutate_mu,
                                          sigma=self.genetic_par.mutate_starting_sigma,
                                          indpb=self.genetic_par.mutate_probability)
         self.genetic_algorithms.register("select",
-                                         Evolutionary_Algorithm_dict[iterator_parameters.select],
+                                         EvolutionaryAlgorithmDictionary[iterator_parameters.select],
                                          k=self.genetic_par.n_selected_chr)
         self.genetic_algorithms.register('evaluate',
                                          self.evaluate_J_DEAP_chromosome)

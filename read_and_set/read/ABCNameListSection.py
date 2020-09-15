@@ -17,9 +17,13 @@ class ABCNamelistSection(metaclass=ABCMeta):
 
 
     def check(self):
-        #self.check_keys()
         self.lowering_case()
         self.check_allowed_values()
+
+
+    def fill_empty_with_none(self):
+        pass
+
 
     def fill_empty_with_default(self):
         tmp_dict = deepcopy(self.section_default_dictionary)

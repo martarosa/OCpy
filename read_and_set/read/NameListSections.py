@@ -10,10 +10,13 @@ class SectionSystem(ABCNamelistSection):
                                            'name': 'output',
                                            'nstep': '10000',
                                            'dt': '0.01',
-                                           'oc_algorithm': 'rabitzi'}
+                                           'oc_algorithm': 'rabitzi',
+                                           'propagation':  'eulero_1order'}
         self.section_dictionary = {}
-        self.allowed_val = [['oc_algorithm', ['eulero_1order_prop', 'eulero_2order_prop', 'rabitzi', 'rabitzii', 'genetic']]]
-        self.case_unsensitive_keys = ['oc_algorithm']
+        self.allowed_val = [['oc_algorithm', ['none', 'rabitzi', 'rabitzii', 'genetic',
+                                              'nelder-mead', 'cg', 'bfgs']],
+                            ['propagation', ['eulero_1order', 'eulero_2order', 'quantum']]]
+        self.case_unsensitive_keys = ['oc_algorithm', 'propagation']
 
 
     def init_default_folder(self, folder):

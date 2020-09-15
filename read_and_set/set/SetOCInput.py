@@ -9,6 +9,8 @@ class SetOCInput(ABCSetInput):
 
     def set(self, user_input):
         self.input_parameters.oc_iterator_name = user_input.sys.section_dictionary['oc_algorithm']
+        self.input_parameters.propagation = user_input.sys.section_dictionary['propagation']
+
         self.input_parameters.alpha = user_input.oc.section_dictionary['alpha']
         self.input_parameters.alpha0 = float(user_input.oc.section_dictionary['alpha0'])
         self.input_parameters.n_iterations = int(user_input.oc.section_dictionary['n_iterations'])

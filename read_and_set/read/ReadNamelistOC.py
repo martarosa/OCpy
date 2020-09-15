@@ -75,7 +75,16 @@ class ReadNamelistOC(ABCReadNamelist):
 
 
     def check_system_nml_consistency(self):
-        pass
+        if (not self.sys.check_namelist_key_exist('oc_algorithm')
+            or self.sys.check_namelist_key_exist_and_value('oc_algorithm', 'rabitzi')
+            or self.sys.check_namelist_key_exist_and_value('oc_algorithm', 'rabitzii')):
+            if(not self.sys.check_namelist_key_exist_and_value('propagation', 'eulero_1order')
+               or not self.sys.check_namelist_key_exist('propagation')):
+                af.exit_error(
+                    "ERROR: in \"SYSTEM\" key \"oc_algorithm\" is rabitz. \"propagation\" value is only allowed "
+                    "to be \"eulero_1order\" ")
+
+
 
     def check_wavef_nml_consistency(self):
         pass

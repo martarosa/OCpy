@@ -14,6 +14,7 @@ from read_and_set.set.SetLogInput import SetLogInput
 
 from molecule.Molecule import Molecule
 from field.Field import Field
+from medium.ABCMedium import ABCMedium
 from medium.DinamicMedium import DinamicMedium
 from medium.FrozenSolventMedium import FrozenSolventMedium
 from medium.VacMedium import VacMedium
@@ -40,13 +41,15 @@ from OCManager import OCManager
 
 
 
+
+
 class SystemManager():
 
     def __init__(self):
 
         self.mol = Molecule()
         self.starting_field = Field()
-        self.medium = None #ABCPCM()
+        self.medium = ABCMedium()
         self.oc = OCManager() # the possibility to perform a single propagation without OC is a special case of optimalControl (since this is a OC program
 
 
@@ -118,6 +121,8 @@ class SystemManager():
                         self.mol,
                         self.starting_field,
                         self.medium)
+
+
 
 
 

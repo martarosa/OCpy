@@ -35,7 +35,7 @@ class OCManager:
         self.par.alpha0 = oc_input.alpha0
         self.par.alpha = oc_input.alpha
         self.par.oc_iterator_name = oc_input.oc_iterator_name
-        if self.par.oc_iterator_name != "eulero_1order_prop" and self.par.oc_iterator_name != "eulero_2order_prop":
+        if self.par.oc_iterator_name != "none":
             self.par.convergence_thr = oc_input.convergence_thr
             self.par.n_iterations = oc_input.n_iterations
         else:
@@ -51,6 +51,9 @@ class OCManager:
                               self.set_alpha_t(oc_input.dt, oc_input.nstep))
 
         self.init_save(save_input, log_header_input)
+
+
+
 
 
 

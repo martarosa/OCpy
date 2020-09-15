@@ -1,7 +1,8 @@
-from propagator.PropagatorTerms import PropagatorTerms
+from propagator.ClassicalPropagatorTerms import ClassicalPropagatorTerms
 from abc import ABCMeta, abstractmethod
-
-
+from medium.ABCMedium import ABCMedium
+from molecule.Molecule import Molecule
+from propagator.ABCPropagatorTerms import ABCPropagatorTerms
 # in propagator_terms there are all possible propagation terms (probably we could delete this attribute and
 # temporary inlitialized in each child class.
 # Then in each child class the specific terms arre added to the propagator delegate, and the propagation is done
@@ -10,16 +11,17 @@ from abc import ABCMeta, abstractmethod
 
 
 
+
+
+
+
 class ABCPropagator(metaclass=ABCMeta):
     def __init__(self):
-        self.propagator_terms = PropagatorTerms()
+        self.mol = Molecule()
+        self.medium = ABCMedium()
+
+        self.propagator_terms = ABCPropagatorTerms()
         self.propagator = []
-
-
-
-    def init_propagator_terms(self, molecule, medium):
-        self.propagator_terms.set_attributes(molecule, medium)
-        self.propagator_terms.init_terms_dictionary()
 
     def add_term_to_propagator(self, term_name):
             self.propagator.append(self.propagator_terms.dict_terms[term_name])
