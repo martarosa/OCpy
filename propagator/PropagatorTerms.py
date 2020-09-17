@@ -50,7 +50,7 @@ class PropagatorTerms():
 
 
     def eulero_medium_term(self, order, dt, field_dt_vector, *args):
-        if self.medium != "vac":
+        if self.medium.par.medium != "vac":
             self.medium.propagate(self.mol, field_dt_vector)
             self.mol.wf.ci += -order * 1j * dt \
                           * (np.dot(self.mol.wf.ci_prev[0],

@@ -1,0 +1,36 @@
+[SYSTEM]
+dt=1
+nstep=250
+name = prova 
+oc_algorithm = genetic 
+#folder=
+
+[WAVEFUNCTION]
+name_ci=ci_ini.inp
+name_ei=ci_energy.inp
+name_mut=ci_mut.inp
+
+[FIELD]
+#field_type=genetic
+#omega=0.32140573 0.32140573 0.32140573
+#sigma=125
+#t0=125
+#fi=0.01 0.01 0.01
+#name_field_file=
+
+[MEDIUM]
+medium=nanop
+#name_Vij=pot_gamess.inp
+#name_Q_tdplas=np_bem.mdy
+#read_qijn=False
+#name_file_qijn=./qijn.dat
+
+[OPTIMALC]
+restart=True
+alpha=const
+alpha0=1
+n_iterations=30
+target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0          
+
+[SAVE]
+restart_step=1

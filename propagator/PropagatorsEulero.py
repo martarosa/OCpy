@@ -76,6 +76,8 @@ class PropagatorEulero2Order(ABCPropagator):
             func(order, dt, field_dt_vector)
 
     def propagate_n_step(self, discrete_time_par, field):
+        if self.propagator_terms.medium.par.medium == "nanop":
+            self.propagator_terms.medium.reset_medium(self.propagator_terms.mol, field)
         if((field.time_axis[1] - field.time_axis[0]) - discrete_time_par.dt > discrete_time_par.dt *0.001):
             af.exit_error("ERROR: Propagation time step and field time step are different")
         wf_matrix_out = Func_tMatrix()

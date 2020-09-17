@@ -40,6 +40,9 @@ module interface_tdplas
                 allocate(V_reactionf(n_tessere))
                 allocate(V_localf(n_tessere))
 
+                call deallocate_BEM_public
+                call deallocate_potential
+                call finalize_prop
 
                 call prepare_potentials(ci, field_vector, V_reactionf, V_localf, quantum_n_ci, n_tessere)
 
@@ -49,6 +52,9 @@ module interface_tdplas
                 call init_vv_propagator
                 return
             end subroutine
+
+
+
 
 
             subroutine call_prop_charges(ci, field_vector, q_t, n_states, n_tessere)
@@ -69,14 +75,15 @@ module interface_tdplas
                real*8, allocatable :: V_localf(:)
                integer, intent(in) :: n_states, n_tessere
 
-               call get_corrected_propagated_charges(q_t)
+
 
                allocate(V_reactionf(n_tessere))
                allocate(V_localf(n_tessere))
                call prepare_potentials(ci, field_vector, V_reactionf, V_localf,quantum_n_ci, n_tessere)
                call set_potential(V_reactionf, V_localf)
                call prop_chr
-               
+               call get_corrected_propagated_charges(q_t)
+
            end subroutine
 
 

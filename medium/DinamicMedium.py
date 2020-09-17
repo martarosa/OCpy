@@ -25,6 +25,10 @@ class DinamicMedium(ABCMedium):
         tdplas.interface_tdplas.call_init_charges(mol.wf.ci_prev[0], field_object.f_xyz[0])
 
 
+    def reset_medium(self, mol, field_object):
+        self.par.q_t = np.zeros(mol.par.Vijn.shape[2])
+        tdplas.interface_tdplas.call_init_charges(mol.wf.ci_prev[0], field_object.f_xyz[0])
+
 
 
     def propagate(self, mol, field_dt_vector):
