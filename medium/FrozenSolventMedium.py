@@ -1,7 +1,7 @@
 import numpy as np
 
 from propagator import math_functions as mf
-
+from parameters.MediumParameters import MediumParameters
 
 
 from medium.ABCMedium import ABCMedium
@@ -14,13 +14,12 @@ from read_and_set.read import auxiliary_functions as af
 class FrozenSolventMedium(ABCMedium):
     def __init__(self):
         super().__init__()
+        self.par = MediumParameters()
         self.muLF = None
         # static matrices in frozen solvent, initialized once
         self.qijn = None
         self.qijn_lf = None
-
         self.q00n = None
-
         self.qijn_fortran_flip = None
 
 
@@ -29,9 +28,12 @@ class FrozenSolventMedium(ABCMedium):
         self.par.cavity = medium_input.cavity
         self.init_static_matrices(medium_input.Qnn_reactionfield, medium_input.Qnn_localfield, mol)
         self.muLF = -af.matrix_prod_tesserae_ijn_nn(self.qijn_lf, mol.par.Vijn)
-
         self.propagate(mol, field_object.f_xyz[0])
         self.qijn_fortran_flip = af.flip_3D_py2f(self.qijn)
+
+
+    def reset_medium(self, *args):
+        pass
 
 
     def propagate(self, mol, field_dt_vector):

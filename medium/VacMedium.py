@@ -12,6 +12,8 @@ class VacMedium(ABCMedium):
         self.par.cavity = 0
         self.par.medium = 'vac'
 
+    def reset_medium(self, *args):
+        pass
 
     def propagate(self, mol, field_dt_vector):
         return 0

@@ -2,6 +2,7 @@ from medium.ABCMedium import ABCMedium
 from read_and_set.read import auxiliary_functions as af
 import numpy as np
 from medium import interface_tdplas as tdplas
+from parameters.MediumParameters import MediumParameters
 # if the solvent is dinamic qijn and qijn_lf depend on time = qijn_t, qijn_lf_t
 #q_t dependence on time comes from <psi(t)|qijn_t|psi(t)>
 #q_t_lf dependence comes from qijn_lf_t * field_dt_vector
@@ -10,7 +11,7 @@ from medium import interface_tdplas as tdplas
 class DinamicMedium(ABCMedium):
     def __init__(self):
         super().__init__()
-
+        self.par = MediumParameters()
 
 
 
@@ -23,6 +24,7 @@ class DinamicMedium(ABCMedium):
                                   Vijn_mol_fortran_flip.shape[0],
                                   Vijn_mol_fortran_flip.shape[1])
         tdplas.interface_tdplas.call_init_charges(mol.wf.ci_prev[0], field_object.f_xyz[0])
+
 
 
     def reset_medium(self, mol, field_object):

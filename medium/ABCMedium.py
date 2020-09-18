@@ -12,6 +12,10 @@ class ABCMedium(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def reset_medium(self, *args):
+        pass
+
+    @abstractmethod
     def propagate(self, mol, field_dt_vector):
         pass
 

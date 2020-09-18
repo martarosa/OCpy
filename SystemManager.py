@@ -14,11 +14,8 @@ from read_and_set.set.SetLogInput import SetLogInput
 
 from molecule.Molecule import Molecule
 from field.Field import Field
-from medium.DinamicMedium import DinamicMedium
-from medium.FrozenSolventMedium import FrozenSolventMedium
-from medium.VacMedium import VacMedium
 from OCManager import OCManager
-
+from dictionaries import Dictionaries as dict
 
 #The system contains Molecule, Field, PCM and OCManager objects.
 # Description of the molecule, starting field and medium are stored separately outside the OCManager. They are never modified and practically useless, there just for
@@ -79,12 +76,7 @@ class SystemManager():
     def init_medium(self, user_input):
         print(user_input.medium.section_dictionary['medium'])
         set_medium = SetMediumInput()
-        if user_input.medium.section_dictionary['medium'] == 'sol':
-            self.medium = FrozenSolventMedium()
-        elif user_input.medium.section_dictionary['medium'] == 'nanop':
-            self.medium = DinamicMedium()
-        elif user_input.medium.section_dictionary['medium'] == 'vac':
-            self.medium = VacMedium()
+        self.medium = dict.MediumDict[user_input.medium.section_dictionary['medium']]()
         set_medium.set(user_input)
         self.medium.init_medium(set_medium.input_parameters, self.mol, self.starting_field.field)
 

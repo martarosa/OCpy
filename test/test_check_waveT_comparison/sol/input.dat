@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = sol_2order_prop_z
+name = tmp_sol_2order_prop_z
 oc_algorithm = eulero_2order_prop 
 #folder=
 

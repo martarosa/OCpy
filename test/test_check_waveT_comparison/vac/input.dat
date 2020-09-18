@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = output 
+name = tmp_output 
 oc_algorithm = eulero_2order_prop 
 
 [WAVEFUNCTION]
