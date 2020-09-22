@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = test_restart
+name = output_ref 
 oc_algorithm = rabitzi 
 #folder=
 
@@ -11,11 +11,11 @@ name_ei=ci_energy.inp
 name_mut=ci_mut.inp
 
 [FIELD]
-#field_type=sin
+field_type=const
 #omega=0.3239892104044628 0.3239892104044628 0.3239892104044628
 #sigma=125
 #t0=125
-#fi=0.01 0.01 0.01
+fi=0.01 0.01 0.01
 #f_max= 0.0 0.0038 0.0 
 #name_field_file=
 
@@ -27,7 +27,7 @@ medium=sol
 #name_file_qijn=./qijn.dat
 
 [OPTIMALC]
-restart=True
+restart=False
 alpha=sin
 alpha0=1
 n_iterations=10

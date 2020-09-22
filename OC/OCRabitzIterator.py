@@ -42,7 +42,7 @@ class OCRabitzIterator(ABCOCIterator):
 # non va iterate
 
     def iterate(self, current_iteration):
-        mut_rabitz_field_prop = self.prop_psi.mol.par.muT
+        mut_rabitz_field_prop = deepcopy(self.prop_psi.mol.par.muT)
         if self.prop_psi.medium.par.medium == "sol":
             mut_rabitz_field_prop += self.prop_psi.medium.muLF
         if current_iteration != 0:

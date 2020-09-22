@@ -182,28 +182,18 @@ class OCGeneticIterator(ABCOCIterator):
 
     def reset_chromosomes(self):
         for i in range(len(self.chromosomes)):
-            self.chromosomes[i].prop_psi.mol.wf.set_wf(self.initial_c0, 1)
             self.chromosomes[i].prop_psi.medium.reset_medium(self.chromosomes[i].prop_psi.mol,
                                                              self.chromosomes[i].field.field)
 
 
     def evaluate_J_DEAP_chromosome(self, chro):
         chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
-    #genera il campo con forma sum
         chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
-    #setto il propagatore e lo propago con il campo appena generato
+        chro.prop_psi.mol.wf.set_wf(self.initial_c0, 1)
         chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
-        #print("mana ogni cromosoma")
-    #calcolo popolazione e integrale del campo, per debug
-        pop= np.real(af.projector_mean_value(chro.prop_psi.mol.wf.ci,
-                                             self.par.target_state))
-        field = np.real(self.alpha_field_J_integral_chromosome(chro.field.field))
-    #calcolo J
         J = np.real(af.projector_mean_value(chro.prop_psi.mol.wf.ci,
                                             self.par.target_state)
                     - self.alpha_field_J_integral_chromosome(chro.field.field))
-        #print(pop)
-        #print(J)
         success =  J - chro.J.values[0]
         if success != 0:
             self.n_mutated +=1

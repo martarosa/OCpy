@@ -2,8 +2,6 @@ import numpy as np
 import pandas as pd
 
 
-
-
 class ReadOutputGaussian():
 
     def read_ci0(self, name_file):
