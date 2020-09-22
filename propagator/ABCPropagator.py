@@ -1,24 +1,24 @@
 from abc import ABCMeta, abstractmethod
 
+import dictionaries.PropagatorDictionaries
 from propagator.ABCPropagatorTerms import ABCPropagatorTerms
 from molecule.Molecule import Molecule
 from medium.ABCMedium import ABCMedium
-from dictionaries import Dictionaries as dict
+from dictionaries import SaveDictionaries as dict
 
 class ABCPropagator(metaclass=ABCMeta):
     def __init__(self):
         self.mol = Molecule()
-        self.medium = None #ABCMedium()
+        self.medium = None
 
         self.propagator_terms = ABCPropagatorTerms()
         self.propagator = []
 
 
-    def init(self, molecule, medium):
+    def init(self, molecule, medium, propagator = None):
         self.mol = molecule
-        #self.medium = dict.MediumDict[medium.par.medium]
         self.medium = medium
-        self.propagator_terms = dict.PropagatorTermsDict["eulero_2order_prop"]()
+        self.propagator_terms = dictionaries.PropagatorDictionaries.PropagatorTermsDict[propagator]()
         self.propagator_terms.init()
 
 

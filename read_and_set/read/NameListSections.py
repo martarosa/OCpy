@@ -10,10 +10,12 @@ class SectionSystem(ABCNamelistSection):
                                            'name': 'output',
                                            'nstep': '10000',
                                            'dt': '0.01',
-                                           'oc_algorithm': 'rabitzi'}
+                                           'oc_algorithm': 'none',
+                                           'propagator': 'none'}
         self.section_dictionary = {}
-        self.allowed_val = [['oc_algorithm', ['eulero_1order_prop', 'eulero_2order_prop', 'rabitzi', 'rabitzii', 'genetic']]]
-        self.case_unsensitive_keys = ['oc_algorithm']
+        self.allowed_val = [['oc_algorithm', ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg']],
+                            ['propagator', ['none', 'eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki']]]
+        self.case_unsensitive_keys = ['oc_algorithm', 'propagation']
 
 
     def init_default_folder(self, folder):
@@ -89,21 +91,30 @@ class SectionOptimalControl(ABCNamelistSection):
         self.section = "OPTIMALC"
         self.section_default_dictionary = { 'restart': 'false',
                                             'alpha': 'const',
-                                            'alpha0': '1',
                                             'target_state': '1',
                                             'n_iterations': '0',
                                             'convergence_thr': '99999',
                                             'delta_ts': '0',
                                             'Ns': '0',
-                                            'iterator_config_file': 'false'}
+                                            'conf_file': 'false'}
         self.section_dictionary = {}
         self.allowed_val = [['alpha', ['const', 'sin', 'quin']],
                             ['restart', ['true', 'false']]]
         self.case_unsensitive_keys = ['restart', 'alpha']
 
 
+#RABITZ
+class SectionRabitzParameters(ABCNamelistSection):
+    def __init__(self):
+        super().__init__()
+        self.section = "PARAMETERS"
+        self.section_default_dictionary = {'alpha0': '1'}
+
+        self.section_dictionary = {}
 
 
+
+#GENETIC
 
 class SectionGenetic(ABCNamelistSection):
     def __init__(self):

@@ -17,7 +17,8 @@ from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
 
 
 #folder = "/home/mana/programmi/python/optimal_control/OCpy/test_rabitz/"
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/nanop/"
+#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/nanop/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/vac/"
 namefile = "input.dat"
 
 

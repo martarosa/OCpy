@@ -15,9 +15,7 @@ class ABCNamelistSection(metaclass=ABCMeta):
     def init(self, user_input):
         self.section_dictionary = dict(user_input[self.section])
 
-
     def check(self):
-        #self.check_keys()
         self.lowering_case()
         self.check_allowed_values()
 
@@ -45,6 +43,12 @@ class ABCNamelistSection(metaclass=ABCMeta):
                              + "Default value is: " + self.section_default_dictionary[key] + "\n")
 
 
+
+
+
+
+
+
     def check_namelist_key_and_print(self, key, output_string):
         if key in self.section_dictionary:
             print(output_string)
@@ -63,7 +67,6 @@ class ABCNamelistSection(metaclass=ABCMeta):
     def check_namelist_key_exist(self, key):
         if key in self.section_dictionary:
             return True
-
 
     def add_key_and_value_to_namelist(self, key, value):
         self.section_dictionary[key] = value

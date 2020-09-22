@@ -4,6 +4,7 @@ from read_and_set.input.OCGeneticInput import OCGeneticInput
 
 class SetGeneticOCInput(ABCSetInput):
     def __init__(self):
+        super().__init__()
         self.input_parameters = OCGeneticInput()
 
     def set(self, user_input):
@@ -24,4 +25,4 @@ class SetGeneticOCInput(ABCSetInput):
         self.input_parameters.q = float(user_input.mutate.section_dictionary['q'])
         self.input_parameters.select = user_input.select.section_dictionary['select']
 
-        self.input_parameters.string_file_config = user_input.string_file_config
+        #self.input_parameters.conf_str = user_input.conf_str

@@ -58,8 +58,6 @@ class SaveOCGenetic(ABCSave):
         self.par.restart_calculation = save_input.restart_calculation
         self.par.append = save_input.append
         self.init_save_file_list(oc_iterator, save_input.restart_step)
-
-
         for i in np.arange(len(self.save_files)):
             print("save: " + str(i))
             self.save_tools.creation_save_files(self.par.folder + self.par.filename, self.save_files[i], self.par.append)

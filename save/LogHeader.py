@@ -3,10 +3,10 @@ class LogHeader():
         self.header = None
         self.field_header = None
         self.oc_header = None
+        self.oc_conf_header =  None
 
     def init_log_header(self, log_input):
         self.init_oc_header(log_input)
-        #self.init_field_header(log_input)
         if log_input.restart == "norestart_found":
             restart = ("#WARNING: restart asked but restart file not found. Starting from default field" + "\n")
         elif log_input.restart == "true":
@@ -24,8 +24,10 @@ class LogHeader():
         else:
             restart = "\n"
         self.init_field_header(log_input)
+        self.init_conf_header(log_input)
         self.header = ( "#calculation: " + log_input.oc_algorithm + "\n" +
                         self.oc_header +
+                        self.oc_conf_header +
                         "#dt: " + log_input.dt + " medium: " + log_input.medium + "\n" +
                         restart +
                         self.field_header)
@@ -33,14 +35,17 @@ class LogHeader():
 
 
     def init_oc_header(self, log_input):
-        if (log_input.oc_algorithm == "rabitzi" or
-                log_input.oc_algorithm == "rabitzii" or
-                log_input.oc_algorithm == "genetic"):
+        if (log_input.oc_algorithm != "none"):
             self.oc_header = ("#target state: " + log_input.target_state + "\n" +
-                              "#alpha: " + log_input.alpha + " starting alpha value: " + log_input.alpha0 + "\n\n"
+                              "#alpha: " + log_input.alpha + "\n\n"
                               )
         else:
             self.oc_header="\n"
+
+
+    def init_conf_header(self, conf_input):
+        if (conf_input.oc_algorithm != "none"):
+            self.oc_conf_header = ("#oc algorithm input: " + conf_input.string_conf_file + "\n\n")
 
 
     def init_field_header(self, log_input):
@@ -62,7 +67,6 @@ class LogHeader():
 
     def restart_rabitz(self, log_input):
         self.field_header = ""
-        #everithing is already done in restart
         pass
 
 
@@ -96,8 +100,7 @@ class LogHeader():
 
     def genetic_pulse(self, log_input):
         self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n" 
-                             "#omega: fourier frequencies \n\n"
-                             "#genetic algorithm input: " + log_input.string_conf_file + "\n\n")
+                             "#omega: fourier frequencies \n\n")
 
 
 
