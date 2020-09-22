@@ -2,7 +2,6 @@ import numpy as np
 
 from propagator.ABCPropagatorTerms import ABCPropagatorTerms
 from read_and_set.read import auxiliary_functions as af
-from molecule.Molecule import Molecule
 from propagator import math_functions as mf
 
 # all posible propagator term. Some use PCM methods specific of FrozenSolventPCM child class, If/when
@@ -20,9 +19,9 @@ class ClassicalPropagatorTerms(ABCPropagatorTerms):
         self.dict_terms["eulero2_coeff"] = self.eulero2_coeff_term
         self.dict_terms["eulero_energy"] = self.eulero_energy_term
         self.dict_terms["eulero_field"] = self.eulero_field_term
-        self.dict_terms["eulero_medium"] = self.eulero_medium_term_fortran
+        self.dict_terms["eulero_medium"] = self.eulero_medium_term
         self.dict_terms["norm"] = self.norm
-        self.dict_terms["oc_medium_bwd"] = self.bwd_medium_term_fortran
+        self.dict_terms["oc_medium_bwd"] = self.bwd_medium_term
 
     # <editor-fold desc="H terms">
 
