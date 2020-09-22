@@ -75,6 +75,17 @@ def matrix_prod_tesserae_ijn_nn(Mnm, Mijn):
     prod = np.dot(Mijn, Mnm)
     return prod.astype(float)
 
+def population_from_counts_dictionary(counts, shots, hilb_dim_computer):
+    for k in range(hilb_dim_computer):
+        if '{0:03b}'.format(k) not in counts.keys():
+            counts[bin(k)[2:]] = 0    
+    print(counts)
+    for key1 in list(counts.keys()):
+        counts[int(key1,2)] = counts.pop(key1)
+    counts = dict(sorted(counts.items()))
+    population = [element/shots for element in counts.values()]
+    return population
+
 
 def population_from_wf_vector(wf):
     out = (np.conj(wf)*wf)/np.dot(np.conj(wf), wf)
