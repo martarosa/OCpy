@@ -14,10 +14,10 @@ class ABCPropagator(metaclass=ABCMeta):
         self.propagator = []
 
 
-    def init(self, molecule, medium):
+    def init(self, molecule, medium, "propagation_type"):
         self.mol = molecule
         self.medium = medium
-        self.propagator_terms = dict.PropagatorTermsDict["eulero_2order_prop"]()
+        self.propagator_terms = dict.PropagatorTermsDict["propagation_type"]()
         self.propagator_terms.init()
 
 
