@@ -16,7 +16,6 @@ class ABCPropagator(metaclass=ABCMeta):
 
     def init(self, molecule, medium):
         self.mol = molecule
-        #self.medium = dict.MediumDict[medium.par.medium]
         self.medium = medium
         self.propagator_terms = dict.PropagatorTermsDict["eulero_2order_prop"]()
         self.propagator_terms.init()

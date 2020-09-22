@@ -1,6 +1,6 @@
 import numpy as np
 
-from propagator import math_functions as mf
+#from propagator import math_functions as mf
 from parameters.MediumParameters import MediumParameters
 
 
