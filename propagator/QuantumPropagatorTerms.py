@@ -16,7 +16,6 @@ from qiskit import Aer , execute , IBMQ
 from propagator.ABCPropagatorTerms import ABCPropagatorTerms
 from qiskit.providers.aer.noise import NoiseModel
 
-from read_and_set.read import NamelistTools as nmtool
 import sys
 
 

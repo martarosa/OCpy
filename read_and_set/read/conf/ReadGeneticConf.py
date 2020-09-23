@@ -2,7 +2,7 @@ import configparser
 import os.path
 from copy import deepcopy
 
-import read_and_set.read.GeneticConfSections
+import read_and_set.read.input_sections.GeneticConfSections
 
 from read_and_set.read import auxiliary_functions as af
 from read_and_set.read.input_sections.ABCReadInputFile import ABCReadInputFile

@@ -2,8 +2,8 @@ import numpy as np
 
 from read_and_set.read import auxiliary_functions as af
 
-from propagator.ABCPropagator import ABCPropagator
 from propagator.ABCPropagatorTerms import ABCPropagatorTerms
+from propagator.ABCPropagator import ABCPropagator
 from medium.ABCMedium import ABCMedium
 
 from molecule.Molecule import Molecule

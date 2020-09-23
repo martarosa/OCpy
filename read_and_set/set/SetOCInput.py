@@ -3,7 +3,7 @@ from read_and_set.set.ABCSetInput import ABCSetInput
 from read_and_set.input.OCInput import OCInput
 
 
-class SetOCInput(ABCSetInput):
+class SetIBMInput(ABCSetInput):
     def __init__(self):
         super().__init__()
         self.input_parameters = OCInput()

@@ -7,8 +7,8 @@ Created on Tue Sep 22 18:59:34 2020
 
 
 import configparser
-from read_and_set.read import NameListSections as sec
-from read_and_set.read.ABCReadInputFile import ABCReadInputFile
+from read_and_set.read.input_sections import IBMConfSections
+from read_and_set.read.input_sections.ABCReadInputFile import ABCReadInputFile
 import os.path
 from read_and_set.read import auxiliary_functions as af
 from copy import deepcopy
@@ -17,8 +17,8 @@ class ReadIBMConf(ABCReadInputFile):
     def __init__(self):
         super().__init__()
         self.n_sections = None
-        self.sections = ["PARAMETERS"]
-        self.parameters = sec.SectionRabitzParameters()
+        self.sections = ["IBM_Interface"]
+        self.parameters = IBMConfSections()
         self.conf_str = None
 
 
@@ -35,7 +35,10 @@ class ReadIBMConf(ABCReadInputFile):
 
     def set_nml_sections(self, user_input):
         self.parameters.init(user_input)
+        self.parameters.fill_empty_with_default()
+        self.parameters.check_keys()
         self.create_print_string()
+
 
 
     def create_print_string(self):

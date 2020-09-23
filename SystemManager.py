@@ -73,6 +73,9 @@ class SystemManager():
         set_oc.set(user_input)
         OCConf = dictionaries.OCDictionaries.OCAlgorithmConfig[user_input.sys.section_dictionary['oc_algorithm']]()
         set_OCConf = dictionaries.OCDictionaries.OCAlgorithmSet[user_input.sys.section_dictionary['oc_algorithm']]()
+        PropConf = dictionaries.PropagatorDictionaries.PropagatorConfig[user_input.sys.section_dictionary['propagator']]()
+        set_PropConf = dictionaries.PropagatorDictionaries.PropagatorSet
+        ### Fai righe sopra ma propagator
         if not user_input.sys.section_dictionary['oc_algorithm'] == "none":
             OCConf.read_file(user_input.sys.section_dictionary['folder'],
                                             user_input.oc.section_dictionary['conf_file'])
