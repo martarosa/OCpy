@@ -7,9 +7,10 @@ from SystemObj import Func_tMatrix
 from parameters.OCManagerParameters import OCManagerParameters
 
 
-# OCmanager is only one, and deals with the different OC_iterators (propagation, rapitz, genetic...) Depending
-# on the iterator, the SaveOC class is differently initialized. The restart method is inside Save and is also differently initialized
-# depending on the algorithm (e.g. for the genetic it reads the field parameters, while for Rabitz it reads the field point by point
+# OCmanager has only one instance, store all the data and performs all the calculations.
+# In particular it initialize the OCIterator() and the SaveOC()
+# Depending on the iterator, the SaveOC class is differently initialized.
+# Methods for restart are inside SaveOC
 
 
 class OCManager:
@@ -19,8 +20,8 @@ class OCManager:
         self.oc_iterator = None
         self.save = None
 
-        self.psi_coeff_t_matrix = Func_tMatrix()
-        self.field_psi_matrix = Func_tMatrix()
+        #self.psi_coeff_t_matrix = Func_tMatrix()
+        #self.field_psi_matrix = Func_tMatrix()
 
 
     def init_oc(self, oc_input, oc_conf, save_input, log_header_input, molecule, starting_field, medium):
@@ -71,9 +72,9 @@ class OCManager:
             self.oc_iterator.iterate(current_iteration)
             self.save.save(current_iteration)
             current_iteration += 1
-        self.psi_coeff_t_matrix = self.oc_iterator.psi_coeff_t_matrix
-        self.field_psi_matrix = self.oc_iterator.field_psi_matrix
-        self.par.convergence_t = self.oc_iterator.par.convergence_t
+        #self.psi_coeff_t_matrix = self.oc_iterator.psi_coeff_t_matrix
+        #self.field_psi_matrix = self.oc_iterator.field_psi_matrix
+
 
 
 

@@ -16,7 +16,6 @@ from SystemObj import DiscreteTimePar, Func_tMatrix
 class SimplePropagationIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
-        #class attributes
         self.par = OCIteratorParameters()
         self.discrete_t_par = DiscreteTimePar()
 

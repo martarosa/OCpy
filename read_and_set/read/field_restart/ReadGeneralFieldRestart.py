@@ -1,10 +1,10 @@
 import numpy as np
 
 from read_and_set.input.FieldInput import FieldInput
-from read_and_set.read.ABCReadFieldRestart import ABCReadFieldRestart
+from read_and_set.read.field_restart.ABCReadFieldRestart import ABCReadFieldRestart
 
 
-class ReadFieldRestartRabitz(ABCReadFieldRestart):
+class ReadGeneralFieldRestart(ABCReadFieldRestart):
     def __init__(self):
         super().__init__()
         self.input_parameters = FieldInput()

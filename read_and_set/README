@@ -1,0 +1,26 @@
+In this folder there are:
+read: objects and methods to read all input files, perform checks on allowed values and fill with default values if needed.
+      Input file format and keyword are known.
+
+input: Each internal main object has here a corresponding ObjectInput (e.g. FieldInput, MediumInput...) which store all
+       the information needed for the internal object initialization. The init method of the internal object needs only
+       its own Object input as argument. ObjectInput objects don't know anything of external input structure,
+       their attributes are filled by corresponding ObjectSet methods
+
+set: Each Object input has a corresponding ObjectSet which knows the input structure and format, convert it and fill
+     ObjectInput attributes
+
+
+e.g. : ReadInput reads input.dat file which contains
+       "SYSTEM" , "WAVEFUNCTION", "FIELD", "MEDIUM", "OPTIMALC", "SAVE"
+       sections.
+       Perform checks on allowed values, fill empty values with default parameters.
+
+       SetFieldInput takes parameters reagrding the field and fills FieldInput object
+       SetMoleculeInput takes names of external quantum codes files in wavefuntion, read them and fills MoleculeInput object
+
+
+Global input, needed for all the calculations, is read by ReadInput(), set by SetNameInput (e.g. SetMediumInput()) and
+stored in NameInput() (e.g. MediumInput())
+Then there are specific .conf files different for different calculations that are read by ReadNameConf()
+(e.g. ReadGeneticConf()) and set by SetNameConf (e.g. SetGeneticConf)

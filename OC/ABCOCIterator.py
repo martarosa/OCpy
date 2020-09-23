@@ -44,7 +44,6 @@ class ABCOCIterator(metaclass=ABCMeta):
         pass
 
 
-
     def field_J_integral(self):
         ax_square = self.field_psi_matrix.f_xyz.ndim - 1
         ax_integral= self.field_psi_matrix.f_xyz.ndim - 2

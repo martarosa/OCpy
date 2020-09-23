@@ -1,4 +1,4 @@
-from read_and_set.read.ABCReadInputFile import ABCReadInputFile
+from read_and_set.read.input_sections.ABCReadInputFile import ABCReadInputFile
 
 class ReadNoConf(ABCReadInputFile):
     def __init__(self):

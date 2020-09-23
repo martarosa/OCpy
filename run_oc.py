@@ -1,7 +1,5 @@
-import argparse
 import SystemManager as ini
-import time
-from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
+
 #parser = argparse.ArgumentParser()
 #parser.add_argument('-f', action='store', dest='input')
 #inputline=parser.parse_args()

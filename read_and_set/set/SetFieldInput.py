@@ -1,13 +1,13 @@
 from read_and_set.input.FieldInput import FieldInput
+from read_and_set.read.external_output.ReadOutputGaussian import ReadOutputGaussian
 from read_and_set.set.ABCSetInput import ABCSetInput
-from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
 
 
 class SetFieldInput(ABCSetInput):
     def __init__(self):
         super().__init__()
         self.input_parameters = FieldInput()
-        self.read_restart = None #ABCReadFieldRestart()
+        self.read_restart = None
 
     def set(self, user_input):
         if (user_input.oc.section_dictionary['restart'] == 'false' or user_input.oc.section_dictionary['restart'] == 'norestart_found'):

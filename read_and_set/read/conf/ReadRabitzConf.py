@@ -1,16 +1,19 @@
 import configparser
-from read_and_set.read import NameListSections as sec
-from read_and_set.read.ABCReadInputFile import ABCReadInputFile
 import os.path
-from read_and_set.read import auxiliary_functions as af
 from copy import deepcopy
+
+import read_and_set.read.RabitzConfSections
+
+from read_and_set.read import auxiliary_functions as af
+from read_and_set.read.input_sections.ABCReadInputFile import ABCReadInputFile
+
 
 class ReadRabitzConf(ABCReadInputFile):
     def __init__(self):
         super().__init__()
         self.n_sections = None
         self.sections = ["PARAMETERS"]
-        self.parameters = sec.SectionRabitzParameters()
+        self.parameters = read_and_set.read.input_sections.RabitzConfSections.SectionRabitzParameters()
         self.conf_str = None
 
 

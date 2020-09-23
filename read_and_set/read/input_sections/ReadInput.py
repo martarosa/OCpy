@@ -1,16 +1,24 @@
-from abc import ABCMeta, abstractmethod
-
-import numpy as np
+from abc import ABCMeta
 import configparser
 import os.path
+import numpy as np
 
 import dictionaries.OCDictionaries
-from read_and_set.read import auxiliary_functions as af
-from read_and_set.read import NameListSections as sec
-from read_and_set.read.ABCReadInputFile import ABCReadInputFile
-from dictionaries import SaveDictionaries as dict
 
-class ReadInputOC(ABCReadInputFile):
+from read_and_set.read.input_sections import InputSections as sec
+from read_and_set.read import auxiliary_functions as af
+from read_and_set.read.input_sections.ABCReadInputFile import ABCReadInputFile
+
+# Read input.dat were there are "SYSTEM" , "WAVEFUNCTION", "FIELD", "MEDIUM", "OPTIMALC", "SAVE" namelist
+# even empty they must all be present
+# For each of them
+# 1-checks if required information are missing
+# 2-lowers non case unsensitive keys
+# 3-check allowed values for some keys
+#Then performs other checks to give warning messages
+#This file is commented but not polished neither organized
+
+class ReadInput(ABCReadInputFile):
     def __init__(self):
         super().__init__()
         self.n_sections = None
@@ -80,11 +88,9 @@ class ReadInputOC(ABCReadInputFile):
 
 
 
-    def check_system_nml_consistency(self):
-        if not self.sys.check_namelist_key_exist("propagator") or self.sys.check_namelist_key_exist_and_value("propagation", "none"):
-            af.exit_error("ERROR. Propagation type not selected. "
-                          "In namelist \"SYSTEM\" \"propagator\" keyword must be different than \"None\"")
 
+
+    def check_system_nml_consistency(self):
         check = OCvsPropagatorCombinedKeywordValues()
         if not check.check(self.sys.section_dictionary["oc_algorithm"], self.sys.section_dictionary["propagator"]):
             af.exit_error("ERROR. \"propagator\" and \"oc_algorithm\" keyword are combined in a way that is not allowed")
@@ -92,6 +98,7 @@ class ReadInputOC(ABCReadInputFile):
 
     def check_wavef_nml_consistency(self):
         pass
+
 
     def check_field_nml_consistency(self):
         #if calculation is restarted only "name_field_file" can be present in FIELD nml
@@ -109,21 +116,21 @@ class ReadInputOC(ABCReadInputFile):
                             "Error. Restarted calculation. "
                             "Field is read from file. Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
             self.check_field_restart()
-        #if calculaion is with genetic oc algorithm only genetic field is allowed
-        elif(self.sys.check_namelist_key_exist_and_value('oc_algorithm', 'genetic')):
-                #if oc optimizator genetic only options are genetic field or restart, all other keywords in FIELD must be empty
-                if (not self.field.check_namelist_key_exist_and_value('field_type', 'genetic')):
-                    af.exit_error(
-                        "Error. Genetic algorithm for optimal control optimization. "
-                        "\"field_type\" in \"FIELD\" namelist must be \"genetic\"")
+        #checking consistenci with oc_algorithm
+        else:
+            check = OCvsFieldCombinedKeywordValues()
+            if not check.check(self.sys.section_dictionary["oc_algorithm"], self.field.section_dictionary["field_type"]):
+                af.exit_error("ERROR. \"field_type\" and \"oc_algorithm\" keyword are combined in a way that is not allowed")
+
         self.check_field_shape_parameters_warning()
+
 
     def check_field_restart(self):
         #if there is a name for the restaring field check if it exist
         if self.field.check_namelist_key_exist('name_field_file'):
             if os.path.isfile(self.sys.section_dictionary['folder'] + self.field.section_dictionary['name_field_file']):
                 pass
-            #if it does not exist  checks if default name exist and make WARNiNG
+            #if it does not exist  checks if default name exist and make WARNING
             elif os.path.isfile(self.sys.section_dictionary['folder'] + self.sys.section_dictionary['name'] + '_field_bkp.dat'):
                 print("WARNING: restart from \"" + self.field.section_dictionary['name_field_file'] + "\" asked but file not found. \n"
                       "Restarting from " + self.sys.section_dictionary['name'] + '_field_bkp.dat')
@@ -210,6 +217,10 @@ class ReadInputOC(ABCReadInputFile):
                 self.save.add_key_and_value_to_namelist('append', 'true')
 
 
+
+
+
+
 class ABCCombinedKeywordValues(metaclass=ABCMeta):
     def __init__(self):
         self.list1 = []
@@ -229,13 +240,30 @@ class OCvsPropagatorCombinedKeywordValues(ABCCombinedKeywordValues):
         super().__init__()
 
         self.list1 = ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg']
-        self.list2 = ['none', 'eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki']
+        self.list2 = ['eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki']
 
-        self.matrix_allowed_couples = np.array([[False, True, True, False, True],
-                                                [False, False, False, True, False],
-                                                [False, False, False, True, False],
-                                                [False, True, True, False, True],
-                                                [False, True, True, False, True],
-                                                [False, True, True, False, True],
-                                                [False, True, True, False, True]
+        self.matrix_allowed_couples = np.array([[True, True, False, True],
+                                                [False, False, True, False],
+                                                [False, False, True, False],
+                                                [True, True, False, True],
+                                                [True, True, False, True],
+                                                [True, True, False, True],
+                                                [True, True, False, True]
                                                ])
+
+
+class OCvsFieldCombinedKeywordValues(ABCCombinedKeywordValues):
+    def __init__(self):
+        super().__init__()
+
+        self.list1 = ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg']
+        self.list2 = ['const', 'pip', 'sin', 'gau', 'sum', 'genetic', 'read']
+
+        self.matrix_allowed_couples = np.array([[True, True, True, False, True, True, True],
+                                                [True, True, True, False, True, True, True],
+                                                [True, True, True, False, True, True, True],
+                                                [True, True, True, False, True, True, True],
+                                                [True, True, True, False, True, True, True],
+                                                [False, False, False, False, False, False, False],
+                                                [True, True, True, False, True, True, True]
+                                                ])

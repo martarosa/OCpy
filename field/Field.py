@@ -1,12 +1,10 @@
 import numpy as np
 
 from SystemObj import DiscreteTimePar, Func_tMatrix
-
-#---------------------------------------------
-#field matrix at different times to be read or created
-#---------------------------------------------
 from parameters.FieldParameters import FieldParameters
 
+
+#create the matrix of the field values in time depending on the shape asked
 
 class Field():
     def __init__(self):
@@ -42,7 +40,6 @@ class Field():
             'gau': lambda: self.gau_pulse(discrete_t_par),
             'sum': lambda: self.sum_pulse(discrete_t_par),
             'genetic' : lambda: self.genetic_pulse(discrete_t_par),
-            'sin_cos': lambda : self.sin_cos_pulse(discrete_t_par),
             'read': lambda : self.read_pulse(discrete_t_par),
              #only internal values
             'restart_rabitz' : lambda: self.restart_rabitz(field),

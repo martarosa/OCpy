@@ -1,42 +1,31 @@
 import dictionaries.MediumDictionaries
 import dictionaries.OCDictionaries
-from read_and_set.read.ReadInputOC import ReadInputOC
-from read_and_set.read.ReadGeneticConf import ReadGeneticConf
+import dictionaries.FieldDictionary
 
-from read_and_set.set.SetFieldInput import SetFieldInput
-from read_and_set.read.ReadFieldRestartGenetic import ReadFieldRestartGenetic
-from read_and_set.read.ReadFieldRestartRabitz import ReadFieldRestartRabitz
-from read_and_set.set.SetMoleculeInput import SetMoleculeInput
-from read_and_set.set.SetMediumInput import SetMediumInput
-from read_and_set.set.SetOCInput import SetOCInput
-from read_and_set.set.SetGeneticOCInput import SetGeneticOCInput
-from read_and_set.set.SetNoConf import SetNoConf
-from read_and_set.set.SetSaveInput import SetSaveInput
-from read_and_set.set.SetLogInput import SetLogInput
-
-from molecule.Molecule import Molecule
-from field.Field import Field
 from OCManager import OCManager
-from dictionaries import SaveDictionaries as dict
-
-#The system contains Molecule, Field, PCM and OCManager objects.
-# Description of the molecule, starting field and medium are stored separately outside the OCManager. They are never modified and practically useless, there just for
-# mental order and debugging
-
-# ReadNamelistOC reads the OCinput file (no gaussian output or other data files), performs checks and store all the parameters in separate dictionaries for each section:
-# sys, wf, field, medium, save, oc
-# Files containingmolecule and medium informations (energies, dipoles, potential, tessere etc) are read by a separate object which knows the format (right now only ReadOutputgaussian is implemented)
-
-# Both SystemManager, and InitPar objects (InitMolecularpar, InitiFieldpar, etc) know user_input format
-
-# Molecule, Field, PCM, OCManager, Save objects don't know anything about user_input format.
-# InitPar objects bridge the external format of user input and internal one:
-# e.g. 1) InitMolecularPar.init(user_input) receives user_input as argument, read informations, open and read gaussian output files if needed
-#      2) fills MoleculeParameters object which has as attributes all informations about the molecule and no methods.
-#         Parameters don't know any format, are only containers of informations
-#      3) Molecule.init_molecule(MoleculeParameters) initialize Molecule attributes from MoleculeParameters
+from field.Field import Field
+from molecule.Molecule import Molecule
 
 
+from read_and_set.read.input_sections.ReadInput import ReadInput
+from read_and_set.set.SetFieldInput import SetFieldInput
+from read_and_set.set.SetLogInput import SetLogInput
+from read_and_set.set.SetMediumInput import SetMediumInput
+from read_and_set.set.SetMoleculeInput import SetMoleculeInput
+from read_and_set.set.SetOCInput import SetOCInput
+from read_and_set.set.SetSaveInput import SetSaveInput
+
+
+#The system contains Molecule, Field, Medium and OCManager objects.
+# Molecule, Field and Medium are both here and inside OCManager. These ones are never modified and here only for debugging
+
+
+# In init_system method ReadInput() reads the input file performs checks and store all the parameters in separate
+#  dictionaries for each of the input sections: sys, wf, field, medium, save, oc
+
+# Then Set*() methods extract all the information needed for the calulation and fill correspondinf data structures,
+# used to finally initialize internal objects. Read and Set methods know the input keys, flags and structure, after them
+# the information is sitributed stored in internal classes. More informations on read and set are in read_adn_set README
 
 
 class SystemManager():
@@ -51,7 +40,7 @@ class SystemManager():
 
 
     def init_system(self, folder, name_file):
-        user_input = ReadInputOC()
+        user_input = ReadInput()
         user_input.read_file(folder, name_file)
         self.init_molecule(user_input)
         self.init_starting_field(user_input)
@@ -63,12 +52,10 @@ class SystemManager():
         init_mol.set(user_input)
         self.mol.init_molecule(init_mol.input_parameters)
 
+
     def init_starting_field(self, user_input):
         set_field = SetFieldInput()
-        if user_input.sys.section_dictionary['oc_algorithm'] == 'genetic':
-            set_field.read_restart = ReadFieldRestartGenetic()
-        else:
-            set_field.read_restart = ReadFieldRestartRabitz()
+        set_field.read_restart = dictionaries.FieldDictionary.FieldRestartDict[user_input.sys.section_dictionary['oc_algorithm']]()
         set_field.set(user_input)
         self.starting_field.init_field(set_field.input_parameters)
 

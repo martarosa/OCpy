@@ -1,19 +1,22 @@
 import configparser
-from read_and_set.read import NameListSections as sec
-from read_and_set.read.ABCReadInputFile import ABCReadInputFile
 import os.path
-from read_and_set.read import auxiliary_functions as af
 from copy import deepcopy
+
+import read_and_set.read.GeneticConfSections
+
+from read_and_set.read import auxiliary_functions as af
+from read_and_set.read.input_sections.ABCReadInputFile import ABCReadInputFile
+
 
 class ReadGeneticConf(ABCReadInputFile):
     def __init__(self):
         super().__init__()
         self.n_sections = None
         self.sections = ["GENETIC", "MATE", "MUTATE", "SELECT"]
-        self.genetic = sec.SectionGenetic()
-        self.mate = sec.SectionMate()
-        self.mutate = sec.SectionMutate()
-        self.select = sec.SectionSelect()
+        self.genetic = read_and_set.read.input_sections.GeneticConfSections.SectionGenetic()
+        self.mate = read_and_set.read.input_sections.GeneticConfSections.SectionMate()
+        self.mutate = read_and_set.read.input_sections.GeneticConfSections.SectionMutate()
+        self.select = read_and_set.read.input_sections.GeneticConfSections.SectionSelect()
         self.conf_str = None
 
 

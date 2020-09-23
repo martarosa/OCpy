@@ -4,5 +4,4 @@ class OCManagerParameters:
         self.propagator = None
         self.convergence_thr = None
         self.n_iterations = None
-        self.alpha0 = None
         self.alpha = None
