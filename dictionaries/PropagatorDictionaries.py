@@ -1,3 +1,4 @@
+    "eulero_1order": PropagatorEulero1Order,
 from propagator.ClassicalPropagatorTerms import ClassicalPropagatorTerms
 from propagator.PropagatorOCRabitz import PropagatorOCfwd
 from propagator.PropagatorsEulero import PropagatorEulero2Order, PropagatorEulero1Order

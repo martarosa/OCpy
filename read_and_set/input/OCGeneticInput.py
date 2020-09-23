@@ -17,5 +17,4 @@ class OCGeneticInput():
         self.q = None
 
         self.select = None
-
-        self.string_file_config = None
+        #self.conf_str = None

@@ -3,6 +3,7 @@ dt=0.01
 nstep=25000
 name = output 
 oc_algorithm = rabitzi 
+propagator = rabitz
 
 [WAVEFUNCTION]
 name_ci=ci_ini.inp
@@ -28,7 +29,6 @@ medium=vac
 [OPTIMALC]
 restart=FALSE
 alpha=const
-alpha0=1
 n_iterations=30
 target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0   
 

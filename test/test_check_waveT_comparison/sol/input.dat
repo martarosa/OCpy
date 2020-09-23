@@ -2,7 +2,8 @@
 dt=0.01
 nstep=25000
 name = tmp_sol_2order_prop_z
-oc_algorithm = eulero_2order_prop 
+oc_algorithm = none
+propagator = eulero_2order 
 #folder=
 
 [WAVEFUNCTION]
@@ -29,7 +30,6 @@ medium=sol
 [OPTIMALC]
 #restart=False
 #alpha=sin
-#alpha0=1
 #n_iterations=10
 #target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0          
 

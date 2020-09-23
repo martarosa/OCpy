@@ -20,7 +20,7 @@ class PropagatorEulero1Order(ABCPropagator):
 
 
     def set_propagator(self, molecule, medium):
-        self.init(molecule, medium)
+        self.init(molecule, medium, "eulero_1order")
         self.clean_propagator()
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
@@ -65,7 +65,7 @@ class PropagatorEulero2Order(ABCPropagator):
 
 
     def set_propagator(self, molecule, medium):
-        self.init(molecule, medium)
+        self.init(molecule, medium, "eulero_2order")
         self.clean_propagator()
         self.add_term_to_propagator("eulero2_coeff")
         self.add_term_to_propagator("eulero_energy")

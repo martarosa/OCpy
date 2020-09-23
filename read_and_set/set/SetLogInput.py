@@ -19,7 +19,6 @@ class SetLogInput(ABCSetInput):
 
         self.input_parameters.target_state = user_input.oc.section_dictionary["target_state"]
         self.input_parameters.alpha = user_input.oc.section_dictionary['alpha']
-        self.input_parameters.alpha0 = user_input.oc.section_dictionary['alpha0']
 
         self.input_parameters.field_type = user_input.field.section_dictionary['field_type']
         self.input_parameters.fi = np.array2string(user_input.field.section_dictionary['fi'])

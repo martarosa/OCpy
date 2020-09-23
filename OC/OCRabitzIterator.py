@@ -2,12 +2,14 @@ import numpy as np
 import pandas as pd
 from copy import deepcopy
 
-from propagator import PropagatorOCRabitz as rabitzI
+import dictionaries.PropagatorDictionaries
+from propagator import PropagatorOCRabitz as prop
 from read_and_set.read import auxiliary_functions as af
-
+from dictionaries import SaveDictionaries as dict
 from field.PropagatorFieldOC import PropagatorFieldOC
 from OC.ABCOCIterator import ABCOCIterator
 from parameters.OCIteratorParameters import OCIteratorParameters
+from parameters.RabitzParameters import RabitzParameters
 from SystemObj import DiscreteTimePar
 
 from field.Field import Func_tMatrix
@@ -17,6 +19,8 @@ class OCRabitzIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
         self.par = OCIteratorParameters()
+        self.rabitz_par = RabitzParameters()
+
         self.discrete_t_par = DiscreteTimePar()
 
 
@@ -28,18 +32,17 @@ class OCRabitzIterator(ABCOCIterator):
 
 
         #Rabitz
-        self.prop_psi = rabitzI.PropagatorOCfwd()
+        self.prop_psi = None
 
         self.initial_c0 = None
         self.rabitz_iterator = None
-        self.prop_chi = rabitzI.PropagatorOCbwd()
+        self.prop_chi = prop.PropagatorOCbwd()
         self.prop_field = PropagatorFieldOC()
         # storage vector optimal control
         self.chi_coeff_t_matrix = Func_tMatrix()
         self.field_chi_matrix = Func_tMatrix()
 
 
-# non va iterate
 
     def iterate(self, current_iteration):
         mut_rabitz_field_prop = deepcopy(self.prop_psi.mol.par.muT)
@@ -106,12 +109,18 @@ class OCRabitzIterator(ABCOCIterator):
             self.par.J = np.real(2 * np.real(np.dot(self.par.target_state, self.prop_psi.mol.wf.ci) \
                                          - self.alpha_field_J_integral()))
 
-    def init(self, molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input = None):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf):
+        self.par.propagator = oc_input.propagator
+        self.prop_psi = dictionaries.PropagatorDictionaries.PropagatorDict[oc_input.propagator]()
+        if not isinstance(self.prop_psi, prop.PropagatorOCfwd):
+            af.exit_error("Error in the initialization of Eulero 1 order propagator")
+
         self.discrete_t_par.dt = oc_input.dt
         self.discrete_t_par.nstep = oc_input.nstep
 
         self.par.target_state = oc_input.target_state
-        self.par.alpha_t = alpha_t
+        self.rabitz_par.alpha0 = oc_conf.alpha0
+        self.par.alpha_t = self.rabitz_par.alpha0 * np.array(alpha_t)
         self.par.J = 99999
         self.par.convergence_t = 99999
 

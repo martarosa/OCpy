@@ -5,7 +5,7 @@ import pandas as pd
 import multiprocessing as mp
 import concurrent.futures
 
-
+import dictionaries.PropagatorDictionaries
 from parameters.GeneticParameters import GeneticParameters
 from read_and_set.read import auxiliary_functions as af
 from OC.ABCOCIterator import ABCOCIterator
@@ -14,7 +14,7 @@ from SystemObj import DiscreteTimePar
 from field.Field import Field, Func_tMatrix
 from copy import deepcopy
 from propagator import PropagatorsEulero as prop
-
+from dictionaries import SaveDictionaries as dict
 from deap import base
 from deap import creator
 from deap import tools
@@ -35,8 +35,6 @@ import random
 #################SIGMA##########################
 #adaptive_on_mutate_success:  depending on the muate successes, defined as eta > eta_thr, sigma changes
 #                             only compatible with mixed genetic algorithm
-
-
 
 
 
@@ -90,11 +88,13 @@ class OCGeneticIterator(ABCOCIterator):
         self.dict_out['field_t'] = self.get_field_t
         self.dict_out['field_ampl'] = self.get_field_ampl
 
-    def init(self, molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf):
+        self.par.propagator = oc_input.propagator
+        self.prop_psi = dictionaries.PropagatorDictionaries.PropagatorDict[oc_input.propagator]()
         self.discrete_t_par.nstep = oc_input.nstep
         self.discrete_t_par.dt = oc_input.dt
         self.par.target_state = oc_input.target_state
-        self.par.alpha_t = alpha_t
+        self.par.alpha_t = np.array(alpha_t)
         self.par.convergence_t = 99999
         self.par.J = 99999
 
@@ -103,7 +103,7 @@ class OCGeneticIterator(ABCOCIterator):
         #self.psi_coeff_t_matrix = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
 
-        self.init_genetic(molecule, starting_field, medium, iterator_config_input)
+        self.init_genetic(molecule, starting_field, medium, oc_conf)
 
     def init_genetic(self, molecule, starting_field, medium, genetic_input):
         self.genetic_par.genetic_algorithm = genetic_input.genetic_algorithm

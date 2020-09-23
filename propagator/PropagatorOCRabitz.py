@@ -24,7 +24,7 @@ class PropagatorOCfwd(ABCPropagator):
 
 
     def set_propagator(self, molecule, medium):
-        self.init(molecule, medium)
+        self.init(molecule, medium, "rabitz")
         self.clean_propagator()
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
@@ -67,7 +67,7 @@ class PropagatorOCbwd(ABCPropagator):
 
 
     def set_propagator(self, molecule, medium):
-        self.init(molecule, medium)
+        self.init(molecule, medium, "rabitz")
         self.clean_propagator()
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")

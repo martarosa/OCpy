@@ -1,0 +1,29 @@
+[SYSTEM]
+dt=0.01
+nstep=25000
+name = output 
+oc_algorithm = genetic 
+propagator = eulero_2order
+
+[WAVEFUNCTION]
+name_ci=ci_ini.inp
+name_ei=ci_energy.inp
+name_mut=ci_mut.inp
+
+[FIELD]
+field_type=genetic
+
+[MEDIUM]
+medium=vac
+
+[OPTIMALC]
+restart=FALSE
+alpha=const
+n_iterations=30
+target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0   
+
+[SAVE]
+#save_restart_step=10
+
+
+

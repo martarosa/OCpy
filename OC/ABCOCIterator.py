@@ -31,7 +31,7 @@ class ABCOCIterator(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def init(self, molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf):
         pass
 
     @abstractmethod
@@ -42,7 +42,6 @@ class ABCOCIterator(metaclass=ABCMeta):
     @abstractmethod
     def get_restart(self):
         pass
-
 
 
     def field_J_integral(self):
