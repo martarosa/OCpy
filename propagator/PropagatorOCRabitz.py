@@ -23,7 +23,7 @@ class PropagatorOCfwd(ABCPropagator):
         self.propagator = []
 
 
-    def set_propagator(self, molecule, medium):
+    def set_propagator(self, molecule, medium, prop_conf = None):
         self.init(molecule, medium, "rabitz")
         self.clean_propagator()
         self.add_term_to_propagator("eulero1_coeff")

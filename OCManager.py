@@ -24,7 +24,7 @@ class OCManager:
         #self.field_psi_matrix = Func_tMatrix()
 
 
-    def init_oc(self, oc_input, oc_conf, save_input, log_header_input, molecule, starting_field, medium):
+    def init_oc(self, oc_input, oc_conf, prop_conf, save_input, log_header_input, molecule, starting_field, medium):
         self.par.alpha = oc_input.alpha
         self.par.oc_iterator_name = oc_input.oc_iterator_name
         self.par.convergence_thr = oc_input.convergence_thr
@@ -32,7 +32,7 @@ class OCManager:
 
 
         self.init_oc_iterator(oc_input,
-                              oc_conf,
+                              oc_conf, prop_conf,
                               molecule,
                               starting_field,
                               medium,
@@ -42,9 +42,9 @@ class OCManager:
 
 
 
-    def init_oc_iterator(self, oc_input, oc_conf, molecule, starting_field, medium, alpha_t):
+    def init_oc_iterator(self, oc_input, oc_conf, prop_conf, molecule, starting_field, medium, alpha_t):
         self.oc_iterator = dictionaries.OCDictionaries.OCAlgorithmDict[self.par.oc_iterator_name]()
-        self.oc_iterator.init(molecule, starting_field, medium, alpha_t, oc_input, oc_conf)
+        self.oc_iterator.init(molecule, starting_field, medium, alpha_t, oc_input, oc_conf, prop_conf)
 
 
     def init_save(self, save_parameters, log_header_parameters):

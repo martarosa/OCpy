@@ -15,7 +15,7 @@ class ABCPropagator(metaclass=ABCMeta):
         self.propagator = []
 
 
-    def init(self, molecule, medium, propagator = None):
+    def init(self, molecule, medium, prop_conf, propagator = None):
         self.mol = molecule
         self.medium = medium
         self.propagator_terms = dictionaries.PropagatorDictionaries.PropagatorTermsDict[propagator]()
@@ -29,7 +29,7 @@ class ABCPropagator(metaclass=ABCMeta):
         self.propagator = []
 
     @abstractmethod
-    def set_propagator(self, molecule, medium):
+    def set_propagator(self, molecule, medium, prop_conf):
         pass
 
     @abstractmethod
@@ -39,7 +39,7 @@ class ABCPropagator(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    #takest objects of tipe Func_t with a vector with values of the time axes and a matrix of the values in each time step
+    #takes objects of tipe Func_t with a vector with values of the time axes and a matrix of the values in each time step
     #e.g. field is fx, fy,fz and returns an object Func_t for the wavefuncion, with the time axis and a matrix of the
     # wf in all the states
     def propagate_n_step(self, *args):

@@ -74,12 +74,15 @@ class SystemManager():
         OCConf = dictionaries.OCDictionaries.OCAlgorithmConfig[user_input.sys.section_dictionary['oc_algorithm']]()
         set_OCConf = dictionaries.OCDictionaries.OCAlgorithmSet[user_input.sys.section_dictionary['oc_algorithm']]()
         PropConf = dictionaries.PropagatorDictionaries.PropagatorConfig[user_input.sys.section_dictionary['propagator']]()
-        set_PropConf = dictionaries.PropagatorDictionaries.PropagatorSet
-        ### Fai righe sopra ma propagator
+        set_PropConf = dictionaries.PropagatorDictionaries.PropagatorSet[user_input.sys.section_dictionary['propagator']]()
         if not user_input.sys.section_dictionary['oc_algorithm'] == "none":
             OCConf.read_file(user_input.sys.section_dictionary['folder'],
                                             user_input.oc.section_dictionary['conf_file'])
         set_OCConf.set(OCConf)
+        if user_input.sys.section_dictionary['propagator'] == "quantum_trotter_suzuki":
+            PropConf.read_file(user_input.sys.section_dictionary['folder'], 
+                               user_input.sys.section_dictionary['ibm_external_opt'])
+        set_PropConf(PropConf)
         set_save = SetSaveInput()
         set_save.set(user_input)
         set_log_header = SetLogInput()
@@ -90,6 +93,7 @@ class SystemManager():
 
         self.oc.init_oc(set_oc.input_parameters,
                         set_OCConf.input_parameters,
+                        set_PropConf.input_parameters,
                         set_save.input_parameters,
                         set_log_header.input_parameters,
                         self.mol,

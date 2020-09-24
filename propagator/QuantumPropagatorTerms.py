@@ -25,7 +25,8 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
             self.qbits = None
             self.cbits = None
             self.qcircuit = None
-            self.IBMInterface = None
+            self.provider = None
+            self.IBMInterface = IBMInterface()
 
             
         def set_qbits(self):
@@ -42,12 +43,19 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
             self.propagator_terms.set_qbits()
             self.propagator_terms.set_cbits()
             self.propagator_terms.set_qcircuit()
+            self.provider = Aer.get_backend(self.IBMInterface.provider)
 
-        def init(self):
-            self.q_processor()
+        def init(self, prop_conf):
+            self.IBMInterface.provider = prop_conf.provider
+            self.IBMInterface.device = prop_conf.device
+            self.IBMInterface.shots = prop_conf.shots
+            self.IBMInterface.noise = prop_conf.noise
+            self.IBMInterface.noise_model = self.IBMInterface.set_noise_model()
+            self.set_qprocessor()
             self.dict_terms["quantum_evo"] = self.quantum_evo_circuit
             self.dict_terms["expectation_value"] = self.expectation_value_hermitian_operator
             self.dict_terms["measure_computational_basis"] = self.computational_basis_measurement
+            self.dict_terms["prepare_GS_linear_mapping"] = self.prepare_GS_linear_mapping
                     
             
             
@@ -55,8 +63,8 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
 
 
         def quantum_evo_circuit(self, i, dt, field_dt_vector):
-            if i == 0:
-                self.qcircuit.x(self.qbits[0])
+#            if i == 0:
+#                self.qcircuit.x(self.qbits[0])
             for k in range(self.mol.wf.n_ci):
                 self.qcircuit.u1((self.mol.par.en_ci[k] - np.dot(self.mol.par.muT,(field_dt_vector)/2)[k][k])*dt, self.qbits[k])
                 self.qcircuit.h(self.qbits[k])
@@ -88,6 +96,8 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
             
 ###### Measurement_methods #######
             
+        ### we still have to work out a generalized measurement for any state ###
+            
         def computational_basis_measurement(self):
             self.qcircuit.measure(self.qbits, self.cbits)
             
@@ -101,6 +111,13 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
                     expectation_value += counts*matrix_element_giusto """
             pass
                      
+###### Initialization_methods ######
+            
+        def prepare_GS_linear_mapping(self):
+            self.qcircuit.x(self.qbits[0])
+            
+
+
 ###### different kinds of execution will be needed #######
             
         def configure_backend(self, simulator_options):  ## simulator_options è un dizionario/lista che gli passo con dentro le informazioni riguardo il tipo di simulazione
@@ -119,7 +136,7 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
                 result = execute(self.qcircuit, self.provider).result()
                 statevector = result.get_statevector(self.qcircuit)
             elif self.provider == Aer.get_backend("qasm_simulator"):
-                result = execute(self.qcircuit, self.IBMInterface.provider, self.IBMInterface.shots, self.IBMInterface.noise_model, self.IBMInterface.noise_model.basis_gates, self.IBMInterface.device.configuration().coupling_map).result()
+                result = execute(self.qcircuit, self.provider, self.IBMInterface.shots, self.IBMInterface.noise_model, self.IBMInterface.noise_model.basis_gates, self.IBMInterface.device.configuration().coupling_map).result()
                 counts = result.get_counts(self.qcircuit)
                 statevector = af.population_from_counts_dictionary(counts, self.IBMInterface.shots, 2**(len(self.qbits)))
             else:
@@ -144,6 +161,8 @@ class IBMInterface():
             
     def set_device(self, device_string):
         pass
+    
+        
             
 #    def set_provider(self, string_provider):
 #        self.provider = Aer.get_backend(string_provider)            

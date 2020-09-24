@@ -18,8 +18,8 @@ class PropagatorQuantum(ABCPropagator):
         self.propagator_terms = QuantumPropagatorTerms()
         self.propagator = []
 
-    def set_propagator(self, molecule, medium):
-        self.init(molecule, medium)
+    def set_propagator(self, molecule, medium, prop_conf):
+        self.init(molecule, medium, prop_conf)
         self.clean_propagator()
         self.add_term_to_propagator("quantum_evo")
         
@@ -29,7 +29,11 @@ class PropagatorQuantum(ABCPropagator):
     
     def propagate_n_step(self, discrete_time_par, field):
         for i in range(discrete_time_par.nstep-1):
+            if i == 0:
+                self.propagator_terms.prepare_GS_linear_mapping()
             field_dt_vector = field.f_xyz[i] + field.f_xyz[i+1]
             self.propagate_one_step(i, discrete_time_par.dt, field_dt_vector)
+            if i == discrete_time_par.nstep-1 and self.propagator_terms.IBMInterface.provider != "statevector_simulator":
+                self.propagator_terms.computational_basis_measurement()
         result = self.propagator_terms.execute()
         return result   
