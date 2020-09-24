@@ -1,7 +1,7 @@
 import numpy as np
 
 import dictionaries.OCDictionaries
-from dictionaries import SaveDictionaries as dict
+from dictionaries import SaveDictionaries as sdict
 
 from SystemObj import Func_tMatrix
 from parameters.OCManagerParameters import OCManagerParameters
@@ -48,7 +48,7 @@ class OCManager:
 
 
     def init_save(self, save_parameters, log_header_parameters):
-        self.save = dict.SaveDict[self.par.oc_iterator_name]()
+        self.save = sdict.SaveDict[self.par.oc_iterator_name]()
         self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
 
 
