@@ -1,10 +1,9 @@
 import numpy as np
 
-import dictionaries.PropagatorTermsDictionaries
+
 from read_and_set.read import auxiliary_functions as af
 
 from propagator.ABCPropagator import ABCPropagator
-from propagator.ABCPropagatorTerms import ABCPropagatorTerms
 from molecule.Molecule import Molecule
 from SystemObj import Func_tMatrix
 import dictionaries.PropagatorTermsDictionaries as ptdict
