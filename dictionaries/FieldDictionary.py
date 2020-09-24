@@ -4,8 +4,7 @@ from read_and_set.read.field_restart.ReadGeneticFieldRestart import ReadGeneticF
 
 
 FieldRestartDict = {
-    "eulero_2order": ReadGeneralFieldRestart,
-    "eulero_1order": ReadGeneralFieldRestart,
+    "none": ReadGeneralFieldRestart,
     "rabitzi": ReadGeneralFieldRestart,
     "rabitzii": ReadGeneralFieldRestart,
     "genetic": ReadGeneticFieldRestart

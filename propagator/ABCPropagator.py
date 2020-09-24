@@ -1,19 +1,18 @@
 from abc import ABCMeta, abstractmethod
 
-import dictionaries.PropagatorDictionaries
-from propagator.ABCPropagatorTerms import ABCPropagatorTerms
 from molecule.Molecule import Molecule
-from medium.ABCMedium import ABCMedium
-from dictionaries import SaveDictionaries as dict
 
 class ABCPropagator(metaclass=ABCMeta):
     def __init__(self):
         self.mol = Molecule()
         self.medium = None
 
-        self.propagator_terms = ABCPropagatorTerms()
+        self.propagator_terms = None 
         self.propagator = []
 
+    @abstractmethod
+    def init(self, molecule, medium, propagator):
+        pass
 
     def init(self, molecule, medium, prop_conf, propagator = None):
         self.mol = molecule

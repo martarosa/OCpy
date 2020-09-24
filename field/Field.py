@@ -40,7 +40,7 @@ class Field():
             'gau': lambda: self.gau_pulse(discrete_t_par),
             'sum': lambda: self.sum_pulse(discrete_t_par),
             'genetic' : lambda: self.genetic_pulse(discrete_t_par),
-            'read': lambda : self.read_pulse(discrete_t_par),
+            'read': lambda : self.read_pulse(),
              #only internal values
             'restart_rabitz' : lambda: self.restart_rabitz(field),
             'restart_genetic' : lambda: self.restart_genetic(discrete_t_par)
@@ -53,7 +53,7 @@ class Field():
     def restart_rabitz(self, field):
         self.field = field
 
-    def read_pulse(self, discrete_t_par):
+    def read_pulse(self):
         self.field.time_axis = np.loadtxt(self.par.restart_name, usecols=(0))
         self.field.f_xyz = np.loadtxt(self.par.restart_name, usecols = (0,1,2))
 

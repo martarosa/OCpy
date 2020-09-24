@@ -8,6 +8,7 @@ from medium.ABCMedium import ABCMedium
 
 from molecule.Molecule import Molecule
 
+import dictionaries.PropagatorTermsDictionaries as ptdict
 
 from SystemObj import Func_tMatrix
 
@@ -19,7 +20,7 @@ class PropagatorOCfwd(ABCPropagator):
         self.mol = Molecule()
         self.medium = None
 
-        self.propagator_terms = ABCPropagatorTerms()
+        self.propagator_terms = None
         self.propagator = []
 
 
@@ -62,8 +63,14 @@ class PropagatorOCbwd(ABCPropagator):
         super().__init__()
         self.mol = Molecule()
         self.medium = None
-        self.propagator_terms = ABCPropagatorTerms()
+        self.propagator_terms = None
         self.propagator = []
+
+    def init(self, molecule, medium, propagator):
+        self.mol = molecule
+        self.medium = medium
+        self.propagator_terms = ptdict.PropagatorTermsDict[propagator]()
+        self.propagator_terms.init()
 
 
     def set_propagator(self, molecule, medium):

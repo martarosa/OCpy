@@ -15,7 +15,7 @@ class SectionSystem(ABCSection):
                                            'propagator'  : 'missing',
                                            'ibm_external_opt' : 'none'}
         self.section_dictionary = {}
-        self.allowed_val = [['oc_algorithm', ['no_optimization', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg']],
+        self.allowed_val = [['oc_algorithm', ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg']],
                             ['propagator',   ['eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki']]]
         self.case_unsensitive_keys = ['oc_algorithm', 'propagator']
 
@@ -94,11 +94,10 @@ class SectionOptimalControl(ABCSection):
         self.section = "OPTIMALC"
         self.section_default_dictionary = { 'restart': 'false',
                                             'alpha'  : 'const',
-                                            'target_state': 'missing',
+                                            'alpha_file': 'none',
+                                            'target_state': '1',
                                             'n_iterations': '0',
                                             'convergence_thr': '99999',
-                                            'delta_ts': '0',
-                                            'Ns': '0',
                                             'conf_file': 'none'}
         self.section_dictionary = {}
         self.allowed_val = [['alpha', ['const', 'sin', 'quin']],

@@ -8,4 +8,4 @@ class SetRabitzOCInput(ABCSetInput):
         self.input_parameters = OCRabitzInput()
 
     def set(self, user_input):
-        self.input_parameters.alpha0 = int(user_input.parameters.section_default_dictionary["alpha0"])
+        self.input_parameters.alpha0 = int(user_input.parameters.section_dictionary["alpha0"])

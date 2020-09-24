@@ -1,13 +1,13 @@
 import numpy as np
 
+import dictionaries.PropagatorTermsDictionaries
 from read_and_set.read import auxiliary_functions as af
 
 from propagator.ABCPropagator import ABCPropagator
 from propagator.ABCPropagatorTerms import ABCPropagatorTerms
-from medium.ABCMedium import ABCMedium
 from molecule.Molecule import Molecule
 from SystemObj import Func_tMatrix
-
+import dictionaries.PropagatorTermsDictionaries as ptdict
 
 
 class PropagatorEulero1Order(ABCPropagator):
@@ -15,8 +15,15 @@ class PropagatorEulero1Order(ABCPropagator):
         super().__init__()
         self.mol = Molecule()
         self.medium = None
-        self.propagator_terms = ABCPropagatorTerms()
+        self.propagator_terms = None
         self.propagator = []
+
+
+    def init(self, molecule, medium, propagator):
+        self.mol = molecule
+        self.medium = medium
+        self.propagator_terms = ptdict.PropagatorTermsDict[propagator]()
+        self.propagator_terms.init()
 
 
     def set_propagator(self, molecule, medium):
@@ -60,8 +67,14 @@ class PropagatorEulero2Order(ABCPropagator):
         self.mol = Molecule()
         self.medium = None
 
-        self.propagator_terms = ABCPropagatorTerms()
+        self.propagator_terms = None
         self.propagator = []
+
+    def init(self, molecule, medium, propagator):
+        self.mol = molecule
+        self.medium = medium
+        self.propagator_terms = ptdict.PropagatorTermsDict[propagator]()
+        self.propagator_terms.init()
 
 
     def set_propagator(self, molecule, medium, prop_conf = None):

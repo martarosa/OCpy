@@ -1,20 +1,19 @@
-import time
+
 
 import numpy as np
 import pandas as pd
-import multiprocessing as mp
+from copy import deepcopy
 import concurrent.futures
 
-import dictionaries.PropagatorDictionaries
+import dictionaries.PropagatorDictionaries as pdict
 from parameters.GeneticParameters import GeneticParameters
 from read_and_set.read import auxiliary_functions as af
 from OC.ABCOCIterator import ABCOCIterator
 from parameters.OCIteratorParameters import OCIteratorParameters
 from SystemObj import DiscreteTimePar
 from field.Field import Field, Func_tMatrix
-from copy import deepcopy
-from propagator import PropagatorsEulero as prop
-from dictionaries import SaveDictionaries as dict
+
+
 from deap import base
 from deap import creator
 from deap import tools
@@ -91,7 +90,8 @@ class OCGeneticIterator(ABCOCIterator):
 
     def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf, prop_conf):
         self.par.propagator = oc_input.propagator
-        self.prop_psi = dictionaries.PropagatorDictionaries.PropagatorDict[oc_input.propagator]()
+        self.propagator_name = oc_input.propagator
+        self.prop_psi = pdict.PropagatorDict[self.propagator_name]()
         self.discrete_t_par.nstep = oc_input.nstep
         self.discrete_t_par.dt = oc_input.dt
         self.par.target_state = oc_input.target_state
