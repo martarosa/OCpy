@@ -2,7 +2,7 @@ import configparser
 import os.path
 from copy import deepcopy
 
-import read_and_set.read.RabitzConfSections
+from read_and_set.read.input_sections.RabitzConfSections import SectionRabitzParameters
 
 from read_and_set.read import auxiliary_functions as af
 from read_and_set.read.input_sections.ABCReadInputFile import ABCReadInputFile
@@ -13,7 +13,7 @@ class ReadRabitzConf(ABCReadInputFile):
         super().__init__()
         self.n_sections = None
         self.sections = ["PARAMETERS"]
-        self.parameters = read_and_set.read.input_sections.RabitzConfSections.SectionRabitzParameters()
+        self.parameters = SectionRabitzParameters()
         self.conf_str = None
 
 
@@ -30,6 +30,8 @@ class ReadRabitzConf(ABCReadInputFile):
 
     def set_nml_sections(self, user_input):
         self.parameters.init(user_input)
+        self.parameters.fill_empty_with_default()
+        self.parameters.check_keys()
         self.create_print_string()
 
 

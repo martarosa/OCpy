@@ -6,7 +6,6 @@ class SectionRabitzParameters(ABCSection):
         super().__init__()
         self.section = "PARAMETERS"
         self.section_default_dictionary = {'alpha0': '1'}
-
         self.section_dictionary = {}
 
 

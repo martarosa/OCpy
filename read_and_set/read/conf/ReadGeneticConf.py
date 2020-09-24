@@ -1,8 +1,7 @@
 import configparser
 import os.path
 from copy import deepcopy
-
-import read_and_set.read.GeneticConfSections
+import read_and_set.read.input_sections.GeneticConfSections as genetic
 
 from read_and_set.read import auxiliary_functions as af
 from read_and_set.read.input_sections.ABCReadInputFile import ABCReadInputFile
@@ -13,10 +12,10 @@ class ReadGeneticConf(ABCReadInputFile):
         super().__init__()
         self.n_sections = None
         self.sections = ["GENETIC", "MATE", "MUTATE", "SELECT"]
-        self.genetic = read_and_set.read.input_sections.GeneticConfSections.SectionGenetic()
-        self.mate = read_and_set.read.input_sections.GeneticConfSections.SectionMate()
-        self.mutate = read_and_set.read.input_sections.GeneticConfSections.SectionMutate()
-        self.select = read_and_set.read.input_sections.GeneticConfSections.SectionSelect()
+        self.genetic = genetic.SectionGenetic()
+        self.mate = genetic.SectionMate()
+        self.mutate = genetic.SectionMutate()
+        self.select = genetic.SectionSelect()
         self.conf_str = None
 
 

@@ -1,20 +1,19 @@
-import time
+
 
 import numpy as np
 import pandas as pd
-import multiprocessing as mp
+from copy import deepcopy
 import concurrent.futures
 
-import dictionaries.PropagatorDictionaries
+import dictionaries.PropagatorDictionaries as pdict
 from parameters.GeneticParameters import GeneticParameters
 from read_and_set.read import auxiliary_functions as af
 from OC.ABCOCIterator import ABCOCIterator
 from parameters.OCIteratorParameters import OCIteratorParameters
 from SystemObj import DiscreteTimePar
 from field.Field import Field, Func_tMatrix
-from copy import deepcopy
-from propagator import PropagatorsEulero as prop
-from dictionaries import SaveDictionaries as dict
+
+
 from deap import base
 from deap import creator
 from deap import tools
@@ -53,6 +52,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par = GeneticParameters()
         self.genetic_algorithms = base.Toolbox()
 
+        self.propagator_name =  None
         self.field_psi_matrix = Func_tMatrix()
         self.psi_coeff_t_matrix = Func_tMatrix()
         self.dict_out = {}
@@ -90,7 +90,8 @@ class OCGeneticIterator(ABCOCIterator):
 
     def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf):
         self.par.propagator = oc_input.propagator
-        self.prop_psi = dictionaries.PropagatorDictionaries.PropagatorDict[oc_input.propagator]()
+        self.propagator_name = oc_input.propagator
+        self.prop_psi = pdict.PropagatorDict[self.propagator_name]()
         self.discrete_t_par.nstep = oc_input.nstep
         self.discrete_t_par.dt = oc_input.dt
         self.par.target_state = oc_input.target_state
@@ -145,7 +146,9 @@ class OCGeneticIterator(ABCOCIterator):
         creator.create("J", base.Fitness, weights=(1.0,))
     # Definisco un oggetto che chiamo Chromosome, come attributi ha J, un oggetto campo e un oggetto propagator.
     # E poi di default ha un vettore da riempire che quando chiami il cromosoma senza attributi viene fuori quello
-        creator.create("Chromosome", list, J=creator.J, field = Field(), prop_psi = prop.PropagatorEulero2Order())
+        creator.create("Chromosome", list, J=creator.J,
+                       field = Field(),
+                       prop_psi = pdict.PropagatorDict[self.propagator_name]())
     #creo un'istanza cromosoma singolo, di tipo Chromosome.
     # Creo n_amplitudes ampiezze con create_random_ampl_rounded e
     # automaticamente finiscono nel vettore vuoto di Chromosome
@@ -160,7 +163,7 @@ class OCGeneticIterator(ABCOCIterator):
                          toolbox.single_chromosome)
         self.chromosomes = toolbox.chromosomes_population(n=self.genetic_par.n_chromosomes) #create all chromosomes
     #creo un oggetto prop_psi ....
-        prop_psi = prop.PropagatorEulero2Order()
+        prop_psi = pdict.PropagatorDict[self.propagator_name]()
         prop_psi.set_propagator(molecule, medium)
         self.initial_c0 = prop_psi.mol.wf.ci
     #... e dentro a ogni cromosoma della mia lista inizializzo il campo, il propagatore e metto J = 0.5

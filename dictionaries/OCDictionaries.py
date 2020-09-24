@@ -20,7 +20,7 @@ OCAlgorithmConfig = {"none": ReadNoConf,
                     "rabitzi": ReadRabitzConf,
                     "rabitzii": ReadRabitzConf
                      }
-OCAlgorithmSet = {"none": SetNoConf,
+OCAlgorithmSet = {  "none": SetNoConf,
                     "genetic": SetGeneticOCInput,
                     "rabitzi": SetRabitzOCInput,
                     "rabitzii": SetRabitzOCInput
@@ -28,7 +28,7 @@ OCAlgorithmSet = {"none": SetNoConf,
 
 
 OCConfigFileDefaultNames = {"none": None,
-                          "genetic": "genetic.conf",
-                          "rabitzi": "rabitz.conf",
-                          "rabitzii": "rabitz.conf"
+                            "genetic": "genetic.conf",
+                            "rabitzi": "rabitz.conf",
+                            "rabitzii": "rabitz.conf"
                             }

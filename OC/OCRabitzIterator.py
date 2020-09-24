@@ -2,11 +2,10 @@ import numpy as np
 import pandas as pd
 from copy import deepcopy
 
-import dictionaries.PropagatorDictionaries
+import dictionaries.PropagatorDictionaries as pdict
 from propagator import PropagatorOCRabitz as prop
 from read_and_set.read import auxiliary_functions as af
-from dictionaries import SaveDictionaries as dict
-from field.PropagatorFieldOC import PropagatorFieldOC
+from field.PropagatorFieldRabitz import PropagatorFieldRabitz
 from OC.ABCOCIterator import ABCOCIterator
 from parameters.OCIteratorParameters import OCIteratorParameters
 from parameters.RabitzParameters import RabitzParameters
@@ -37,7 +36,7 @@ class OCRabitzIterator(ABCOCIterator):
         self.initial_c0 = None
         self.rabitz_iterator = None
         self.prop_chi = prop.PropagatorOCbwd()
-        self.prop_field = PropagatorFieldOC()
+        self.prop_field = PropagatorFieldRabitz()
         # storage vector optimal control
         self.chi_coeff_t_matrix = Func_tMatrix()
         self.field_chi_matrix = Func_tMatrix()
@@ -111,7 +110,7 @@ class OCRabitzIterator(ABCOCIterator):
 
     def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf):
         self.par.propagator = oc_input.propagator
-        self.prop_psi = dictionaries.PropagatorDictionaries.PropagatorDict[oc_input.propagator]()
+        self.prop_psi = pdict.PropagatorDict[oc_input.propagator]()
         if not isinstance(self.prop_psi, prop.PropagatorOCfwd):
             af.exit_error("Error in the initialization of Eulero 1 order propagator")
 

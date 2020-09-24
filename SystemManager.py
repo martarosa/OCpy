@@ -1,6 +1,6 @@
-import dictionaries.MediumDictionaries
-import dictionaries.OCDictionaries
-import dictionaries.FieldDictionary
+import dictionaries.MediumDictionaries as mdict
+import dictionaries.OCDictionaries as ocdict
+import dictionaries.FieldDictionary as fdict
 
 from OCManager import OCManager
 from field.Field import Field
@@ -14,6 +14,7 @@ from read_and_set.set.SetMediumInput import SetMediumInput
 from read_and_set.set.SetMoleculeInput import SetMoleculeInput
 from read_and_set.set.SetOCInput import SetOCInput
 from read_and_set.set.SetSaveInput import SetSaveInput
+from read_and_set.set.SetAlphaInput import SetAlphaInput
 
 
 #The system contains Molecule, Field, Medium and OCManager objects.
@@ -35,8 +36,8 @@ class SystemManager():
         self.mol = Molecule()
         self.starting_field = Field()
         self.medium = None
-        self.oc = OCManager()
 
+        self.oc = OCManager()
 
 
     def init_system(self, folder, name_file):
@@ -48,21 +49,20 @@ class SystemManager():
         self.init_optimal_control(user_input)
 
     def init_molecule(self, user_input):
-        init_mol = SetMoleculeInput()
-        init_mol.set(user_input)
-        self.mol.init_molecule(init_mol.input_parameters)
+        set_mol = SetMoleculeInput()
+        set_mol.set(user_input)
+        self.mol.init_molecule(set_mol.input_parameters)
 
 
     def init_starting_field(self, user_input):
         set_field = SetFieldInput()
-        set_field.read_restart = dictionaries.FieldDictionary.FieldRestartDict[user_input.sys.section_dictionary['oc_algorithm']]()
+        set_field.read_restart = fdict.FieldRestartDict[user_input.sys.section_dictionary['oc_algorithm']]()
         set_field.set(user_input)
         self.starting_field.init_field(set_field.input_parameters)
 
     def init_medium(self, user_input):
-        print(user_input.medium.section_dictionary['medium'])
         set_medium = SetMediumInput()
-        self.medium = dictionaries.MediumDictionaries.MediumDict[user_input.medium.section_dictionary['medium']]()
+        self.medium = mdict.MediumDict[user_input.medium.section_dictionary['medium']]()
         set_medium.set(user_input)
         self.medium.init_medium(set_medium.input_parameters, self.mol, self.starting_field.field)
 
@@ -71,22 +71,28 @@ class SystemManager():
     def init_optimal_control(self, user_input):
         set_oc = SetOCInput()
         set_oc.set(user_input)
-        OCConf = dictionaries.OCDictionaries.OCAlgorithmConfig[user_input.sys.section_dictionary['oc_algorithm']]()
-        set_OCConf = dictionaries.OCDictionaries.OCAlgorithmSet[user_input.sys.section_dictionary['oc_algorithm']]()
-        if not user_input.sys.section_dictionary['oc_algorithm'] == "none":
-            OCConf.read_file(user_input.sys.section_dictionary['folder'],
+        ocConf = ocdict.OCAlgorithmConfig[user_input.sys.section_dictionary['oc_algorithm']]()
+        set_ocConf = ocdict.OCAlgorithmSet[user_input.sys.section_dictionary['oc_algorithm']]()
+        set_alpha = SetAlphaInput()
+        set_alpha.set(user_input)
+
+        if user_input.sys.section_dictionary['oc_algorithm'] != "none":
+            ocConf.read_file(user_input.sys.section_dictionary['folder'],
                                             user_input.oc.section_dictionary['conf_file'])
-        set_OCConf.set(OCConf)
+        set_ocConf.set(ocConf)
+
+
         set_save = SetSaveInput()
         set_save.set(user_input)
         set_log_header = SetLogInput()
         set_log_header.set(user_input)
         if user_input.sys.section_dictionary['oc_algorithm'] != 'none':
-            set_log_header.set_conf_log(OCConf.conf_str)
+            set_log_header.set_conf_log(ocConf.conf_str)
 
 
         self.oc.init_oc(set_oc.input_parameters,
-                        set_OCConf.input_parameters,
+                        set_ocConf.input_parameters,
+                        set_alpha.input_parameters,
                         set_save.input_parameters,
                         set_log_header.input_parameters,
                         self.mol,

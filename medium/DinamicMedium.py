@@ -35,7 +35,7 @@ class DinamicMedium(ABCMedium):
 
     def propagate(self, mol, field_dt_vector):
         af.exit_error("ERROR: Propagation without TDPLAS is not possible for the nanoparticle")
-        #self.propagate_fortran(mol, field_dt_vector)
+
 
 
     def propagate_fortran(self, mol, field_dt_vector):

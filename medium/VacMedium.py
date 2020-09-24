@@ -1,4 +1,3 @@
-from abc import ABCMeta, abstractmethod
 from medium.ABCMedium import ABCMedium
 from parameters.MediumParameters import MediumParameters
 

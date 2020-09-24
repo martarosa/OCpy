@@ -2,10 +2,9 @@ import numpy as np
 import pandas as pd
 from copy import deepcopy
 
-import dictionaries.PropagatorDictionaries
-from propagator import PropagatorsEulero as prop
+import dictionaries.PropagatorDictionaries as pdict
 from read_and_set.read import auxiliary_functions as af
-from dictionaries import SaveDictionaries as dict
+
 
 from OC.ABCOCIterator import ABCOCIterator
 from parameters.OCIteratorParameters import OCIteratorParameters
@@ -38,7 +37,7 @@ class SimplePropagationIterator(ABCOCIterator):
 
     def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf = None):
         self.par.propagator = oc_input.propagator
-        self.prop_psi = dictionaries.PropagatorDictionaries.PropagatorDict[oc_input.propagator]()
+        self.prop_psi = pdict.PropagatorDict[oc_input.propagator]()
         self.discrete_t_par.dt = oc_input.dt
         self.discrete_t_par.nstep = oc_input.nstep
         self.par.target_state = oc_input.target_state
