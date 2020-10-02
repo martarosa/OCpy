@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.1
 nstep=2500
-name = output 
+name = tmp 
 oc_algorithm = genetic 
 propagator = eulero_2order
 #folder=

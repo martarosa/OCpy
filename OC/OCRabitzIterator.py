@@ -43,9 +43,6 @@ class OCRabitzIterator(ABCOCIterator):
 
 
     def iterate(self, current_iteration):
-        self.chi_coeff_t_matrix = Func_tMatrix()
-        print("mana")
-        print(self.chi_coeff_t_matrix)
         mut_rabitz_field_prop = deepcopy(self.prop_psi.mol.par.muT)
         if self.prop_psi.medium.par.medium == "sol":
             mut_rabitz_field_prop += self.prop_psi.medium.muLF
@@ -58,9 +55,6 @@ class OCRabitzIterator(ABCOCIterator):
                                                                      0)
                     elif self.rabitz_iterator == 'rabitzii':
                         self.prop_chi.mol.wf.set_wf(self.par.target_state, 0)
-
-                    print("mana")
-                    print(self.chi_coeff_t_matrix)
                     self.chi_coeff_t_matrix.f_xyz[i] = self.prop_chi.mol.wf.ci
 
 
@@ -90,9 +84,8 @@ class OCRabitzIterator(ABCOCIterator):
             self.check_convergence( )
 
         else:
-            self.psi_coeff_t_matrix = self.prop_psi.propagate_n_step(self.discrete_t_par,
-                                                                     self.field_psi_matrix)
-
+            self.prop_psi.propagate_n_step(self.discrete_t_par, self.field_psi_matrix)
+            self.psi_coeff_t_matrix = deepcopy(self.prop_psi.wf_matrix_out)
             self.chi_coeff_t_matrix = deepcopy(self.psi_coeff_t_matrix)
 
 
@@ -161,7 +154,7 @@ class OCRabitzIterator(ABCOCIterator):
         return final_pop
 
     def get_pop_t(self):
-        psi_coeff_t_matrix = np.insert(self.prop_psi.wf_matrix_out.f_xyz, 0, self.prop_psi.wf_matrix_out.time_axis, axis = 1)
+        psi_coeff_t_matrix = np.insert(self.psi_coeff_t_matrix.f_xyz, 0, self.psi_coeff_t_matrix.time_axis, axis = 1)
         pop_t_matrix = np.real(af.population_from_wf_matrix(psi_coeff_t_matrix))
         return pop_t_matrix
 
