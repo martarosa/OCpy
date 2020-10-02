@@ -16,7 +16,7 @@ class PropagatorEulero1Order(ABCPropagator):
         self.medium = None
         self.propagator_terms = None
         self.propagator = []
-
+        self.wf_matrix_out = Func_tMatrix()
 
     def init(self, molecule, medium, propagator):
         self.mol = molecule
@@ -45,8 +45,8 @@ class PropagatorEulero1Order(ABCPropagator):
     def propagate_n_step(self, discrete_time_par, field):
         if((field.time_axis[1] - field.time_axis[0]) - discrete_time_par.dt > discrete_time_par.dt *0.001):
             af.exit_error("ERROR: Propagation time step and field time step are different")
-        wf_matrix_out = Func_tMatrix()
-        wf_matrix_out.time_axis = np.linspace(0,
+
+        self.wf_matrix_out.time_axis = np.linspace(0,
                                               discrete_time_par.dt * discrete_time_par.nstep,
                                               discrete_time_par.nstep + 1)
         out = list()
@@ -54,8 +54,8 @@ class PropagatorEulero1Order(ABCPropagator):
         for i in range(discrete_time_par.nstep):
             self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i])
             out.append(self.mol.wf.ci)
-        wf_matrix_out.f_xyz = np.array(out)
-        return wf_matrix_out
+        self.wf_matrix_out.f_xyz = np.array(out)
+
 
 
 
@@ -74,7 +74,7 @@ class PropagatorEulero2Order(ABCPropagator):
         self.medium = medium
         self.propagator_terms = ptdict.PropagatorTermsDict[propagator]()
         self.propagator_terms.init()
-
+        self.wf_matrix_out = Func_tMatrix()
 
     def set_propagator(self, molecule, medium):
         self.init(molecule, medium, "eulero_2order")
@@ -94,8 +94,8 @@ class PropagatorEulero2Order(ABCPropagator):
     def propagate_n_step(self, discrete_time_par, field):
         if(field.time_axis[1] - field.time_axis[0]) - discrete_time_par.dt > discrete_time_par.dt *0.001:
             af.exit_error("ERROR: Propagation time step and field time step are different")
-        wf_matrix_out = Func_tMatrix()
-        wf_matrix_out.time_axis = np.linspace(0,
+
+        self.wf_matrix_out.time_axis = np.linspace(0,
                                               discrete_time_par.dt * discrete_time_par.nstep,
                                               discrete_time_par.nstep + 1)
         out = list()
@@ -107,5 +107,4 @@ class PropagatorEulero2Order(ABCPropagator):
             else:
                 self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i], order=1)
             out.append(self.mol.wf.ci)
-        wf_matrix_out.f_xyz = np.array(out)
-        return wf_matrix_out
+        self.wf_matrix_out.f_xyz = np.array(out)

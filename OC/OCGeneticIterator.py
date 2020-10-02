@@ -100,8 +100,6 @@ class OCGeneticIterator(ABCOCIterator):
         self.par.J = 99999
 
         self.field_psi_matrix = deepcopy(starting_field.field)
-
-        #self.psi_coeff_t_matrix = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
 
         self.init_genetic(molecule, starting_field, medium, oc_conf)
@@ -358,8 +356,9 @@ class OCGeneticIterator(ABCOCIterator):
 
     def get_pop_t(self):
         self.chromosomes[0].prop_psi.mol.wf.set_wf(self.initial_c0, 1)
-        psi_coeff_t_matrix = self.chromosomes[0].prop_psi.propagate_n_step(self.discrete_t_par,
-                                                                           self.chromosomes[0].field.field)
+        self.chromosomes[0].prop_psi.propagate_n_step(self.discrete_t_par,
+                                                      self.chromosomes[0].field.field)
+        psi_coeff_t_matrix = self.chromosomes[0].prop_psi.wf_matrix_out
         psi_coeff_t_matrix = np.insert(psi_coeff_t_matrix.f_xyz, 0, psi_coeff_t_matrix.time_axis, axis = 1)
         pop_t_matrix = np.real(af.population_from_wf_matrix(psi_coeff_t_matrix))
         return pop_t_matrix

@@ -26,8 +26,9 @@ class SimplePropagationIterator(ABCOCIterator):
         self.prop_psi = None
 
     def iterate(self, current_iteration):
-        self.psi_coeff_t_matrix = self.prop_psi.propagate_n_step(self.discrete_t_par,
-                                                                 self.field_psi_matrix)
+        self.prop_psi.propagate_n_step(self.discrete_t_par,
+                                       self.field_psi_matrix)
+        self.psi_coeff_t_matrix = self.prop_psi.wf_matrix_out
 
     def check_convergence(self):
         pass
@@ -55,7 +56,7 @@ class SimplePropagationIterator(ABCOCIterator):
         self.dict_out['pop_t'] = self.get_pop_t
 
     def get_pop_t(self):
-        psi_coeff_t_matrix = np.insert(self.psi_coeff_t_matrix.f_xyz, 0, self.psi_coeff_t_matrix.time_axis, axis = 1)
+        psi_coeff_t_matrix = np.insert(self.prop_psi.wf_matrix_out.f_xyz, 0, self.prop_psi.wf_matrix_out.time_axis, axis = 1)
         pop_t = np.real(af.population_from_wf_matrix(psi_coeff_t_matrix))
         return pop_t
 

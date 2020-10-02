@@ -20,6 +20,7 @@ class PropagatorOCfwd(ABCPropagator):
         self.propagator_terms = None
         self.propagator = []
 
+        self.wf_matrix_out = Func_tMatrix()
 
     def init(self, molecule, medium, propagator):
         self.mol = molecule
@@ -48,8 +49,8 @@ class PropagatorOCfwd(ABCPropagator):
             af.exit_error("ERROR: Propagation time step and field time step are different")
 
 
-        wf_matrix_out = Func_tMatrix()
-        wf_matrix_out.time_axis = np.linspace(0,
+
+        self.wf_matrix_out.time_axis = np.linspace(0,
                                               discrete_time_par.dt * discrete_time_par.nstep,
                                               discrete_time_par.nstep + 1)
         out = list()
@@ -57,8 +58,8 @@ class PropagatorOCfwd(ABCPropagator):
         for i in range(discrete_time_par.nstep):
             self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i])
             out.append(self.mol.wf.ci)
-        wf_matrix_out.f_xyz = np.array(out)
-        return wf_matrix_out
+        self.wf_matrix_out.f_xyz = np.array(out)
+
 
 
 
@@ -69,6 +70,8 @@ class PropagatorOCbwd(ABCPropagator):
         self.medium = None
         self.propagator_terms = None
         self.propagator = []
+
+        self.wf_matrix_out = Func_tMatrix()
 
     def init(self, molecule, medium, propagator):
         self.mol = molecule
@@ -95,8 +98,8 @@ class PropagatorOCbwd(ABCPropagator):
     def propagate_n_step(self, discrete_time_par, field, wf_fwd):
         if((field.time_axis[1] - field.time_axis[0]) - discrete_time_par.dt > discrete_time_par.dt *0.001):
             af.exit_error("ERROR: Propagation time step and field time step are different")
-        wf_matrix_out = Func_tMatrix()
-        wf_matrix_out.time_axis = np.linspace(0,
+
+        self.wf_matrix_out.time_axis = np.linspace(0,
                                               discrete_time_par.dt * discrete_time_par.nstep,
                                               discrete_time_par.nstep + 1)
         out = list()
@@ -104,8 +107,8 @@ class PropagatorOCbwd(ABCPropagator):
         for i in range(discrete_time_par.nstep):
             self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i], wf_fwd)
             out.append(self.mol.wf.ci)
-        wf_matrix_out.f_xyz = np.array(out)
-        return wf_matrix_out
+        self.wf_matrix_out.f_xyz = np.array(out)
+
 
 
 
