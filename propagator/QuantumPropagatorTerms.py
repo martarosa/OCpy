@@ -15,6 +15,7 @@ from qiskit import QuantumCircuit , QuantumRegister , ClassicalRegister
 from qiskit import Aer , execute , IBMQ
 from propagator.ABCPropagatorTerms import ABCPropagatorTerms
 from qiskit.providers.aer.noise import NoiseModel
+from parameters.IBMParameters import IBMParameters
 
 import sys
 
@@ -25,8 +26,7 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
             self.qbits = None
             self.cbits = None
             self.qcircuit = None
-            self.provider = None
-            self.IBMInterface = IBMInterface()
+            self.IBMParameters = IBMParameters() ### chiamalo parameters come gli altri tipo : IBMParameters
 
             
         def set_qbits(self):
@@ -43,14 +43,13 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
             self.propagator_terms.set_qbits()
             self.propagator_terms.set_cbits()
             self.propagator_terms.set_qcircuit()
-            self.provider = Aer.get_backend(self.IBMInterface.provider)
 
         def init(self, prop_conf):
-            self.IBMInterface.provider = prop_conf.provider
-            self.IBMInterface.device = prop_conf.device
-            self.IBMInterface.shots = prop_conf.shots
-            self.IBMInterface.noise = prop_conf.noise
-            self.IBMInterface.noise_model = self.IBMInterface.set_noise_model()
+            self.IBMParameters.provider = prop_conf.provider
+            self.IBMParameters.device = prop_conf.device
+            self.IBMParameters.shots = prop_conf.shots
+            self.IBMParameters.noise = prop_conf.noise
+            self.IBMParameters.noise_model = self.IBMParameters.set_noise_model()
             self.set_qprocessor()
             self.dict_terms["quantum_evo"] = self.quantum_evo_circuit
             self.dict_terms["expectation_value"] = self.expectation_value_hermitian_operator
@@ -136,36 +135,17 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
                 result = execute(self.qcircuit, self.provider).result()
                 statevector = result.get_statevector(self.qcircuit)
             elif self.provider == Aer.get_backend("qasm_simulator"):
-                result = execute(self.qcircuit, self.provider, self.IBMInterface.shots, self.IBMInterface.noise_model, self.IBMInterface.noise_model.basis_gates, self.IBMInterface.device.configuration().coupling_map).result()
+                result = execute(self.qcircuit, self.provider, self.IBMParameters.shots, self.IBMParameters.noise_model, self.IBMParameters.noise_model.basis_gates, self.IBMParameters.device.configuration().coupling_map).result()
                 counts = result.get_counts(self.qcircuit)
-                statevector = af.population_from_counts_dictionary(counts, self.IBMInterface.shots, 2**(len(self.qbits)))
+                statevector = af.population_from_counts_dictionary(counts, self.IBMParameters.shots, 2**(len(self.qbits)))
             else:
-                result = execute(self.qcircuit, self.IBMInterface.device, shots=self.IBMInterface.shots).result()
+                result = execute(self.qcircuit, self.IBMParameters.device, shots=self.IBMParameters.shots).result()
                 counts = result.get_counts(self.qcircuit)
-                statevector = af.population_from_counts_dictionary(counts, self.IBMInterface.shots, 2**(len(self.qbits)))
+                statevector = af.population_from_counts_dictionary(counts, self.IBMParameters.shots, 2**(len(self.qbits)))
             return statevector
+       
         
-        
-class IBMInterface():
-    def __init__(self):
-        self.provider = None
-        self.device = None
-        self.shots = None
-        self.noise = None
-        self.noise_model = None
-        
-        
-    def set_noise_model(self):
-        if self.noise:
-            self.noise_model = NoiseModel.from_backend(self.device)
-            
-    def set_device(self, device_string):
-        pass
-    
-        
-            
-#    def set_provider(self, string_provider):
-#        self.provider = Aer.get_backend(string_provider)            
+          
         
     
 

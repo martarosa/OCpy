@@ -35,7 +35,7 @@ class SimplePropagationIterator(ABCOCIterator):
     def calc_J(self):
         pass
 
-    def init(self, molecule, starting_field, medium, alpha_t, oc_input, prop_conf, oc_conf = None):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf = None, prop_conf = None):
         self.par.propagator = oc_input.propagator
         self.prop_psi = pdict.PropagatorDict[oc_input.propagator]()
         self.discrete_t_par.dt = oc_input.dt

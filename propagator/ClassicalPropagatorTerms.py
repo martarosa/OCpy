@@ -2,7 +2,7 @@ import numpy as np
 
 from propagator.ABCPropagatorTerms import ABCPropagatorTerms
 from read_and_set.read import auxiliary_functions as af
-from propagator import math_functions as mf
+#from propagator import math_functions as mf
 
 # all posible propagator term. Some use PCM methods specific of FrozenSolventPCM child class, If/when
 # DinamicPCM(PCM) will have rabitz implemented, it will have a propagate_bwd_oc term, while the propagation in

@@ -108,7 +108,7 @@ class OCRabitzIterator(ABCOCIterator):
             self.par.J = np.real(2 * np.real(np.dot(self.par.target_state, self.prop_psi.mol.wf.ci) \
                                          - self.alpha_field_J_integral()))
 
-    def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf, prop_conf = None):
         self.par.propagator = oc_input.propagator
         self.prop_psi = pdict.PropagatorDict[oc_input.propagator]()
         if not isinstance(self.prop_psi, prop.PropagatorOCfwd):

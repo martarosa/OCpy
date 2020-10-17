@@ -18,7 +18,7 @@ from deap import base
 from deap import creator
 from deap import tools
 from qiskit import Aer
-from qiskit.tools.qi.qi import partial_trace
+from qiskit.quantum_info import partial_trace
 
 import random
 
@@ -191,13 +191,13 @@ class OCGeneticIterator(ABCOCIterator):
         chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
         chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
         if self.par.propagator == "quantum_trotter_suzuki":
-            chro.prop_psi.set_qprocessor()
-            result = chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
-            if chro.prop_psi.provider == Aer.get_backend("statevector_simulator"):
-                p_tgt = np.real(partial_trace(result, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1]))[1,1])
+            chro.prop_psi.propagator_terms.set_qprocessor()
+            chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
+            if chro.prop_psi.IBMParameters.provider == Aer.get_backend("statevector_simulator"):
+                p_tgt = np.real(partial_trace(chro.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1]))[1,1])
             else:
-                p_tgt = result[np.argmax(self.par.target_state)]
-            chro.prop_psi.provider = None
+                p_tgt = chro.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
+            chro.prop_psi.IBMParameters.provider = None
             J = p_tgt - self.alpha_field_J_integral_chromosome(chro.field.field)
         else:
             chro.prop_psi.mol.wf.set_wf(self.initial_c0, 1)

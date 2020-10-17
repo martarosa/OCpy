@@ -5,7 +5,7 @@ import time
 
 #folder = "/home/mana/programmi/python/optimal_control/OCpy/test_rabitz/"
 #folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/nanop/"
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/vac/2levels/"
+folder = "/Users/castd/Desktop/OCpy_hybrid_implementation/"
 
 namefile = "input.dat"
 

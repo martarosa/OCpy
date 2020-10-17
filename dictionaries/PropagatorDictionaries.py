@@ -1,6 +1,7 @@
 from propagator.PropagatorOCRabitz import PropagatorOCfwd
 from propagator.PropagatorsEulero import PropagatorEulero2Order, PropagatorEulero1Order
 from propagator.QuantumPropagatorTerms import QuantumPropagatorTerms
+from propagator.ClassicalPropagatorTerms import ClassicalPropagatorTerms
 from propagator import QuantumPropagator
 from read_and_set.read.conf.ReadNoConf import ReadNoConf
 from read_and_set.set.SetNoConf import SetNoConf

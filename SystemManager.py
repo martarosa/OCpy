@@ -1,6 +1,7 @@
 import dictionaries.MediumDictionaries as mdict
 import dictionaries.OCDictionaries as ocdict
 import dictionaries.FieldDictionary as fdict
+import dictionaries.PropagatorDictionaries as pdict
 
 from OCManager import OCManager
 from field.Field import Field
@@ -71,11 +72,13 @@ class SystemManager():
     def init_optimal_control(self, user_input):
         set_oc = SetOCInput()
         set_oc.set(user_input)
-        OCConf = dictionaries.OCDictionaries.OCAlgorithmConfig[user_input.sys.section_dictionary['oc_algorithm']]()
-        set_OCConf = dictionaries.OCDictionaries.OCAlgorithmSet[user_input.sys.section_dictionary['oc_algorithm']]()
-        PropConf = dictionaries.PropagatorDictionaries.PropagatorConfig[user_input.sys.section_dictionary['propagator']]()
-        set_PropConf = dictionaries.PropagatorDictionaries.PropagatorSet[user_input.sys.section_dictionary['propagator']]()
-        if not user_input.sys.section_dictionary['oc_algorithm'] == "none":
+        OCConf = ocdict.OCAlgorithmConfig[user_input.sys.section_dictionary['oc_algorithm']]()
+        set_OCConf = ocdict.OCAlgorithmSet[user_input.sys.section_dictionary['oc_algorithm']]()
+        PropConf = pdict.PropagatorConfig[user_input.sys.section_dictionary['propagator']]()
+        set_PropConf = pdict.PropagatorSet[user_input.sys.section_dictionary['propagator']]()
+        set_alpha = SetAlphaInput()
+        set_alpha.set(user_input)
+        if user_input.sys.section_dictionary['oc_algorithm'] != "none":
             OCConf.read_file(user_input.sys.section_dictionary['folder'],
                                             user_input.oc.section_dictionary['conf_file'])
         set_OCConf.set(OCConf)
@@ -94,6 +97,7 @@ class SystemManager():
         self.oc.init_oc(set_oc.input_parameters,
                         set_OCConf.input_parameters,
                         set_PropConf.input_parameters,
+                        set_alpha.input_parameters,
                         set_save.input_parameters,
                         set_log_header.input_parameters,
                         self.mol,

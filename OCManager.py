@@ -19,7 +19,7 @@ class OCManager:
 
 
 
-    def init_oc(self, oc_input, oc_conf, prop_conf, save_input, log_header_input, molecule, starting_field, medium):
+    def init_oc(self, oc_input, oc_conf, prop_conf, alpha_input, save_input, log_header_input, molecule, starting_field, medium):
         self.par.alpha = oc_input.alpha
         self.par.oc_iterator_name = oc_input.oc_iterator_name
         self.par.convergence_thr = oc_input.convergence_thr
