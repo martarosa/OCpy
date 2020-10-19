@@ -85,13 +85,13 @@ class SystemManager():
         if user_input.sys.section_dictionary['propagator'] == "quantum_trotter_suzuki":
             PropConf.read_file(user_input.sys.section_dictionary['folder'], 
                                user_input.sys.section_dictionary['ibm_external_opt'])
-        set_PropConf(PropConf)
+        set_PropConf.set(PropConf)
         set_save = SetSaveInput()
         set_save.set(user_input)
         set_log_header = SetLogInput()
         set_log_header.set(user_input)
         if user_input.sys.section_dictionary['oc_algorithm'] != 'none':
-            set_log_header.set_conf_log(ocConf.conf_str)
+            set_log_header.set_conf_log(OCConf.conf_str)
 
 
         self.oc.init_oc(set_oc.input_parameters,

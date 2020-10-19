@@ -4,7 +4,6 @@ class LogInput():
         self.dt = None
         self.medium = None
         self.alpha = None
-        #self.alpha0 = None
         self.field_type = None
         self.fi = None
         self.omega = None

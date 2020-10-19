@@ -1,5 +1,5 @@
 from read_and_set.set.ABCSetInput import ABCSetInput
-from read_and_set.input import IBMInput
+from read_and_set.input.IBMInput import IBMInput
 
 
 class SetIBMInput(ABCSetInput):

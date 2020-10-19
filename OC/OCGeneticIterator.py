@@ -103,7 +103,7 @@ class OCGeneticIterator(ABCOCIterator):
 
         #self.psi_coeff_t_matrix = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
-
+        print(prop_conf)
         self.init_genetic(molecule, starting_field, medium, oc_conf, prop_conf)
 
     def init_genetic(self, molecule, starting_field, medium, genetic_input, prop_conf):
@@ -111,6 +111,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.n_chromosomes = genetic_input.n_chromosomes
         self.genetic_par.n_selected_chr = genetic_input.n_selected_chr
         self.genetic_par.amplitude_lim = genetic_input.amplitude_lim
+        self.genetic_par.parallel = genetic_input.parallel
 
         self.genetic_par.mate = genetic_input.mate
         self.genetic_par.mate_probability = genetic_input.mate_probability
@@ -125,6 +126,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.select = genetic_input.select
         self.genetic_par.n_amplitudes = starting_field.par.fi.size
         self.genetic_par.omegas_matrix = starting_field.par.omega
+        print(self.genetic_par.omegas_matrix)
 
 
         self.init_chromosomes(molecule, starting_field, medium, prop_conf)
@@ -132,7 +134,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.init_evolutionary_algorithm(genetic_input)
 
     def init_chromosomes(self, molecule, starting_field, medium, prop_conf):
-        self.init_DEAP_chromosomes(molecule, starting_field, medium)
+        self.init_DEAP_chromosomes(molecule, starting_field, medium, prop_conf)
 
     def create_random_ampl_rounded(self):
         number = round(random.uniform(-self.genetic_par.amplitude_lim, self.genetic_par.amplitude_lim),4)
@@ -247,8 +249,11 @@ class OCGeneticIterator(ABCOCIterator):
             if random.random() < self.genetic_par.mutate_probability:
                 self.genetic_algorithms.mutate(mutant)
         self.check_bounds_matrix(new)
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            new = list(executor.map(self.genetic_algorithms.evaluate, new))
+        if self.genetic_par.parallel == True:
+            with concurrent.futures.ProcessPoolExecutor() as executor:
+                new = list(executor.map(self.genetic_algorithms.evaluate, new))
+        else:
+            new = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new))
         self.chromosomes[:] = new
 
 

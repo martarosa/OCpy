@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-
+import dictionaries.PropagatorTermsDictionaries as ptdict
 from molecule.Molecule import Molecule
 
 class ABCPropagator(metaclass=ABCMeta):
@@ -14,10 +14,10 @@ class ABCPropagator(metaclass=ABCMeta):
     def init(self, molecule, medium, propagator):
         pass
 
-    def init(self, molecule, medium, prop_conf, propagator = None):
+    def init(self, molecule, medium, prop_conf):
         self.mol = molecule
         self.medium = medium
-        self.propagator_terms = dictionaries.PropagatorDictionaries.PropagatorTermsDict[propagator]()
+        self.propagator_terms = ptdict.PropagatorTermsDict[prop_conf]()
         self.propagator_terms.init()
 
 

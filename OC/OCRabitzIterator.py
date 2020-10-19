@@ -132,7 +132,8 @@ class OCRabitzIterator(ABCOCIterator):
     # init specific iterator
     def init_rabitz(self, oc_input, molecule, medium):
         self.rabitz_iterator = oc_input.oc_iterator_name
-        self.prop_psi.set_propagator(molecule, medium)
+        print(oc_input.propagator)
+        self.prop_psi.set_propagator(molecule, medium, oc_input.propagator)
         self.prop_chi.set_propagator(molecule, medium)
         self.field_chi_matrix = deepcopy(self.field_psi_matrix)
         self.initial_c0 = self.prop_psi.mol.wf.ci
@@ -149,8 +150,7 @@ class OCRabitzIterator(ABCOCIterator):
 # methods inside dictionary return things to be saved
     def get_log_file_out(self):
         integral_field = np.real(self.field_J_integral())
-        norm_proj = np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state)
-                            /(np.dot(self.prop_psi.mol.wf.ci, np.conj(self.prop_psi.mol.wf.ci))))
+        norm_proj = np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state)/(np.dot(self.prop_psi.mol.wf.ci, np.conj(self.prop_psi.mol.wf.ci))))
         return np.array([self.par.convergence_t, self.par.J, norm_proj, integral_field])
 
     def get_final_pop(self):

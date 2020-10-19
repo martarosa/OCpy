@@ -2,7 +2,7 @@ from propagator.PropagatorOCRabitz import PropagatorOCfwd
 from propagator.PropagatorsEulero import PropagatorEulero2Order, PropagatorEulero1Order
 from propagator.QuantumPropagatorTerms import QuantumPropagatorTerms
 from propagator.ClassicalPropagatorTerms import ClassicalPropagatorTerms
-from propagator import QuantumPropagator
+from propagator.QuantumPropagator import PropagatorQuantum
 from read_and_set.read.conf.ReadNoConf import ReadNoConf
 from read_and_set.set.SetNoConf import SetNoConf
 from read_and_set.read.conf.ReadIBMConf import ReadIBMConf
@@ -13,7 +13,7 @@ PropagatorDict = {
     "eulero_2order": PropagatorEulero2Order,
     "eulero_1order": PropagatorEulero1Order,
     "rabitz": PropagatorOCfwd,
-    "quantum_trotter_suzuki" : QuantumPropagator
+    "quantum_trotter_suzuki" : PropagatorQuantum
     
 }
 PropagatorTermsDict = {

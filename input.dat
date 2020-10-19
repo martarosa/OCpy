@@ -2,9 +2,9 @@
 dt=1
 nstep=250
 name = test_new_implementation
-oc_algorithm = rabitzi
-propagator = rabitz
-ibm_external_opt = none
+oc_algorithm = genetic
+propagator = eulero_2order
+#ibm_external_opt = ibm_input.conf
 folder = 
 
 [WAVEFUNCTION]
@@ -13,7 +13,7 @@ name_ei=ci_energy3.inp
 name_mut=ci_mut3.inp
 
 [FIELD]
-field_type=const
+field_type=genetic
 #name_field_file = test_genetic_quantum_qasm_3lev_noisy_depol_flip_5_field_bkp.dat
 fi=0.01 0.01 0.01
 #sigma = 125
@@ -31,9 +31,9 @@ medium=vac
 restart=False
 alpha=const
 #alpha0=1
-n_iterations= 3
+n_iterations= 5
 target_state= 0 1 0  
-#conf_file = genetic.conf
+conf_file = genetic.conf
 
 [SAVE]
 restart_step=1

@@ -4,7 +4,7 @@ from read_and_set.read.input_sections.ABCSection import ABCSection
 class SectionIBMParameters(ABCSection):
     def __init__(self):
         super().__init__()
-        self.section = "IBM_Interface"
+        self.section = "IBM_INTERFACE"
         self.section_default_dictionary = {'provider' : 'qasm_simulator',
                                            'device' : 'none',
                                            'noise' : 'False',

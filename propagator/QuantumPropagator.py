@@ -12,6 +12,7 @@ from propagator.ABCPropagator import ABCPropagator
 from propagator.QuantumPropagatorTerms import QuantumPropagatorTerms
 import dictionaries.PropagatorTermsDictionaries as ptdict
 
+from molecule.Molecule import Molecule
 
 
 class PropagatorQuantum(ABCPropagator):
@@ -32,6 +33,7 @@ class PropagatorQuantum(ABCPropagator):
     def init(self, molecule, medium, propagator):
         self.mol = molecule
         self.medium = medium
+        print(propagator)
         self.propagator_terms = ptdict.PropagatorTermsDict[propagator]()   
         self.propagator_terms.init()
         

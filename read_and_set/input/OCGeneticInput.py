@@ -4,6 +4,7 @@ class OCGeneticInput():
         self.n_selected_chr = None
         self.genetic_algorithm = None
         self.amplitude_lim = None
+        self.parallel = None
 
         self.mate = None
         self.mate_probability = None

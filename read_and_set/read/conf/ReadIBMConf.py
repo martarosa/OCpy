@@ -7,7 +7,7 @@ Created on Tue Sep 22 18:59:34 2020
 
 
 import configparser
-from read_and_set.read.input_sections import IBMConfSections
+from read_and_set.read.input_sections.IBMConfSections import SectionIBMParameters
 from read_and_set.read.input_sections.ABCReadInputFile import ABCReadInputFile
 import os.path
 from read_and_set.read import auxiliary_functions as af
@@ -17,8 +17,8 @@ class ReadIBMConf(ABCReadInputFile):
     def __init__(self):
         super().__init__()
         self.n_sections = None
-        self.sections = ["IBM_Interface"]
-        self.parameters = IBMConfSections()
+        self.sections = ["IBM_INTERFACE"]
+        self.parameters = SectionIBMParameters()
         self.conf_str = None
 
 

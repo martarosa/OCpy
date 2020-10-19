@@ -5,6 +5,7 @@ from save.ABCSave import ABCSave
 from parameters.SaveParameters import SaveParameters
 from save.SaveRestart import SaveRestart
 from save.SaveTools import SaveTools
+import sys
 
 class SaveOCGenetic(ABCSave):
     def __init__(self):
@@ -39,7 +40,6 @@ class SaveOCGenetic(ABCSave):
                            restart_step,
                            'field_t',
                            oc_iterator)
-
         field_ampl = SaveFile("_field_ampl.dat",
                               "#field_amplitudes \n #field shape = a0 + sum(ai*sin(wi t)) \n "
                               +"#omegas = "+np.array_repr(oc_iterator.genetic_par.omegas_matrix[:,0]).replace('\n', ''),
