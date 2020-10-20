@@ -9,27 +9,24 @@ Created on Fri Mar  6 15:55:38 2020
 import time
 
 import numpy as np
-import multiprocessing as mp
-import concurrent.futures
+
 
 from parameters.FieldParameters import FieldParameters
 from read_and_set.read import auxiliary_functions as af
-from read_and_set.read import NamelistTools as nmtool
 from OC.ABCOCIterator import ABCOCIterator
 from parameters.OCIteratorParameters import OCIteratorParameters
 from SystemObj import DiscreteTimePar
 from field.Field import Field, Func_tMatrix
 from copy import deepcopy
 from scipy import optimize
-from propagator import PropagatorsEulero as prop
-import sys
+import dictionaries.PropagatorDictionaries as pdict
 
 
 import random
 
 
 
-class OCScipyOptimizeGradFreeIterator(ABCOCIterator):
+class OCScipyOptimizeIterator(ABCOCIterator):
     def __init__(self):
         super().__init__()
         self.par = OCIteratorParameters()
@@ -49,7 +46,6 @@ class OCScipyOptimizeGradFreeIterator(ABCOCIterator):
         
     def iterate(self, current_iteration):
         if current_iteration == 0:
-     #       print(current_iteration)
             self.current_iteration = current_iteration
             self.optimize()  
         else:
@@ -96,7 +92,7 @@ class OCScipyOptimizeGradFreeIterator(ABCOCIterator):
         return x
     
     def optimize(self):
-        result = optimize.minimize(self.calc_J, self.initial_guess_control_parameters(), method = self.par.optimization_method, options = {'disp' : True, 'return_all' : True, 'maxiter' : self.par.n_iterations}, callback = self.callback_for_scipy)                       
+        result = optimize.minimize(self.calc_J, self.initial_guess_control_parameters(), method = self.par.oc_iterator_name, options = {'disp' : True, 'return_all' : True, 'maxiter' : self.par.n_iterations}, callback = self.callback_for_scipy)                       
         self.result = result                      
 
         
@@ -106,21 +102,23 @@ class OCScipyOptimizeGradFreeIterator(ABCOCIterator):
         self.dict_out['scipy_result'] = self.result
         
     
-    def init(self, molecule, starting_field, pcm, alpha_t, oc_input):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf, prop_conf):
         self.discrete_t_par.nstep = oc_input.nstep
         self.discrete_t_par.dt = oc_input.dt
         self.par.target_state = oc_input.target_state
-        self.par.alpha_t = alpha_t
+        self.par.alpha_t = np.array(alpha_t)
         self.par.convergence_t = 99999
         self.par.J = [99999,]
-        self.par.oc_iterator_prop = oc_input.oc_iterator_name
-        self.par.propagation_type = oc_input.propagation_type
+        self.par.oc_iterator_name = oc_input.oc_iterator_name
+        self.par.propagator = oc_input.propagator
         self.par.n_iterations = oc_input.n_iterations
-        self.par.optimization_method = oc_input.optimization_method
 
         self.field = deepcopy(starting_field)
         self.field_par = starting_field.par
-        self.init_symplex(molecule, starting_field, pcm)
+        self.prop_psi = pdict.PropagatorDict[self.par.propagator]()
+        prop_conf.quantum_prop_keyword = self.par.propagator
+        self.prop_psi.set_propagator(molecule, medium, prop_conf)
+        self.init_wf()
         self.init_output_dictionary()
     
     def check_convergence(self):
@@ -133,50 +131,29 @@ class OCScipyOptimizeGradFreeIterator(ABCOCIterator):
     def calc_J(self, coefficients):
         self.field.par.fi = np.asarray(coefficients).reshape((-1, 3))
         self.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
-        print(self.field.par.fi)
-        if self.par.propagation_type == 'quantum':
-            from qiskit import Aer
-            if self.prop_psi.provider == Aer.get_backend("statevector_simulator"):
-               from qiskit.tools.qi.qi import partial_trace
-               self.prop_psi.set_propagator(self.prop_psi.propagator_terms.mol, self.prop_psi.propagator_terms.pcm)
-               statevector = self.prop_psi.propagate_n_step(self.discrete_t_par, self.field.field)
-               p_tgt = np.real(partial_trace(statevector, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[np.argmax(self.par.target_state)]))[1,1])
+        self.prop_psi.mol.wf.set_wf(self.initial_c0, 1)
+        if self.par.propagator == 'quantum_trotter_suzuki':
+            self.prop_psi.propagator_terms.set_qprocessor(self.prop_psi.mol)
+            self.prop_psi.propagate_n_step(self.discrete_t_par, self.field.field)
+            if self.prop_psi.propagator_terms.IBMParameters.provider == "statevector_simulator":
+               from qiskit.quantum_info import partial_trace
+               p_tgt = np.real(partial_trace(self.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[np.argmax(self.par.target_state)])).data[1,1])
                field = np.real(self.alpha_field_J_integral(self.field.field))
                J = 1 - p_tgt + field
             else:
-               self.prop_psi.set_propagator(self.prop_psi.propagator_terms.mol, self.prop_psi.propagator_terms.pcm)
-               bitstring_state_population = self.prop_psi.propagate_n_step(self.discrete_t_par, self.field.field)
+               p_tgt = self.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
                field = np.real(self.alpha_field_J_integral(self.field.field))
-               p_tgt = bitstring_state_population[2]
-               print(p_tgt)
                J = 1 - p_tgt + field
-               print(p_tgt - field)
         else:
-            self.prop_psi.set_propagator(self.prop_psi.propagator_terms.mol, self.prop_psi.propagator_terms.pcm)
-            self.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
             self.prop_psi.propagate_n_step(self.discrete_t_par, self.field.field)
-                       #calcolo popolazione e integrale del campo, per debug
-            pop= np.real(af.projector_mean_value(self.prop_psi.propagator_terms.mol.wf.ci,
-                                                 self.par.target_state))
+            p_tgt = np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state))
             field = np.real(self.alpha_field_J_integral(self.field.field))
-           #calcolo J
-            J = 1 - np.real(af.projector_mean_value(self.prop_psi.propagator_terms.mol.wf.ci, self.par.target_state)) + self.alpha_field_J_integral(self.field.field)
+            J = 1 - p_tgt + field
         return J
         
-        
-    def chose_propagator(self):
-        if self.par.propagation_type == 'quantum':
-            from propagator import PropagatorQuantum as qprop
-            self.prop_psi = qprop.PropagatorQuantum()
-            from qiskit import Aer
-            self.prop_psi.provider = Aer.get_backend("qasm_simulator")
-        else:
-            self.prop_psi = prop.PropagatorEulero2Order()
             
-    def init_symplex(self, molecule, starting_field, pcm):
-        self.chose_propagator()
-        self.prop_psi.set_propagator(molecule, pcm)
-        self.initial_c0 = self.prop_psi.propagator_terms.mol.wf.ci
+    def init_wf(self):
+        self.initial_c0 = self.prop_psi.mol.wf.ci
     
     def callback_for_scipy(self, coefficients):
         print(self.current_iteration)
@@ -184,8 +161,8 @@ class OCScipyOptimizeGradFreeIterator(ABCOCIterator):
         self.par.J.append(self.calc_J(coefficients))
         self.amplitudes_to_save.append(coefficients)
         print("J at iteration " + str(self.current_iteration) + " is " + str(self.par.J[-1]))
-        if self.par.propagation_type == 'classic':
-            self.pop_tgt.append(np.real(af.projector_mean_value(self.prop_psi.propagator_terms.mol.wf.ci, self.par.target_state)))
+        if self.par.propagator != 'quantum_trotter_suzuki':
+            self.pop_tgt.append(np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state)))
         
             
     def alpha_field_J_integral(self, field):
@@ -216,10 +193,10 @@ class OCScipyOptimizeGradFreeIterator(ABCOCIterator):
 
     
     def get_log_file_out(self): 
-        if self.par.propagation_type != 'quantum':
+        if self.par.propagator != 'quantum_trotter_suzuki':
             pop_tgt = self.pop_tgt[self.current_iteration - self.par.n_iterations]
             J = self.par.J[-self.current_iteration]
-            integral_field = pop_tgt - J
+        #    integral_field = pop_tgt - str(J)
             self.check_convergence()
             integral_field = self.field_J_integral(self.amplitudes_to_save[self.par.n_iterations - self.current_iteration]) 
             log_array = np.array([self.par.convergence_t, self.par.J[self.par.n_iterations - self.current_iteration], pop_tgt, integral_field])

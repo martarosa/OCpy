@@ -17,7 +17,6 @@ from field.Field import Field, Func_tMatrix
 from deap import base
 from deap import creator
 from deap import tools
-from qiskit import Aer
 from qiskit.quantum_info import partial_trace
 
 import random
@@ -91,8 +90,7 @@ class OCGeneticIterator(ABCOCIterator):
     def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf, prop_conf):
         self.par.propagator = oc_input.propagator
         prop_conf.quantum_prop_keyword = self.par.propagator
-        self.propagator_name = oc_input.propagator
-        self.prop_psi = pdict.PropagatorDict[self.propagator_name]()
+        self.prop_psi = pdict.PropagatorDict[self.par.propagator]()
         self.discrete_t_par.nstep = oc_input.nstep
         self.discrete_t_par.dt = oc_input.dt
         self.par.target_state = oc_input.target_state
@@ -198,7 +196,6 @@ class OCGeneticIterator(ABCOCIterator):
                 p_tgt = np.real(partial_trace(chro.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1])).data[1,1])
             else:
                 p_tgt = chro.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
-         #   chro.prop_psi.IBMParameters.provider = None
             J = p_tgt - self.alpha_field_J_integral_chromosome(chro.field.field)
         else:
             chro.prop_psi.mol.wf.set_wf(self.initial_c0, 1)

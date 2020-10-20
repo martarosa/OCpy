@@ -45,6 +45,7 @@ class OCManager:
 
     def init_save(self, save_parameters, log_header_parameters):
         self.save = sdict.SaveDict[self.par.oc_iterator_name]()
+        print(self.save)
         self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
 
 

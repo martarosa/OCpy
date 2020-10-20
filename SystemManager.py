@@ -90,7 +90,7 @@ class SystemManager():
         set_save.set(user_input)
         set_log_header = SetLogInput()
         set_log_header.set(user_input)
-        if user_input.sys.section_dictionary['oc_algorithm'] != 'none':
+        if user_input.sys.section_dictionary['oc_algorithm'] !='none':
             set_log_header.set_conf_log(OCConf.conf_str)
 
 

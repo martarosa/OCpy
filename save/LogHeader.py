@@ -25,6 +25,7 @@ class LogHeader():
             restart = "\n"
         self.init_field_header(log_input)
         self.init_conf_header(log_input)
+        print(self.oc_conf_header)
         self.header = ( "#calculation: " + log_input.oc_algorithm + "\n" +
                         self.oc_header +
                         self.oc_conf_header +
@@ -44,8 +45,10 @@ class LogHeader():
 
 
     def init_conf_header(self, conf_input):
-        if (conf_input.oc_algorithm != "none"):
+        if (conf_input.oc_algorithm not in  ["none", "nelder-mead", "bfgs", "cg"] ):
             self.oc_conf_header = ("#oc algorithm input: " + conf_input.string_conf_file + "\n\n")
+        else:
+            self.oc_conf_header = "\n"
 
 
     def init_field_header(self, log_input):

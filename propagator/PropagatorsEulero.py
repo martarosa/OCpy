@@ -79,6 +79,8 @@ class PropagatorEulero2Order(ABCPropagator):
         self.propagator_terms = ptdict.PropagatorTermsDict[propagator]()
         self.propagator_terms.init()
 
+    def clean_propagator(self):
+        self.propagator = []
 
     def set_propagator(self, molecule, medium, prop_conf = None):
         self.init(molecule, medium, "eulero_2order")

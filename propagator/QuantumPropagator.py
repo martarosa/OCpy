@@ -37,6 +37,7 @@ class PropagatorQuantum(ABCPropagator):
     def init(self, molecule, medium, propagator):
         self.mol = molecule
         self.medium = medium
+        print(propagator.quantum_prop_keyword)
         self.propagator_terms = ptdict.PropagatorTermsDict[propagator.quantum_prop_keyword]()   
         self.propagator_terms.init(propagator)
         

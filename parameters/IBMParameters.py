@@ -18,7 +18,3 @@ class IBMParameters():
     def set_device(self, device_string):
         pass
     
-        
-            
-#    def set_provider(self, string_provider):
-#        self.provider = Aer.get_backend(string_provider)  
