@@ -24,6 +24,9 @@ class PropagatorOCfwd(ABCPropagator):
         self.propagator = []
 
 
+    def clean_propagator(self):
+        self.propagator = []
+
     def set_propagator(self, molecule, medium, prop_conf):
         self.init(molecule, medium, prop_conf)
         self.clean_propagator()

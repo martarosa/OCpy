@@ -26,31 +26,31 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
             self.qbits = None
             self.cbits = None
             self.qcircuit = None
-            self.IBMParameters = IBMParameters() ### chiamalo parameters come gli altri tipo : IBMParameters
+            self.IBMParameters = IBMParameters() 
 
             
-        def set_qbits(self):
-            self.qbits = QuantumRegister(self.mol.wf.n_ci, 'q')
+        def set_qbits(self, mol):
+            self.qbits = QuantumRegister(mol.wf.n_ci, 'q')
             
-        def set_cbits(self):
-            self.cbits = ClassicalRegister(self.mol.wf.n_ci, 'c')
+        def set_cbits(self, mol):
+            self.cbits = ClassicalRegister(mol.wf.n_ci, 'c')
             
         def set_qcircuit(self):
             self.qcircuit = QuantumCircuit(self.qbits,self.cbits)
             
             
-        def set_qprocessor(self):
-            self.propagator_terms.set_qbits()
-            self.propagator_terms.set_cbits()
-            self.propagator_terms.set_qcircuit()
+        def set_qprocessor(self, mol):
+            self.set_qbits(mol)
+            self.set_cbits(mol)
+            self.set_qcircuit()
 
         def init(self, prop_conf):
+            self.IBMParameters.quantum_prop_keyword = prop_conf.quantum_prop_keyword
             self.IBMParameters.provider = prop_conf.provider
             self.IBMParameters.device = prop_conf.device
             self.IBMParameters.shots = prop_conf.shots
             self.IBMParameters.noise = prop_conf.noise
             self.IBMParameters.noise_model = self.IBMParameters.set_noise_model()
-            self.set_qprocessor()
             self.dict_terms["quantum_evo"] = self.quantum_evo_circuit
             self.dict_terms["expectation_value"] = self.expectation_value_hermitian_operator
             self.dict_terms["measure_computational_basis"] = self.computational_basis_measurement
@@ -61,33 +61,31 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
 ##### Method to build the circuit equivalent to simulation of a single_particle hamiltonian, in the field-free diagonal basis, under a TD external perturbation ##### 
 
 
-        def quantum_evo_circuit(self, i, dt, field_dt_vector):
-#            if i == 0:
-#                self.qcircuit.x(self.qbits[0])
-            for k in range(self.mol.wf.n_ci):
-                self.qcircuit.u1((self.mol.par.en_ci[k] - np.dot(self.mol.par.muT,(field_dt_vector)/2)[k][k])*dt, self.qbits[k])
+        def quantum_evo_circuit(self, mol, dt, field_dt_vector):
+            for k in range(mol.wf.n_ci):
+                self.qcircuit.u1((mol.par.en_ci[k] - np.dot(mol.par.muT,(field_dt_vector)/2)[k][k])*dt, self.qbits[k])
                 self.qcircuit.h(self.qbits[k])
-            self.bounded_occupation_gatex(dt, field_dt_vector)
-            for k in range(self.mol.wf.n_ci):
+            self.bounded_occupation_gatex(mol, dt, field_dt_vector)
+            for k in range(mol.wf.n_ci):
                 self.qcircuit.rx(np.pi/2, self.qbits[k])
-            self.bounded_occupation_gatey(dt, field_dt_vector)
+            self.bounded_occupation_gatey(mol, dt, field_dt_vector)
             
-        def bounded_occupation_gatex(self, dt, field_dt_vector):
-            for i in range(self.mol.wf.n_ci-1):
-                for j in range(1,self.mol.wf.n_ci):
+        def bounded_occupation_gatex(self, mol, dt, field_dt_vector):
+            for i in range(mol.wf.n_ci-1):
+                for j in range(1,mol.wf.n_ci):
                     if j > i:
                         self.qcircuit.cx(self.qbits[j], self.qbits[i])
-                        self.qcircuit.rz(np.dot(self.mol.par.muT,((field_dt_vector)/2))[j][i]*dt, self.qbits[i])
+                        self.qcircuit.rz(np.dot(mol.par.muT,((field_dt_vector)/2))[j][i]*dt, self.qbits[i])
                         self.qcircuit.cx(self.qbits[j], self.qbits[i])
                 self.qcircuit.h(self.qbits[i])
             self.qcircuit.h(self.qbits[j])
             
-        def bounded_occupation_gatey(self, dt, field_dt_vector):
-            for i in range(self.mol.wf.n_ci-1):
-                for j in range(1,self.mol.wf.n_ci):
+        def bounded_occupation_gatey(self, mol, dt, field_dt_vector):
+            for i in range(mol.wf.n_ci-1):
+                for j in range(1,mol.wf.n_ci):
                     if j > i:
                         self.qcircuit.cx(self.qbits[j], self.qbits[i])
-                        self.qcircuit.rz(np.dot(self.mol.par.muT,((field_dt_vector)/2))[j][i]*dt, self.qbits[i])
+                        self.qcircuit.rz(np.dot(mol.par.muT,((field_dt_vector)/2))[j][i]*dt, self.qbits[i])
                         self.qcircuit.cx(self.qbits[j], self.qbits[i])
                 self.qcircuit.rx(-np.pi/2, self.qbits[i])
             self.qcircuit.rx(-np.pi/2, self.qbits[j])
@@ -107,7 +105,9 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
                 Visto che execute è separato deve restituire una lista di circuiti da eseguire
                 Per ottenere il valore di aspettazione poi avremo una cosa del tipo:
                 for counts in data:
-                    expectation_value += counts*matrix_element_giusto """
+                    expectation_value += counts*matrix_element_giusto"""
+            ### un'altra possibilità è ricostruire l'hamiltoniano con gli oggetti Pauli di Aqua e utilizzare
+            # le funzioni qiskit di expectation_value
             pass
                      
 ###### Initialization_methods ######
@@ -115,27 +115,19 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
         def prepare_GS_linear_mapping(self):
             self.qcircuit.x(self.qbits[0])
             
-
-
-###### different kinds of execution will be needed #######
+###### different kinds of execution are available #######
             
         def configure_backend(self, simulator_options):  ## simulator_options è un dizionario/lista che gli passo con dentro le informazioni riguardo il tipo di simulazione
-           # device = IBMQ.get_provider().get_backend('ibmqx2')
-#            properties = device.properties()
-#            coupling_map = device.configuration().coupling_map
-#            gate_times = [('u1', None, 0), ('u2', None, 60), ('u3', None, 120)]
-#            basis_gates = noise_model.basis_gates
-#    # Select the QasmSimulator from the Aer provider
-#            simulator = Aer.get_backend('qasm_simulator')
             pass
         
             
         def execute(self):
-            if self.provider == Aer.get_backend("statevector_simulator"):
-                result = execute(self.qcircuit, self.provider).result()
+            print(self.IBMParameters.provider)
+            if self.IBMParameters.provider == "statevector_simulator":
+                result = execute(self.qcircuit, Aer.get_backend(self.IBMParameters.provider)).result()
                 statevector = result.get_statevector(self.qcircuit)
-            elif self.provider == Aer.get_backend("qasm_simulator"):
-                result = execute(self.qcircuit, self.provider, self.IBMParameters.shots, self.IBMParameters.noise_model, self.IBMParameters.noise_model.basis_gates, self.IBMParameters.device.configuration().coupling_map).result()
+            elif self.IBMParameters.provider == "qasm_simulator":
+                result = execute(self.qcircuit, Aer.get_backend(self.IBMParameters.provider), self.IBMParameters.shots, self.IBMParameters.noise_model, self.IBMParameters.noise_model.basis_gates, self.IBMParameters.device.configuration().coupling_map).result()
                 counts = result.get_counts(self.qcircuit)
                 statevector = af.population_from_counts_dictionary(counts, self.IBMParameters.shots, 2**(len(self.qbits)))
             else:

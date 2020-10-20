@@ -3,6 +3,7 @@ from qiskit.providers.aer.noise import NoiseModel
 
 class IBMParameters():
     def __init__(self):
+        self.quantum_prop_keyword = None
         self.provider = None
         self.device = None
         self.shots = None

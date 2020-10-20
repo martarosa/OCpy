@@ -3,8 +3,8 @@ dt=1
 nstep=250
 name = test_new_implementation
 oc_algorithm = genetic
-propagator = eulero_2order
-#ibm_external_opt = ibm_input.conf
+propagator = quantum_trotter_suzuki
+ibm_external_opt = ibm_input.conf
 folder = 
 
 [WAVEFUNCTION]

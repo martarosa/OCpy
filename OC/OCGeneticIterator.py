@@ -90,6 +90,7 @@ class OCGeneticIterator(ABCOCIterator):
 
     def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf, prop_conf):
         self.par.propagator = oc_input.propagator
+        prop_conf.quantum_prop_keyword = self.par.propagator
         self.propagator_name = oc_input.propagator
         self.prop_psi = pdict.PropagatorDict[self.propagator_name]()
         self.discrete_t_par.nstep = oc_input.nstep
@@ -103,7 +104,6 @@ class OCGeneticIterator(ABCOCIterator):
 
         #self.psi_coeff_t_matrix = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
-        print(prop_conf)
         self.init_genetic(molecule, starting_field, medium, oc_conf, prop_conf)
 
     def init_genetic(self, molecule, starting_field, medium, genetic_input, prop_conf):
@@ -126,7 +126,6 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.select = genetic_input.select
         self.genetic_par.n_amplitudes = starting_field.par.fi.size
         self.genetic_par.omegas_matrix = starting_field.par.omega
-        print(self.genetic_par.omegas_matrix)
 
 
         self.init_chromosomes(molecule, starting_field, medium, prop_conf)
@@ -193,13 +192,13 @@ class OCGeneticIterator(ABCOCIterator):
         chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
         chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
         if self.par.propagator == "quantum_trotter_suzuki":
-            chro.prop_psi.propagator_terms.set_qprocessor()
+            chro.prop_psi.propagator_terms.set_qprocessor(chro.prop_psi.mol)
             chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
-            if chro.prop_psi.IBMParameters.provider == Aer.get_backend("statevector_simulator"):
-                p_tgt = np.real(partial_trace(chro.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1]))[1,1])
+            if chro.prop_psi.propagator_terms.IBMParameters.provider == "statevector_simulator":
+                p_tgt = np.real(partial_trace(chro.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1])).data[1,1])
             else:
                 p_tgt = chro.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
-            chro.prop_psi.IBMParameters.provider = None
+         #   chro.prop_psi.IBMParameters.provider = None
             J = p_tgt - self.alpha_field_J_integral_chromosome(chro.field.field)
         else:
             chro.prop_psi.mol.wf.set_wf(self.initial_c0, 1)

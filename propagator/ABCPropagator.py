@@ -24,8 +24,9 @@ class ABCPropagator(metaclass=ABCMeta):
     def add_term_to_propagator(self, term_name):
         self.propagator.append(self.propagator_terms.dict_terms[term_name])
 
+    @abstractmethod
     def clean_propagator(self):
-        self.propagator = []
+        pass
 
     @abstractmethod
     def set_propagator(self, molecule, medium, prop_conf):
