@@ -38,8 +38,14 @@ class SaveOCScipyOptimize(ABCSave):
                               'field_ampl',
                               oc_iterator)
         
+        field_t = SaveFile("_field_t.dat",
+                   "#field(t) \n#fields: n_iteration, nstep, time, field(t) x, y, z  \n",
+                   restart_step,
+                   'field_t',
+                   oc_iterator)
         
-        self.save_files = [log, field_ampl]
+        
+        self.save_files = [log, field_ampl, field_t]
         
 
 #        self.restart_file = SaveRestart("_field_bkp.dat", restart_step, oc_iterator)

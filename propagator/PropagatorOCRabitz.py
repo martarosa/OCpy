@@ -74,6 +74,9 @@ class PropagatorOCbwd(ABCPropagator):
         self.medium = medium
         self.propagator_terms = ptdict.PropagatorTermsDict[propagator]()
         self.propagator_terms.init()
+        
+    def clean_propagator(self):
+        self.propagator = []
 
 
     def set_propagator(self, molecule, medium):

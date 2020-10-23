@@ -12,8 +12,8 @@ namefile = "input.dat"
 
 
 
-OC_system=ini.SystemManager()
-OC_system.init_system(folder, namefile)
+#OC_system=ini.SystemManager()
+#OC_system.init_system(folder, namefile)
 
 #print(OC_system.mol.par.muT[2,7])
 #print(OC_system.mol.par.muT[7,1])
