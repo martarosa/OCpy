@@ -68,7 +68,7 @@ class OCRabitzIterator(ABCOCIterator):
                     self.par.alpha_t[i - 1])
 
                 self.prop_chi.propagate_one_step(self.discrete_t_par.dt, self.prop_field.field_dt_vector,
-                                                 self.psi_coeff_t_matrix.f_xyz[i]) ### qui non dovremmo usare field_chi_matrix ?
+                                                 self.psi_coeff_t_matrix.f_xyz[i]) ### qui non dovremmo usare field_chi_matrix[i] ?
 
                 self.chi_coeff_t_matrix.f_xyz[i - 1] = self.prop_chi.mol.wf.ci
 

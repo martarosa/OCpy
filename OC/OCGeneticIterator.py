@@ -196,7 +196,7 @@ class OCGeneticIterator(ABCOCIterator):
                 p_tgt = np.real(partial_trace(chro.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1])).data[1,1])
             else:
                 p_tgt = chro.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
-            J = p_tgt - self.alpha_field_J_integral_chromosome(chro.field.field)
+            J = p_tgt - self.alpha_field_J_integral_chromosome(chro.field.field) ### devi fare proiezione su una psi generica
         else:
             chro.prop_psi.mol.wf.set_wf(self.initial_c0, 1)
             chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
@@ -246,7 +246,7 @@ class OCGeneticIterator(ABCOCIterator):
                 self.genetic_algorithms.mutate(mutant)
         self.check_bounds_matrix(new)
         if self.genetic_par.parallel == True:
-            with concurrent.futures.ProcessPoolExecutor() as executor:
+            with concurrent.futures.ProcessPoolExecutor() as executor: #### metti un check per non far andare parallel true su windows
                 new = list(executor.map(self.genetic_algorithms.evaluate, new))
         else:
             new = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new))

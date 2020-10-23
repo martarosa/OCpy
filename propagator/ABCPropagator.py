@@ -25,7 +25,7 @@ class ABCPropagator(metaclass=ABCMeta):
         self.propagator.append(self.propagator_terms.dict_terms[term_name])
 
     @abstractmethod
-    def clean_propagator(self):
+    def clean_propagator(self, *args):
         pass
 
     @abstractmethod

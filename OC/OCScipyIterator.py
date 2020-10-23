@@ -93,6 +93,8 @@ class OCScipyOptimizeIterator(ABCOCIterator):
 0.005, -0.003984008037552428, 0.0002927285381301723]
         return x
     
+    ### prendo spunto da restart_genetic (ma meglio), posso dargli
+    
     def optimize(self):
         result = optimize.minimize(self.calc_J, self.initial_guess_control_parameters(), method = self.par.oc_iterator_name, options = {'disp' : True, 'return_all' : True, 'maxiter' : self.par.n_iterations}, callback = self.callback_for_scipy)                       
         self.result = result                      
