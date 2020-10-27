@@ -8,10 +8,12 @@ class SectionGenetic(ABCSection):
         self.section_default_dictionary = {'n_chromosomes': '120',
                                            'n_selected_chr': '20',
                                            'genetic_algorithm' : 'sequential',
-                                           'amplitude_lim': '0.05'}
+                                           'amplitude_lim': '0.05', 
+                                           'parallel': 'False'}
         self.section_dictionary = {}
-        self.allowed_val = [['genetic_algorithm', ['sequential', 'mixed']]]
-        self.case_unsensitive_keys = ['genetic_algorithm']
+        self.allowed_val = [['genetic_algorithm', ['sequential', 'mixed']], 
+                            ['parallel', ['True', 'False']]]
+        self.case_unsensitive_keys = ['genetic_algorithm', 'parallel']
 
 
 class SectionMate(ABCSection):

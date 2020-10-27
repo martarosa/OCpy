@@ -12,11 +12,12 @@ class SectionSystem(ABCSection):
                                            'nstep'       : 'missing',
                                            'dt'          : 'missing',
                                            'oc_algorithm': 'none',
-                                           'propagator'  : 'missing'}
+                                           'propagator'  : 'missing',
+                                           'ibm_external_opt' : 'none'}
         self.section_dictionary = {}
         self.allowed_val = [['oc_algorithm', ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg']],
                             ['propagator',   ['eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki']]]
-        self.case_unsensitive_keys = ['oc_algorithm', 'propagation']
+        self.case_unsensitive_keys = ['oc_algorithm', 'propagator']
 
 
     def init_default_folder(self, folder):

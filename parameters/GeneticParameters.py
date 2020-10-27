@@ -3,6 +3,7 @@ class GeneticParameters():
         self.genetic_algorithm = None
         self.n_chromosomes = None
         self.n_selected_chr = None
+        self.parallel = None
 
         self.amplitude_lim = None
         self.n_amplitudes = None

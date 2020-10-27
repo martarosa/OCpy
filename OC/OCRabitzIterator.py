@@ -65,7 +65,7 @@ class OCRabitzIterator(ABCOCIterator):
                     self.par.alpha_t[i - 1])
 
                 self.prop_chi.propagate_one_step(self.discrete_t_par.dt, self.prop_field.field_dt_vector,
-                                                 self.psi_coeff_t_matrix.f_xyz[i])
+                                                 self.psi_coeff_t_matrix.f_xyz[i]) ### qui non dovremmo usare field_chi_matrix[i] ?
 
                 self.chi_coeff_t_matrix.f_xyz[i - 1] = self.prop_chi.mol.wf.ci
 
@@ -73,15 +73,15 @@ class OCRabitzIterator(ABCOCIterator):
                 if i == 0:
                     self.prop_psi.mol.wf.set_wf(self.initial_c0, 0)
                     self.psi_coeff_t_matrix.f_xyz[i] = self.prop_psi.mol.wf.ci
-
                 self.field_psi_matrix.f_xyz[i] = self.prop_field.propagate_field_OC_Rabitz(
                     self.prop_psi.mol.wf.ci,
                     self.chi_coeff_t_matrix.f_xyz[i],
                     mut_rabitz_field_prop,
                     self.par.alpha_t[i])
-                self.prop_psi.propagate_one_step(self.discrete_t_par.dt, self.prop_field.field_dt_vector)
-                self.psi_coeff_t_matrix.f_xyz[i + 1] = self.prop_psi.mol.wf.ci  # coefficients are stored
-            self.check_convergence( )
+                self.prop_psi.propagate_one_step(self.discrete_t_par.dt, self.prop_field.field_dt_vector) ### qui non dovremmo usare field_psi_matrix ?
+                self.psi_coeff_t_matrix.f_xyz[i + 1] = self.prop_psi.mol.wf.ci # coefficients are stored
+
+            self.check_convergence()
 
         else:
             self.prop_psi.propagate_n_step(self.discrete_t_par, self.field_psi_matrix)
@@ -104,7 +104,7 @@ class OCRabitzIterator(ABCOCIterator):
             self.par.J = np.real(2 * np.real(np.dot(self.par.target_state, self.prop_psi.mol.wf.ci) \
                                          - self.alpha_field_J_integral()))
 
-    def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf, prop_conf = None):
         self.par.propagator = oc_input.propagator
         self.prop_psi = pdict.PropagatorDict[oc_input.propagator]()
         if not isinstance(self.prop_psi, prop.PropagatorOCfwd):
@@ -128,7 +128,7 @@ class OCRabitzIterator(ABCOCIterator):
     # init specific iterator
     def init_rabitz(self, oc_input, molecule, medium):
         self.rabitz_iterator = oc_input.oc_iterator_name
-        self.prop_psi.set_propagator(molecule, medium)
+        self.prop_psi.set_propagator(molecule, medium, oc_input.propagator)
         self.prop_chi.set_propagator(molecule, medium)
         self.field_chi_matrix = deepcopy(self.field_psi_matrix)
         self.initial_c0 = self.prop_psi.mol.wf.ci
@@ -144,9 +144,10 @@ class OCRabitzIterator(ABCOCIterator):
 
 # methods inside dictionary return things to be saved
     def get_log_file_out(self):
+#        print(self.prop_psi.mol.wf.ci)
+#        print(self.initial_c0)
         integral_field = np.real(self.field_J_integral())
-        norm_proj = np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state)
-                            /(np.dot(self.prop_psi.mol.wf.ci, np.conj(self.prop_psi.mol.wf.ci))))
+        norm_proj = np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state)/(np.dot(self.prop_psi.mol.wf.ci, np.conj(self.prop_psi.mol.wf.ci))))
         return np.array([self.par.convergence_t, self.par.J, norm_proj, integral_field])
 
     def get_final_pop(self):

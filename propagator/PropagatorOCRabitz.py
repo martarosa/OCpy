@@ -2,7 +2,10 @@ import numpy as np
 
 from read_and_set.read import auxiliary_functions as af
 
+from propagator.ABCPropagatorTerms import ABCPropagatorTerms
 from propagator.ABCPropagator import ABCPropagator
+from medium.ABCMedium import ABCMedium
+
 from molecule.Molecule import Molecule
 
 import dictionaries.PropagatorTermsDictionaries as ptdict
@@ -22,15 +25,11 @@ class PropagatorOCfwd(ABCPropagator):
 
         self.wf_matrix_out = Func_tMatrix()
 
-    def init(self, molecule, medium, propagator):
-        self.mol = molecule
-        self.medium = medium
-        self.propagator_terms = ptdict.PropagatorTermsDict[propagator]()
-        self.propagator_terms.init()
+    def clean_propagator(self):
+        self.propagator = []
 
-
-    def set_propagator(self, molecule, medium):
-        self.init(molecule, medium, "rabitz")
+    def set_propagator(self, molecule, medium, prop_conf):
+        self.init(molecule, medium, prop_conf)
         self.clean_propagator()
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
@@ -79,6 +78,9 @@ class PropagatorOCbwd(ABCPropagator):
         self.medium = medium
         self.propagator_terms = ptdict.PropagatorTermsDict[propagator]()
         self.propagator_terms.init()
+        
+    def clean_propagator(self):
+        self.propagator = []
 
 
     def set_propagator(self, molecule, medium):

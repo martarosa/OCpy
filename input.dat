@@ -1,0 +1,39 @@
+[SYSTEM]
+dt=1
+nstep=250
+name = test_new_implementation_rabitz
+oc_algorithm = rabitzii
+propagator = rabitz
+#ibm_external_opt = ibm_input.conf
+folder = 
+
+[WAVEFUNCTION]
+name_ci=ci_ini3.inp
+name_ei=ci_energy3.inp
+name_mut=ci_mut3.inp
+
+[FIELD]
+field_type=const
+#name_field_file = test_genetic_quantum_qasm_3lev_noisy_depol_flip_5_field_bkp.dat
+fi=0.01 0.01 0.01
+#sigma = 125
+#t0 = 125
+#omega = 0.32140573 0.32140573 0.32140573 
+
+[MEDIUM]
+medium=vac
+#name_Vij=pot_gamess.inp
+#name_Q_tdplas=np_bem.mdy
+#read_qijn=False
+#name_file_qijn=./qijn.dat
+
+[OPTIMALC]
+restart=False
+alpha=const
+#alpha0=1
+n_iterations= 3
+target_state= 0 1 0  
+conf_file = rabitz.conf
+
+[SAVE]
+restart_step=1
