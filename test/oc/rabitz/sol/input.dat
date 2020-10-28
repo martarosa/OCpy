@@ -12,13 +12,11 @@ name_ei=ci_energy.inp
 name_mut=ci_mut.inp
 
 [FIELD]
-field_type=const
+#field_type=const
 #omega=0.3239892104044628 0.3239892104044628 0.3239892104044628
 #sigma=125
 #t0=125
-fi=0.01 0.01 0.01
-#f_max= 0.0 0.0038 0.0 
-#name_field_file=
+#fi=0.01 0.01 0.01
 
 [MEDIUM]
 medium=sol
@@ -28,7 +26,7 @@ medium=sol
 #name_file_qijn=./qijn.dat
 
 [OPTIMALC]
-restart=False
+restart=True
 alpha=sin
 n_iterations=10
 target_state=0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0          

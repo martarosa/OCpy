@@ -82,10 +82,10 @@ class SectionSave(ABCSection):
     def __init__(self):
         super().__init__()
         self.section = "SAVE"
-        self.section_default_dictionary = {'restart_step': '10'}
+        self.section_default_dictionary = {'restart_step': '10', 'append': 'false'}
         self.section_dictionary = {}
-        self.allowed_val = []
-        self.case_unsensitive_keys = []
+        self.allowed_val = [['append', ['true', 'false']]]
+        self.case_unsensitive_keys = ['append']
 
 
 class SectionOptimalControl(ABCSection):

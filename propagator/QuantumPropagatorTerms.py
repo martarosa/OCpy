@@ -11,10 +11,10 @@ from read_and_set.read import auxiliary_functions as af
 from molecule.Molecule import Molecule
 #from propagator import math_functions as mf
 
-from qiskit import QuantumCircuit , QuantumRegister , ClassicalRegister
-from qiskit import Aer , execute , IBMQ
+#MRqiskit from qiskit import QuantumCircuit , QuantumRegister , ClassicalRegister
+#MRqiskit from qiskit import Aer , execute , IBMQ
 from propagator.ABCPropagatorTerms import ABCPropagatorTerms
-from qiskit.providers.aer.noise import NoiseModel
+#MRqiskit from qiskit.providers.aer.noise import NoiseModel
 from parameters.IBMParameters import IBMParameters
 
 import sys
@@ -123,6 +123,8 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
             
         def execute(self):
             print(self.IBMParameters.provider)
+            '''
+            #MRqiskit
             if self.IBMParameters.provider == "statevector_simulator":
                 result = execute(self.qcircuit, Aer.get_backend(self.IBMParameters.provider)).result()
                 statevector = result.get_statevector(self.qcircuit)
@@ -135,7 +137,7 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
                 counts = result.get_counts(self.qcircuit)
                 statevector = af.population_from_counts_dictionary(counts, self.IBMParameters.shots, 2**(len(self.qbits)))
             return statevector
-       
+            '''
         
           
         

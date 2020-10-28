@@ -1,5 +1,5 @@
-from qiskit.providers.aer.noise import NoiseModel
-from qiskit import IBMQ
+#MRqiskit from qiskit.providers.aer.noise import NoiseModel
+#MRqiskit from qiskit import IBMQ
 
 class IBMParameters():
     def __init__(self):
@@ -13,11 +13,17 @@ class IBMParameters():
         
         
     def set_noise_model(self):
+        pass
+        '''
+        #MRqiskit
         if self.noise:
             self.noise_model = NoiseModel.from_backend(self.device.properties())
             self.coupling_map = self.device.configuration().coupling_map
-            
+        '''    
     def set_device(self):
+        pass
+        '''
+        #MRqiskit
         provider = IBMQ.load_account()
         self.device = provider.get_backend(self.device)
-    
+        '''

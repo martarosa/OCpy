@@ -20,7 +20,7 @@ from field.Field import Field, Func_tMatrix
 from copy import deepcopy
 from scipy import optimize
 import dictionaries.PropagatorDictionaries as pdict
-from qiskit.quantum_info import partial_trace
+#MRqiskit from qiskit.quantum_info import partial_trace
 
 
 
@@ -138,6 +138,9 @@ class OCScipyOptimizeIterator(ABCOCIterator):
         self.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
         self.prop_psi.mol.wf.set_wf(self.initial_c0, 1)
         if self.par.propagator == 'quantum_trotter_suzuki':
+            pass
+            '''
+            MRqiskit 
             self.prop_psi.propagator_terms.set_qprocessor(self.prop_psi.mol)
             self.prop_psi.propagate_n_step(self.discrete_t_par, self.field.field)
             if self.prop_psi.propagator_terms.IBMParameters.provider == "statevector_simulator":
@@ -148,6 +151,7 @@ class OCScipyOptimizeIterator(ABCOCIterator):
                p_tgt = self.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
                field = np.real(self.alpha_field_J_integral(self.field.field))
                J = 1 - p_tgt + field
+            '''
         else:
             self.prop_psi.propagate_n_step(self.discrete_t_par, self.field.field)
             p_tgt = np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state))
@@ -168,7 +172,8 @@ class OCScipyOptimizeIterator(ABCOCIterator):
         if self.par.propagator != 'quantum_trotter_suzuki':
             self.pop_tgt.append(np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state)))
         elif self.prop_psi.propagator_terms.IBMParameters.provider == "statevector_simulator":
-            self.pop_tgt.append(np.real(partial_trace(self.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[np.argmax(self.par.target_state)])).data[1,1]))
+            pass
+            #MRqiskit self.pop_tgt.append(np.real(partial_trace(self.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[np.argmax(self.par.target_state)])).data[1,1]))
         else:
             self.pop_tgt.append(self.prop_psi.counts_dictionary[np.argmax(self.par.target_state)])
         if self.current_iteration == self.par.n_iterations:

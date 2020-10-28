@@ -17,7 +17,7 @@ from field.Field import Field, Func_tMatrix
 from deap import base
 from deap import creator
 from deap import tools
-from qiskit.quantum_info import partial_trace
+#MRqiskit from qiskit.quantum_info import partial_trace
 
 import random
 
@@ -191,7 +191,8 @@ class OCGeneticIterator(ABCOCIterator):
             chro.prop_psi.propagator_terms.set_qprocessor(chro.prop_psi.mol)
             chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
             if chro.prop_psi.propagator_terms.IBMParameters.provider == "statevector_simulator":
-                p_tgt = np.real(partial_trace(chro.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1])).data[1,1])
+                pass
+                #MRqiskit p_tgt = np.real(partial_trace(chro.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1])).data[1,1])
             else:
                 p_tgt = chro.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
             J = p_tgt - self.alpha_field_J_integral_chromosome(chro.field.field) ### devi fare proiezione su una psi generica
