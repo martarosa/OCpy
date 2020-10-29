@@ -12,8 +12,8 @@ name_ei=ci_energy3.inp
 name_mut=ci_mut3.inp
 
 [FIELD]
-field_type=genetic
-#name_field_file=tmp_field_bkp.dat
+#field_type=genetic
+name_field_file=tmp_field_bkp.dat
 #fi=0.01 0.01 0.01
 #sigma = 125
 #t0 = 125

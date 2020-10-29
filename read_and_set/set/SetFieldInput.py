@@ -31,7 +31,7 @@ class SetFieldInput(ABCSetInput):
 
     def set_restart(self, user_input):
             self.read_restart.read_file(user_input.sys.section_dictionary['folder'], user_input.field.section_dictionary['name_field_file'])
-            if(user_input.sys.section_dictionary['oc_algorithm'] == 'genetic'):
+            if user_input.sys.section_dictionary['oc_algorithm'] in ['genetic', 'nelder-mead', 'bfgs', 'cg']:
                 self.input_parameters = self.read_restart.input_parameters
                 self.input_parameters.dt = float(user_input.sys.section_dictionary['dt'])
                 self.input_parameters.nstep = int(user_input.sys.section_dictionary['nstep'])
