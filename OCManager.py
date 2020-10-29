@@ -2,6 +2,7 @@ import dictionaries.OCDictionaries
 from dictionaries import SaveDictionaries as sdict
 from alpha.Alpha import Alpha
 from parameters.OCManagerParameters import OCManagerParameters
+import numpy as np
 
 
 # OCmanager has only one instance, store all the data and performs all the calculations.
@@ -54,5 +55,7 @@ class OCManager:
             self.oc_iterator.iterate(current_iteration)
             self.save.save(current_iteration)
             current_iteration += 1
+        if self.par.oc_iterator_name in ['nelder-mead', 'bfgs', 'cg']:
+            np.save(self.save.par.folder + self.save.par.filename + "_result.npy", [self.oc_iterator.result, self.oc_iterator.par.J])
 
 

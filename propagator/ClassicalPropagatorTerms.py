@@ -2,7 +2,7 @@ import numpy as np
 
 from propagator.ABCPropagatorTerms import ABCPropagatorTerms
 from read_and_set.read import auxiliary_functions as af
-from propagator import math_functions as mf
+#from propagator import math_functions as mf
 
 # all posible propagator term. Some use PCM methods specific of FrozenSolventPCM child class, If/when
 # DinamicPCM(PCM) will have rabitz implemented, it will have a propagate_bwd_oc term, while the propagation in
@@ -21,7 +21,7 @@ class ClassicalPropagatorTerms(ABCPropagatorTerms):
         self.dict_terms["eulero_field"] = self.eulero_field_term
         self.dict_terms["eulero_medium"] = self.eulero_medium_term_fortran
         self.dict_terms["norm"] = self.norm
-        self.dict_terms["oc_medium_bwd"] = self.bwd_medium_term_fortran
+    #    self.dict_terms["oc_medium_bwd"] = self.bwd_medium_term_fortran
 
     # <editor-fold desc="H terms">
 
@@ -81,16 +81,16 @@ class ClassicalPropagatorTerms(ABCPropagatorTerms):
                                       np.asfortranarray(mol.par.Vijn_fortran_flip, dtype=np.complex128)))
 
 
-
-    def bwd_medium_term_fortran(self, mol, order, dt, field_dt_vector, medium, wf_fwd, *args):
-        medium.propagate_bwd_oc_fortran(wf_fwd, field_dt_vector)
-        q_t = medium.get_q_t()
-        mol.wf.ci += -order * 1j * dt \
-                          * (mf.bwd_pcm(np.asfortranarray(mol.wf.ci_prev[0], dtype=np.complex128),
-                                        np.asfortranarray(wf_fwd, dtype=np.complex128),
-                                        np.asfortranarray(q_t, dtype=np.complex128),
-                                        np.asfortranarray(mol.par.Vijn_fortran_flip, dtype=np.complex128),
-                                        np.asfortranarray(medium.qijn_fortran_flip, dtype=np.complex128)))
+#
+#    def bwd_medium_term_fortran(self, mol, order, dt, field_dt_vector, medium, wf_fwd, *args):
+#        medium.propagate_bwd_oc_fortran(wf_fwd, field_dt_vector)
+#        q_t = medium.get_q_t()
+#        mol.wf.ci += -order * 1j * dt \
+#                          * (mf.bwd_pcm(np.asfortranarray(mol.wf.ci_prev[0], dtype=np.complex128),
+#                                        np.asfortranarray(wf_fwd, dtype=np.complex128),
+#                                        np.asfortranarray(q_t, dtype=np.complex128),
+#                                        np.asfortranarray(mol.par.Vijn_fortran_flip, dtype=np.complex128),
+#                                        np.asfortranarray(medium.qijn_fortran_flip, dtype=np.complex128)))
 
 
 

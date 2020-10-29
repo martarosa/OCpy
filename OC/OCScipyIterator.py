@@ -20,6 +20,7 @@ from field.Field import Field, Func_tMatrix
 from copy import deepcopy
 from scipy import optimize
 import dictionaries.PropagatorDictionaries as pdict
+import pandas as pd
 #MRqiskit from qiskit.quantum_info import partial_trace
 
 
@@ -42,7 +43,7 @@ class OCScipyOptimizeIterator(ABCOCIterator):
         self.initial_c0 = None
         self.current_iteration = None
         self.result = None
-        self.pop_tgt = ['NaN', ]
+        self.pop_target = []
         
        
         
@@ -121,13 +122,15 @@ class OCScipyOptimizeIterator(ABCOCIterator):
         self.field = deepcopy(starting_field)
         self.field_par = starting_field.par
         self.prop_psi = pdict.PropagatorDict[self.par.propagator]()
-        prop_conf.quantum_prop_keyword = self.par.propagator
+        if prop_conf != None:
+            prop_conf.quantum_prop_keyword = self.par.propagator
         self.prop_psi.set_propagator(molecule, medium, prop_conf)
         self.init_wf()
         self.init_output_dictionary()
     
     def check_convergence(self):
         if self.current_iteration - self.par.n_iterations + 1 == 0:
+          #  print(self.par.n_iterations)
             self.par.convergence_t = self.par.J[0]
         else:
             self.par.convergence_t =  self.par.J[self.current_iteration - self.par.n_iterations] - self.par.J[self.current_iteration - self.par.n_iterations + 1]
@@ -144,9 +147,9 @@ class OCScipyOptimizeIterator(ABCOCIterator):
             self.prop_psi.propagator_terms.set_qprocessor(self.prop_psi.mol)
             self.prop_psi.propagate_n_step(self.discrete_t_par, self.field.field)
             if self.prop_psi.propagator_terms.IBMParameters.provider == "statevector_simulator":
-               p_tgt = np.real(partial_trace(self.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[np.argmax(self.par.target_state)])).data[1,1])
+               pop_target = np.real(partial_trace(self.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[np.argmax(self.par.target_state)])).data[1,1])
                field = np.real(self.alpha_field_J_integral(self.field.field))
-               J = 1 - p_tgt + field
+               J = 1 - pop_target + field
             else:
                p_tgt = self.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
                field = np.real(self.alpha_field_J_integral(self.field.field))
@@ -154,9 +157,9 @@ class OCScipyOptimizeIterator(ABCOCIterator):
             '''
         else:
             self.prop_psi.propagate_n_step(self.discrete_t_par, self.field.field)
-            p_tgt = np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state))
+            pop_target = np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state))
             field = np.real(self.alpha_field_J_integral(self.field.field))
-            J = 1 - p_tgt + field
+            J = 1 - pop_target + field
         return J
         
             
@@ -170,13 +173,13 @@ class OCScipyOptimizeIterator(ABCOCIterator):
         self.amplitudes_to_save.append(coefficients)
         print("J at iteration " + str(self.current_iteration) + " is " + str(self.par.J[-1]))
         if self.par.propagator != 'quantum_trotter_suzuki':
-            self.pop_tgt.append(np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state)))
+            self.pop_target.append(np.real(af.projector_mean_value(self.prop_psi.mol.wf.ci, self.par.target_state)))
         elif self.prop_psi.propagator_terms.IBMParameters.provider == "statevector_simulator":
             pass
             #MRqiskit self.pop_tgt.append(np.real(partial_trace(self.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[np.argmax(self.par.target_state)])).data[1,1]))
         else:
             self.pop_tgt.append(self.prop_psi.counts_dictionary[np.argmax(self.par.target_state)])
-        if self.current_iteration == self.par.n_iterations:
+        if self.current_iteration == self.par.n_iterations - 1:
             self.field_psi_matrix = self.field.field
             
             
@@ -194,8 +197,10 @@ class OCScipyOptimizeIterator(ABCOCIterator):
 ### methods to save the output #####
         
     def get_field_ampl(self):
-     #   print(self.current_iteration)
-        return np.reshape(self.amplitudes_to_save[self.par.n_iterations - self.current_iteration], ((-1,3)))
+         if self.current_iteration - self.par.n_iterations + 1 <= len(self.amplitudes_to_save):
+             return np.reshape(self.amplitudes_to_save[self.current_iteration - self.par.n_iterations + 1], ((-1,3)))
+         else:
+             return np.reshape(self.amplitudes_to_save[-1], ((-1,3)))
     
     
     def field_J_integral(self, amplitudes):
@@ -210,32 +215,40 @@ class OCScipyOptimizeIterator(ABCOCIterator):
 
     
     def get_log_file_out(self): 
-        if self.par.propagator != 'quantum_trotter_suzuki':
-            pop_tgt = self.pop_tgt[self.current_iteration - self.par.n_iterations]
-            J = self.par.J[-self.current_iteration]
-        #    integral_field = pop_tgt - str(J)
-            self.check_convergence()
-            integral_field = self.field_J_integral(self.amplitudes_to_save[self.par.n_iterations - self.current_iteration]) 
-            log_array = np.array([self.par.convergence_t, self.par.J[self.par.n_iterations - self.current_iteration], pop_tgt, integral_field])
-            self.current_iteration += 1
-            print(self.par.convergence_t)
-            return log_array
+        if self.current_iteration - self.par.n_iterations + 1 < len(self.pop_target):
+            pop_target = self.pop_target[self.current_iteration - self.par.n_iterations + 1]
+            integral_field = self.field_J_integral(self.amplitudes_to_save[self.current_iteration - self.par.n_iterations + 1]) 
         else:
-            self.check_convergence()
-            integral_field = self.field_J_integral(self.amplitudes_to_save[self.par.n_iterations - self.current_iteration]) 
-            log_array = np.array([self.par.convergence_t, self.par.J[self.current_iteration - self.par.n_iterations + 1], self.pop_tgt[self.current_iteration - self.par.n_iterations + 1] ,integral_field])
-            self.current_iteration += 1
-            return log_array
+            pop_target = self.pop_target[-1]
+            integral_field = self.field_J_integral(self.amplitudes_to_save[-1])
+        self.check_convergence()
+        log_array = np.array([self.par.convergence_t, self.par.J[self.current_iteration - self.par.n_iterations + 1], pop_target, integral_field])
+        self.current_iteration += 1
+        return log_array
+
 
     def get_scipy_result_out(self):
         result = self.result
         return result
-
+    
     def get_restart(self):
-        out = np.concatenate((self.genetic_par.omegas_matrix, np.reshape(self.amplitudes_to_save[-1], ((-1,3)))))
+        separate1 = np.array([["###","omegas","###"],["###","###","###"]])
+        separate2 = np.array([["###", "fi", "###"],["###","###","###"]])
+        out = pd.DataFrame(separate1)
+        out_tmp = pd.DataFrame(self.field.par.omega)
+        out = out.append(out_tmp)
+        out_tmp = pd.DataFrame(separate2)
+        out = out.append(out_tmp)
+        out_tmp = pd.DataFrame(np.reshape(self.amplitudes_to_save[-1], ((-1,3))))
+        out = out.append(out_tmp)
         return out
+
+#    def get_restart(self):
+#        out = np.concatenate((, ))
+#        return out
     
     def get_field_t(self):
+        print(self.field_psi_matrix.f_xyz)
         field_t_matrix = np.insert(self.field_psi_matrix.f_xyz, 0, self.field_psi_matrix.time_axis, axis = 1)
         return field_t_matrix
 

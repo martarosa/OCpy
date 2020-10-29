@@ -1,6 +1,6 @@
 import numpy as np
 
-from propagator import math_functions as mf
+#from propagator import math_functions as mf
 
 from medium.ABCMedium import ABCMedium
 from parameters.MediumParameters import MediumParameters
@@ -40,10 +40,10 @@ class FrozenSolventMedium(ABCMedium):
         self.par.q_t = q_t_reactionf + q_t_lf
 
 
-    def propagate_fortran(self, mol, field_dt_vector):
-        q_t_reactionf = mf.propagate_q_frozen(mol.wf.ci_prev[0], self.qijn_fortran_flip)
-        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
-        self.par.q_t = q_t_reactionf + q_t_lf
+#    def propagate_fortran(self, mol, field_dt_vector):
+#        q_t_reactionf = mf.propagate_q_frozen(mol.wf.ci_prev[0], self.qijn_fortran_flip)
+#        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
+#        self.par.q_t = q_t_reactionf + q_t_lf
 
 
     def propagate_bwd_oc(self, chi_ci, field_dt_vector):
@@ -51,10 +51,10 @@ class FrozenSolventMedium(ABCMedium):
         q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
         self.par.q_t = q_t_reactionf + q_t_lf
 
-    def propagate_bwd_oc_fortran(self, chi_ci, field_dt_vector):
-        q_t_reactionf = mf.propagate_q_frozen(chi_ci, self.qijn_fortran_flip)
-        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
-        self.par.q_t = q_t_reactionf + q_t_lf
+#    def propagate_bwd_oc_fortran(self, chi_ci, field_dt_vector):
+#        q_t_reactionf = mf.propagate_q_frozen(chi_ci, self.qijn_fortran_flip)
+#        q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
+#        self.par.q_t = q_t_reactionf + q_t_lf
 
 
     def get_q_t(self):

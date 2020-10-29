@@ -13,6 +13,7 @@ name_mut=ci_mut.inp
 
 [FIELD]
 field_type=genetic
+#name_field_file=tmp_field_bkp.dat
 #fi=0.01 0.01 0.01
 #sigma = 125
 #t0 = 125
@@ -30,7 +31,7 @@ restart=False
 alpha=const
 n_iterations=20
 target_state=0 1           
-#iterator_config_file = genetic.conf
+conf_file = genetic.conf
 
 [SAVE]
 #restart_step=1

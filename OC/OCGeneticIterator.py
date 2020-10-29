@@ -89,7 +89,8 @@ class OCGeneticIterator(ABCOCIterator):
 
     def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf, prop_conf):
         self.par.propagator = oc_input.propagator
-        prop_conf.quantum_prop_keyword = self.par.propagator
+        if prop_conf != None:
+            prop_conf.quantum_prop_keyword = self.par.propagator
         self.prop_psi = pdict.PropagatorDict[self.par.propagator]()
         self.discrete_t_par.nstep = oc_input.nstep
         self.discrete_t_par.dt = oc_input.dt
@@ -194,8 +195,8 @@ class OCGeneticIterator(ABCOCIterator):
                 pass
                 #MRqiskit p_tgt = np.real(partial_trace(chro.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1])).data[1,1])
             else:
-                p_tgt = chro.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
-            J = p_tgt - self.alpha_field_J_integral_chromosome(chro.field.field) ### devi fare proiezione su una psi generica
+                pop_target = chro.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
+            J = pop_target - self.alpha_field_J_integral_chromosome(chro.field.field) ### devi fare proiezione su una psi generica
         else:
             chro.prop_psi.mol.wf.set_wf(self.initial_c0, 1)
             chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)

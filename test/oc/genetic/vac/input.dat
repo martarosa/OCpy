@@ -12,12 +12,13 @@ name_mut=ci_mut.inp
 
 [FIELD]
 field_type=genetic
+#name_field_file = 
 
 [MEDIUM]
 medium=vac
 
 [OPTIMALC]
-restart=FALSE
+restart=False
 alpha=const
 n_iterations=30
 target_state=0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0   
