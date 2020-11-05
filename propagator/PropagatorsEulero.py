@@ -114,3 +114,47 @@ class PropagatorEulero2Order(ABCPropagator):
                 self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i], order=1)
             out.append(self.mol.wf.ci)
         self.wf_matrix_out.f_xyz = np.array(out)
+        
+class PropagatorEulero2OrderGeneralPerturbation(ABCPropagator):
+    def __init__(self):
+        super().__init__()
+        self.mol = Molecule()
+        self.medium = None
+        
+        self.propagator_terms = None
+        self.propagator = []
+        
+    def clean_propagator(self):
+        self.propagator = []
+        
+    def set_propagator(self, molecule, medium, prop_conf = None):
+        self.init(molecule, medium, "eulero_2order_general_prop")
+        self.clean_propagator()
+        self.add_term_to_propagator("eulero2_coeff")
+        self.add_term_to_propagator("eulero_system_hamiltonian")
+        self.add_term_to_propagator("eulero_perturbation")
+        if self.medium != None:
+            self.add_term_to_propagator("eulero_medium")
+        self.add_term_to_propagator("norm")
+    
+    def propagate_one_step(self, dt, perturbation, order=2):
+        for func in self.propagator:
+            func(self.mol, order, dt, perturbation, self.medium)
+            
+    def propagate_n_step(self, discrete_time_par, field):
+        if(field.time_axis[1] - field.time_axis[0]) - discrete_time_par.dt > discrete_time_par.dt *0.001:
+            af.exit_error("ERROR: Propagation time step and field time step are different")
+
+        self.wf_matrix_out.time_axis = np.linspace(0,
+                                              discrete_time_par.dt * discrete_time_par.nstep,
+                                              discrete_time_par.nstep + 1)
+        out = list()
+        out.append(self.mol.wf.ci)
+        for i in range(discrete_time_par.nstep):
+
+            if i != 0:
+                self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i])
+            else:
+                self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i], order=1)
+            out.append(self.mol.wf.ci)
+        self.wf_matrix_out.f_xyz = np.array(out)

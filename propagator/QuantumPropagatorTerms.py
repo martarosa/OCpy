@@ -58,7 +58,9 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
                     
             
             
-##### Method to build the circuit equivalent to simulation of a single_particle hamiltonian, in the field-free diagonal basis, under a TD external perturbation ##### 
+##### Method to build the circuit equivalent to simulation of a single_particle hamiltonian, in the field-free diagonal basis, under a TD external perturbation (linear mapping) ##### 
+
+#### N.B. all this section should be updated aware of the new qiskit functionality: WeightedPauliOperator.evolve ######
 
 
         def quantum_evo_circuit(self, mol, dt, field_dt_vector):
@@ -89,6 +91,11 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
                         self.qcircuit.cx(self.qbits[j], self.qbits[i])
                 self.qcircuit.rx(-np.pi/2, self.qbits[i])
             self.qcircuit.rx(-np.pi/2, self.qbits[j])
+
+##### Method to build the circuit equivalent to the simulation of a single particle hamiltonian, under a TD external perturbation (binary_mapping) #####
+
+	def binary_quantum_evo(self, mol, dt, perturbation):
+	    pass	
             
             
 ###### Measurement_methods #######
