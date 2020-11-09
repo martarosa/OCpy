@@ -17,6 +17,10 @@ def projector_mean_value(vector, vector_to_project):
     mean_value = np.dot(np.conj(vector), apply_projection(vector, vector_to_project))
     return mean_value
 
+def compute_expectation_value(vector, operator):
+    expectation_value = np.dot(np.conj(vector), np.dot(operator, vector))
+    return expectation_value
+
 
 def normalized_projector_mean_value(vector, vector_to_project):
     mean_value = np.dot(np.conj(vector), apply_projection(vector, vector_to_project))/np.dot(vector,vector)

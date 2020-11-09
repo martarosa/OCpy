@@ -2,6 +2,9 @@ import numpy as np
 import pandas as pd
 
 
+### e se chiamassimo questa ReadExternalOutput e ci mettiamo tutto?
+
+
 class ReadOutputGaussian():
 
     def read_ci0(self, name_file):

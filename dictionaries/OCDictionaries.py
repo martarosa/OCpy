@@ -9,6 +9,10 @@ from read_and_set.set.SetGeneticConf import SetGeneticOCInput
 from read_and_set.set.SetNoConf import SetNoConf
 from read_and_set.set.SetRabitzConf import SetRabitzOCInput
 
+OCProblemDict = {"optical_excitation": ObservableFunctional,
+                 "ground_state": EnergyFunctional}
+
+
 OCAlgorithmDict = { "none": SimplePropagationIterator,
                     "genetic": OCGeneticIterator,
                     "rabitzi": OCRabitzIterator,

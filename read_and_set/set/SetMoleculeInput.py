@@ -10,14 +10,17 @@ class SetMoleculeInput(ABCSetInput):
 
 
     def set(self, user_input):
-        read_output = ReadOutputGaussian()
-        self.input_parameters.wf_ci = read_output.read_ci0(user_input.sys.section_dictionary['folder'] +
-                                                           user_input.wf.section_dictionary['name_ci'])
-
-        self.input_parameters.en_ci = read_output.read_en_ci0(user_input.sys.section_dictionary['folder'] +
-                                                              user_input.wf.section_dictionary['name_ei'])
-        self.input_parameters.muT = read_output.read_muT(user_input.sys.section_dictionary['folder'] +
-                                                         user_input.wf.section_dictionary['name_mut'], self.input_parameters.wf_ci.size)
+        if user_input.sys.oc_problem['oc_problem'] == 'ground_state':
+            pass
+        elif user_input.sys.oc_problem['oc_problem'] == 'optical_excitation':
+            read_output = ReadOutputGaussian()
+            self.input_parameters.wf_ci = read_output.read_ci0(user_input.sys.section_dictionary['folder'] +
+                                                               user_input.wf.section_dictionary['name_ci'])
+    
+            self.input_parameters.en_ci = read_output.read_en_ci0(user_input.sys.section_dictionary['folder'] +
+                                                                  user_input.wf.section_dictionary['name_ei'])
+            self.input_parameters.muT = read_output.read_muT(user_input.sys.section_dictionary['folder'] +
+                                                             user_input.wf.section_dictionary['name_mut'], self.input_parameters.wf_ci.size)
         if user_input.medium.section_dictionary['medium'] != 'vac':
             self.input_parameters.Vijn = read_output.read_V(user_input.sys.section_dictionary['folder'] +
                                                             user_input.medium.section_dictionary['name_vij'],

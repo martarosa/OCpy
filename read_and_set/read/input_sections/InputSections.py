@@ -13,11 +13,13 @@ class SectionSystem(ABCSection):
                                            'dt'          : 'missing',
                                            'oc_algorithm': 'none',
                                            'propagator'  : 'missing',
+                                           'oc_problem'  : 'optical_excitation',
                                            'ibm_external_opt' : 'none'}
         self.section_dictionary = {}
-        self.allowed_val = [['oc_algorithm', ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg']],
-                            ['propagator',   ['eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki']]]
-        self.case_unsensitive_keys = ['oc_algorithm', 'propagator']
+        self.allowed_val = [['oc_algorithm', ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg', 'cobyla']],
+                            ['propagator',   ['eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki']]
+                            ['oc_problem', ['optical_excitation', 'ground_state']]]
+        self.case_unsensitive_keys = ['oc_algorithm', 'propagator', 'oc_problem']
 
 
     def init_default_folder(self, folder):
@@ -35,6 +37,7 @@ class SectionField(ABCSection):
                                            'omega'     : '0 0 0',
                                            'sigma'     : '0',
                                            't0'        : '0',
+                                           'num_control_parameters' : '40',
                                            'name_field_file': 'none'}
         self.section_dictionary = {}
         self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'sum', 'genetic', 'read']]]

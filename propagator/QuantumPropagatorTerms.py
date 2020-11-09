@@ -94,8 +94,8 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
 
 ##### Method to build the circuit equivalent to the simulation of a single particle hamiltonian, under a TD external perturbation (binary_mapping) #####
 
-	def binary_quantum_evo(self, mol, dt, perturbation):
-	    pass	
+        def binary_quantum_evo(self, mol, dt, perturbation):
+            pass	
             
             
 ###### Measurement_methods #######
