@@ -11,6 +11,9 @@ python module interface_tdplas ! in
                 integer intent(in) :: n_tessere
                 integer intent(in) :: n_states
             end subroutine init_global_tdplas
+            function get_threads() result (nt) ! in :interface_tdplas:interface_tdplas.f90:interface_tdplas
+                integer :: nt
+            end function get_threads
             subroutine call_init_charges(ci,field_vector,n_states) ! in :interface_tdplas:interface_tdplas.f90:interface_tdplas
                 complex*16 dimension(n_states),intent(in) :: ci
                 real*8 dimension(3),intent(in) :: field_vector

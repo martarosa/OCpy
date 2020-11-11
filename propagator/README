@@ -1,0 +1,2 @@
+python -m numpy.f2py math_functions.f90 -m math_functions -h math_functions.pyf --overwrite-signature 
+python -m numpy.f2py -c math_functions.pyf math_functions.f90 

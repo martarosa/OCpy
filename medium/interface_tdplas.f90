@@ -1,5 +1,6 @@
 module interface_tdplas
       use tdplas
+      !$ use omp_lib
       implicit none
 
 
@@ -16,9 +17,23 @@ module interface_tdplas
                 integer    , intent(in)  :: n_states, n_tessere         ! number of CIS states
                 real*8     , intent(in)  :: vts(:,:,:)
 
+                integer :: nt
+                nt = get_threads()
+                write(*,*) nt
+
                 call  quantum_init(dt, vts, n_tessere, n_states)
-                call  readio_and_init_tdplas_for_ocpy
+                call  readio_and_init_tdplas_for_ocpy(nt)
             end subroutine
+
+
+            function get_threads() result(nt)
+                integer :: nt
+
+                nt = 0
+                !$ nt = omp_get_max_threads()
+
+            end function get_threads
+
 
 
             subroutine call_init_charges(ci, field_vector, n_states)
@@ -35,12 +50,13 @@ module interface_tdplas
                 real*8, allocatable  :: V_reactionf(:)
                 real*8, allocatable :: V_localf(:)
                 integer, intent(in) :: n_tessere, n_states
-
+                write(*,*) "qui mana"
 
                 allocate(V_reactionf(n_tessere))
                 allocate(V_localf(n_tessere))
 
                 call deallocate_BEM_public
+                call deallocate_BEM_end_propagation
                 call deallocate_potential
                 call finalize_prop
 

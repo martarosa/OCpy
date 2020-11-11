@@ -55,6 +55,7 @@ class ReadOutputGaussian():
     def read_V_wavet(self, name_file, n_en): #n_en is total number of states, nexcited+1
         print(n_en)
         n_tessere_cavity = self.read_N_tessere_cavity(name_file)
+        print(n_tessere_cavity)
         VN = pd.read_csv(name_file, header=None, skiprows=2, nrows=n_tessere_cavity, sep=r"\s+", engine='python')
         VN = self.convert_fortran_dble(VN[2])
         index=list()

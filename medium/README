@@ -1,2 +1,2 @@
-python3 -m numpy.f2py interface_tdplas.f90 -m interface_tdplas -h interface_tdplas.pyf --overwrite-signature 
-python3 -m numpy.f2py -c interface_tdplas.pyf interface_tdplas.f90 -L/home/mana/programmi/WaveT/TDPlas/src_oc/ -ltdplas -I/home/mana/programmi/WaveT/TDPlas/src_oc/ -L/usr/lib/ -lblas -llapack
+python -m numpy.f2py interface_tdplas.f90 -m interface_tdplas -h interface_tdplas.pyf --overwrite-signature 
+python -m numpy.f2py -c interface_tdplas.pyf interface_tdplas.f90 --f90flags="-fopenmp" -lgomp  -L/home/mana/programmi/WaveT/TDPlas/src/ -ltdplas -I/home/mana/programmi/WaveT/TDPlas/src/ -L/usr/lib/ -lblas -llapack
