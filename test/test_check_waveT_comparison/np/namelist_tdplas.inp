@@ -9,8 +9,8 @@ bem_type='diagonal'
 bem_read_write='read'
 /
 &SURFACE
-create_cavity = 'read_file'
-input_surface='cavity'
+surface_type='mesh'
+input_mesh='read_file'
 /
 
 &EPS_FUNCTION

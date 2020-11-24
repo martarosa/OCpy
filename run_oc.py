@@ -16,8 +16,8 @@ from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
 
 
 
-#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/test_check_waveT_comparison/np/"
-folder = "/home/mana/progetti/OC/paperNP/output_from_vacuum/propagation_test/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/test_check_waveT_comparison/np/"
+#folder = "/home/mana/progetti/OC/paperNP/output_from_vacuum/propagation_test/"
 namefile = "input.dat"
 
 

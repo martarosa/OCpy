@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = wt_2order_prop_nuova 
+name = np_2order_prop 
 oc_algorithm = eulero_2order_prop 
 #folder=
 

@@ -1,3 +1,0 @@
-secondo
-restart true
-ERROR. Restarted calculation. field is read from file. Keys in namelist "FIELD" are not used apart "name_field_file"

@@ -50,7 +50,6 @@ module interface_tdplas
                 real*8, allocatable  :: V_reactionf(:)
                 real*8, allocatable :: V_localf(:)
                 integer, intent(in) :: n_tessere, n_states
-                write(*,*) "qui mana"
 
                 allocate(V_reactionf(n_tessere))
                 allocate(V_localf(n_tessere))
@@ -99,7 +98,6 @@ module interface_tdplas
                call set_potential(V_reactionf, V_localf)
                call prop_chr
                call get_corrected_propagated_charges(q_t)
-
            end subroutine
 
 
