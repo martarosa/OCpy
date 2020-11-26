@@ -46,7 +46,7 @@ class SaveOCGenetic(ABCSave):
                               restart_step,
                               'field_ampl',
                               oc_iterator)
-        if 'qiskit' in sys.modules == False:
+        if oc_iterator.par.propagator != 'quantum_trotter_suzuki':
             self.save_files = [log, final_pop, pop_t, field_t, field_ampl]
         else:
             self.save_files = [log, field_t, field_ampl]

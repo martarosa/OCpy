@@ -13,13 +13,11 @@ class SectionSystem(ABCSection):
                                            'dt'          : 'missing',
                                            'oc_algorithm': 'none',
                                            'propagator'  : 'missing',
-                                           'oc_problem'  : 'optical_excitation',
                                            'ibm_external_opt' : 'none'}
         self.section_dictionary = {}
         self.allowed_val = [['oc_algorithm', ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg', 'cobyla']],
-                            ['propagator',   ['eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki']]
-                            ['oc_problem', ['optical_excitation', 'ground_state']]]
-        self.case_unsensitive_keys = ['oc_algorithm', 'propagator', 'oc_problem']
+                            ['propagator',   ['eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki', 'eulero_2order_psi4']]]
+        self.case_unsensitive_keys = ['oc_algorithm', 'propagator']
 
 
     def init_default_folder(self, folder):
@@ -37,10 +35,10 @@ class SectionField(ABCSection):
                                            'omega'     : '0 0 0',
                                            'sigma'     : '0',
                                            't0'        : '0',
-                                           'num_control_parameters' : '40',
+                                           'num_control_parameters' : '30',
                                            'name_field_file': 'none'}
         self.section_dictionary = {}
-        self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'sum', 'genetic', 'read']]]
+        self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'sum', 'genetic', 'read', 'gaussian_sum', 'free_harmonics']]]
         self.case_unsensitive_keys = ['field_type']
 
 
@@ -57,7 +55,8 @@ class SectionWaveFunction(ABCSection):
         self.section = 'WAVEFUNCTION'
         self.section_default_dictionary = {'name_ci' : 'ci_ini.inp',
                                            'name_ei' : 'ci_energy.inp',
-                                           'name_mut': 'ci_mut.inp'}
+                                           'name_mut': 'ci_mut.inp',
+                                           'name_quantum_chemistry': 'quantum_chemistry.npy'}
         self.section_dictionary = {}
         self.allowed_val = []
         self.case_unsensitive_keys = []
@@ -101,11 +100,13 @@ class SectionOptimalControl(ABCSection):
                                             'target_state': '1',
                                             'n_iterations': '0',
                                             'convergence_thr': '99999',
+                                           'oc_problem'  : 'optical_excitation',
                                             'conf_file': 'none'}
         self.section_dictionary = {}
         self.allowed_val = [['alpha', ['const', 'sin', 'quin']],
-                            ['restart', ['true', 'false']]]
-        self.case_unsensitive_keys = ['restart', 'alpha']
+                            ['restart', ['true', 'false']],
+                            ['oc_problem', ['optical_excitation', 'ground_state']]]
+        self.case_unsensitive_keys = ['restart', 'alpha', 'oc_problem']
 
 
 

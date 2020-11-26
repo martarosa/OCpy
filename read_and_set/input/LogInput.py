@@ -8,6 +8,7 @@ class LogInput():
         self.fi = None
         self.omega = None
         self.sigma = None
+        self.num_control_parameters = None
         self.t0 = None
         self.target_state = None
         self.restart = None

@@ -13,6 +13,7 @@ class SetLogInput(ABCSetInput):
         self.input_parameters.oc_algorithm = user_input.sys.section_dictionary['oc_algorithm']
         self.input_parameters.dt = user_input.sys.section_dictionary['dt']
         self.input_parameters.medium = user_input.medium.section_dictionary['medium']
+        self.input_parameters.num_control_parameters = user_input.field.section_dictionary['num_control_parameters']
 
         self.input_parameters.restart = user_input.oc.section_dictionary['restart']
 

@@ -2,6 +2,7 @@ from OC.OCGeneticIterator import OCGeneticIterator
 from OC.OCRabitzIterator import OCRabitzIterator
 from OC.OCSimplePropagatorIterator import SimplePropagationIterator
 from OC.OCScipyIterator import OCScipyOptimizeIterator
+from ObjectiveFunction.ObjectiveFunctionSpecifics import ObjectiveFunctionGroundState, ObjectiveFunctionOptical
 from read_and_set.read.conf.ReadGeneticConf import ReadGeneticConf
 from read_and_set.read.conf.ReadNoConf import ReadNoConf
 from read_and_set.read.conf.ReadRabitzConf import ReadRabitzConf
@@ -9,8 +10,8 @@ from read_and_set.set.SetGeneticConf import SetGeneticOCInput
 from read_and_set.set.SetNoConf import SetNoConf
 from read_and_set.set.SetRabitzConf import SetRabitzOCInput
 
-OCProblemDict = {"optical_excitation": ObservableFunctional,
-                 "ground_state": EnergyFunctional}
+OCObjectiveFunction = {"optical_excitation": ObjectiveFunctionOptical,
+                 "ground_state": ObjectiveFunctionGroundState}
 
 
 OCAlgorithmDict = { "none": SimplePropagationIterator,

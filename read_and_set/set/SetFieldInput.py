@@ -21,6 +21,7 @@ class SetFieldInput(ABCSetInput):
         self.input_parameters.nstep = int(user_input.sys.section_dictionary['nstep'])
         self.input_parameters.field_type = user_input.field.section_dictionary['field_type']
         self.input_parameters.fi = user_input.field.section_dictionary['fi']
+        self.input_parameters.control_parameters = int(user_input.field.section_dictionary['num_control_parameters'])
         self.input_parameters.sigma = float(user_input.field.section_dictionary['sigma'])
         self.input_parameters.omega = user_input.field.section_dictionary['omega']
         self.input_parameters.t0 = float(user_input.field.section_dictionary['t0'])
@@ -35,6 +36,9 @@ class SetFieldInput(ABCSetInput):
                 self.input_parameters = self.read_restart.input_parameters
                 self.input_parameters.dt = float(user_input.sys.section_dictionary['dt'])
                 self.input_parameters.nstep = int(user_input.sys.section_dictionary['nstep'])
+                if user_input.oc.section_dictionary['oc_problem'] == 'ground_state':
+                    self.input_parameters.control_parameters = int(user_input.field.section_dictionary['num_control_parameters'])
+                    self.input_parameters.field_type = user_input.field.section_dictionary['field_type']
             else:
                 self.input_parameters = self.read_restart.input_parameters
 

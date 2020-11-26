@@ -9,6 +9,8 @@ from SystemObj import Func_tMatrix
 import dictionaries.PropagatorTermsDictionaries as ptdict
 
 
+
+
 class PropagatorEulero1Order(ABCPropagator):
     def __init__(self):
         super().__init__()
@@ -124,15 +126,25 @@ class PropagatorEulero2OrderGeneralPerturbation(ABCPropagator):
         self.propagator_terms = None
         self.propagator = []
         
+    def init(self, molecule, medium, propagator):
+        self.mol = molecule
+        self.medium = medium
+        self.propagator_terms = ptdict.PropagatorTermsDict[propagator]()
+        self.propagator_terms.init()
+        self.wf_matrix_out = Func_tMatrix()
+        
     def clean_propagator(self):
         self.propagator = []
         
     def set_propagator(self, molecule, medium, prop_conf = None):
-        self.init(molecule, medium, "eulero_2order_general_prop")
+        self.init(molecule, medium, "eulero_2order_psi4")
         self.clean_propagator()
         self.add_term_to_propagator("eulero2_coeff")
-        self.add_term_to_propagator("eulero_system_hamiltonian")
-        self.add_term_to_propagator("eulero_perturbation")
+        if af.is_diagonal(self.mol.par.hamiltonian):
+            self.add_term_to_propagator("eulero_energy")
+        else:
+            self.add_term_to_propagator("eulero_external_hamiltonian")
+      #  self.add_term_to_propagator("eulero_perturbation")
         if self.medium != None:
             self.add_term_to_propagator("eulero_medium")
         self.add_term_to_propagator("norm")

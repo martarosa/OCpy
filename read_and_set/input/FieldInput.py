@@ -4,6 +4,7 @@ class FieldInput():
         # parameters used when field is created with a given shape
         self.dt = None
         self.nstep = None
+        self.control_parameters = None
         self.fi = None
         self.omega = None
         self.sigma = None

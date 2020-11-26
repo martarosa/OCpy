@@ -4,6 +4,7 @@ class OCInput:
         self.dt = None
 
         self.oc_iterator_name = None
+        self.control_problem = None
         self.propagator = None
         self.alpha = None
         self.alpha0 = None

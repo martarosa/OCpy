@@ -21,8 +21,9 @@ class ClassicalPropagatorTerms(ABCPropagatorTerms):
         self.dict_terms["eulero_field"] = self.eulero_field_term
         self.dict_terms["eulero_medium"] = self.eulero_medium_term_fortran
         self.dict_terms["norm"] = self.norm
-        self.dict_terms["eulero_system_hamiltonian"] = self.eulero_system_hamiltonian_term
-        self.dict_terms["eulero_perturbation"] = self.eulero_external_perturbation_term
+#        self.dict_terms["eulero_system_hamiltonian"] = self.eulero_system_hamiltonian_term
+#        self.dict_terms["eulero_perturbation"] = self.eulero_external_perturbation_term
+        self.dict_terms["eulero_external_hamiltonian"] = self.eulero_external_hamiltonian_term
     #    self.dict_terms["oc_medium_bwd"] = self.bwd_medium_term_fortran
 
     # <editor-fold desc="H terms">
@@ -42,11 +43,15 @@ class ClassicalPropagatorTerms(ABCPropagatorTerms):
     def eulero_energy_term(self, mol, order, dt, *args):
         mol.wf.ci += -order * 1j * dt * (mol.par.en_ci * mol.wf.ci_prev[0])
         
-    def eulero_system_hamiltonian_term(self, mol, order, dt, *args):
-        mol.wf.ci += -order * 1j * dt * (np.dot(mol.par.hamiltonian, self.mol.wf.ci_prev[0]))
+    def eulero_external_hamiltonian_term(self, mol, order, dt, perturbation, *args):
+        mol.propagate_hamiltonian(perturbation)
+        mol.wf.ci += -order * 1j * dt * (np.dot(mol.par.hamiltonian_t, mol.wf.ci_prev[0]))
         
-    def eulero_external_perturbation_term(self, mol, order, dt, perturbation, *args):
-        mol.wf.ci += -order * 1j * dt * (np.dot(perturbation * mol.par.control_operator, self.mol.wf.ci_prev[0]))
+#    def eulero_system_hamiltonian_term(self, mol, order, dt, *args):
+#        mol.wf.ci += -order * 1j * dt * (np.dot(mol.wf.ci_prev[0], mol.par.hamiltonian))
+#        
+#    def eulero_external_perturbation_term(self, mol, order, dt, perturbation, *args):
+#        mol.wf.ci += -order * 1j * dt * (np.dot(mol.wf.ci_prev[0], mol.par.control_operator) * (1 - perturbation))
 
     def eulero_field_term(self, mol, order, dt, field_dt_vector, *args):
         mol.wf.ci += -order * 1j * dt * (-np.dot(np.dot(mol.wf.ci_prev[0], mol.par.muT), field_dt_vector))

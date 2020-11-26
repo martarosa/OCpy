@@ -106,6 +106,8 @@ class OCRabitzIterator(ABCOCIterator):
 
     def init(self, molecule, starting_field, medium, alpha_t, oc_input, oc_conf, prop_conf = None):
         self.par.propagator = oc_input.propagator
+        self.par.control_problem = oc_input.control_problem
+        self.obj_fun = ocdict.OCObjectiveFunction[self.par.control_problem]()
         self.prop_psi = pdict.PropagatorDict[oc_input.propagator]()
         if not isinstance(self.prop_psi, prop.PropagatorOCfwd):
             af.exit_error("Error in the initialization of Eulero 1 order propagator")

@@ -6,6 +6,7 @@ from copy import deepcopy
 import concurrent.futures
 
 import dictionaries.PropagatorDictionaries as pdict
+import dictionaries.OCDictionaries as ocdict
 from parameters.GeneticParameters import GeneticParameters
 from read_and_set.read import auxiliary_functions as af
 from OC.ABCOCIterator import ABCOCIterator
@@ -92,6 +93,10 @@ class OCGeneticIterator(ABCOCIterator):
         if prop_conf != None:
             prop_conf.quantum_prop_keyword = self.par.propagator
         self.prop_psi = pdict.PropagatorDict[self.par.propagator]()
+        self.par.control_problem = oc_input.control_problem
+        self.par.restart = oc_input.restart
+        self.obj_fun = ocdict.OCObjectiveFunction[self.par.control_problem]()
+        self.obj_fun.set_objective_function()
         self.discrete_t_par.nstep = oc_input.nstep
         self.discrete_t_par.dt = oc_input.dt
         self.par.target_state = oc_input.target_state
@@ -109,6 +114,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.n_selected_chr = genetic_input.n_selected_chr
         self.genetic_par.amplitude_lim = genetic_input.amplitude_lim
         self.genetic_par.parallel = genetic_input.parallel
+        self.genetic_par.localized_guess = genetic_input.localized_guess
 
         self.genetic_par.mate = genetic_input.mate
         self.genetic_par.mate_probability = genetic_input.mate_probability
@@ -121,8 +127,12 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.eta_thr = genetic_input.eta_thr
         self.genetic_par.q = genetic_input.q
         self.genetic_par.select = genetic_input.select
-        self.genetic_par.n_amplitudes = starting_field.par.fi.size
-        self.genetic_par.omegas_matrix = starting_field.par.omega
+        if self.par.control_problem == "optical_excitation":
+            self.genetic_par.n_amplitudes = starting_field.par.fi.size
+            self.genetic_par.omegas_matrix = starting_field.par.omega
+        elif self.par.control_problem == "ground_state":
+            self.genetic_par.n_amplitudes = starting_field.par.control_parameters
+            self.genetic_par.omegas_matrix = np.zeros((int(starting_field.par.control_parameters/3), 3))
 
 
         self.init_chromosomes(molecule, starting_field, medium, prop_conf)
@@ -140,8 +150,11 @@ class OCGeneticIterator(ABCOCIterator):
         print("init_chromo")
         toolbox= base.Toolbox()
     # fitness è una classe astratta.
-    # Creo creator.J, una classe figlia di fitness che ha pesi positivi quindi massimizza
-        creator.create("J", base.Fitness, weights=(1.0,))
+    # Creo creator.J, una classe figlia di fitness che massimizza con pesi positivi (optical_excitation) e minimizza con pesi negativi ("ground_state")
+        if self.par.control_problem == "optical_excitation":
+            creator.create("J", base.Fitness, weights=(1.0,))
+        elif self.par.control_problem == "ground_state":
+            creator.create("J", base.Fitness, weights=(-1.0,))
     # Definisco un oggetto che chiamo Chromosome, come attributi ha J, un oggetto campo e un oggetto propagator.
     # E poi di default ha un vettore da riempire che quando chiami il cromosoma senza attributi viene fuori quello
         creator.create("Chromosome", list, J=creator.J, field = Field(), prop_psi = self.prop_psi)
@@ -161,22 +174,44 @@ class OCGeneticIterator(ABCOCIterator):
     #creo un oggetto prop_psi ....
         prop_psi = self.prop_psi
         prop_psi.set_propagator(molecule, medium, prop_conf)
-        self.initial_c0 = prop_psi.mol.wf.ci
+        if self.par.control_problem == 'optical_excitation':
+            self.initial_c0 = self.prop_psi.mol.wf.ci
+        elif self.par.control_problem == 'ground_state':
+            self.initial_c0 = np.zeros(len(self.prop_psi.mol.par.basis_determinants))
+            self.initial_c0[-1] = 1
     #... e dentro a ogni cromosoma della mia lista inizializzo il campo, il propagatore e metto J = 0.5
     #Sono tutti uguali ma le ampiezze del mio vettore sono diverse perchè le ho fatte random prima
+    # se voglio fare un guess non random ma localizzato intorno ad una soluzione approssimata metto
+    # self.genetic_par.localized_guess == True
+        if self.genetic_par.localized_guess:
+            x = np.zeros((int(starting_field.par.control_parameters/3), 3))
+            x[0,0] = 0.5
+#            x[:,1] = np.random.uniform(0, 3, int(starting_field.par.control_parameters/3))
+            x[:,2] = np.random.uniform(0, 3, int(starting_field.par.control_parameters/3))
+            x = np.reshape(x, starting_field.par.control_parameters).tolist()
         for i in range(len(self.chromosomes)):
             self.chromosomes[i].field = deepcopy(starting_field)
             self.chromosomes[i].prop_psi = deepcopy(prop_psi)
             self.chromosomes[i].J.values = [0.5]
-            if (starting_field.par.field_type == "restart_genetic"):
+            if (self.par.restart == 'true'):
                 self.assign_chromosome_values(self.chromosomes[i], starting_field.par.fi.reshape((1,-1)))
+            elif self.genetic_par.localized_guess:
+                self.localized_initial_guess(self.chromosomes[i], x)
         self.par.J = [99999]
 
-
+    def localized_initial_guess(self, chromosome, reshaped_initial_guess):
+        n = len(reshaped_initial_guess)
+        random_variation = int(random.randrange(0, n))
+        for j in range(n):
+            if j != random_variation:
+                chromosome[j] = reshaped_initial_guess[j] #+ random.uniform(-self.genetic_par.mutate_starting_sigma, self.genetic_par.mutate_starting_sigma)
+            else:
+                chromosome[j] = reshaped_initial_guess[j] + random.uniform(-10, 10)
+                
     def assign_chromosome_values(self, chromosome, reshaped_starting_field_fi):
         n = reshaped_starting_field_fi.size
         for j in range(n):
-            chromosome[j] = reshaped_starting_field_fi[0][j] + random.uniform(-self.genetic_par.mutate_starting_sigma/10, -self.genetic_par.mutate_starting_sigma/10)
+            chromosome[j] = reshaped_starting_field_fi[0][j] #+ random.uniform(-self.genetic_par.mutate_starting_sigma/10, -self.genetic_par.mutate_starting_sigma/10)
 
 
     def reset_chromosomes(self):
@@ -186,23 +221,36 @@ class OCGeneticIterator(ABCOCIterator):
 
 
     def evaluate_J_DEAP_chromosome(self, chro):
-        chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
-        chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
-        if self.par.propagator == "quantum_trotter_suzuki":
-            chro.prop_psi.propagator_terms.set_qprocessor(chro.prop_psi.mol)
-            chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
-            if chro.prop_psi.propagator_terms.IBMParameters.provider == "statevector_simulator":
-                pass
-                #MRqiskit p_tgt = np.real(partial_trace(chro.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1])).data[1,1])
+        if self.par.control_problem == "optical_excitation":
+            chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
+            chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
+        elif self.par.control_problem == "ground_state":
+            if chro.field.par.field_type == "simple_sum":
+                chro.field.par.fi = np.asarray(chro).reshape((-1, 1))
             else:
-                pop_target = chro.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
-            J = pop_target - self.alpha_field_J_integral_chromosome(chro.field.field) ### devi fare proiezione su una psi generica
+                chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
+            chro.field.chose_field(chro.field.par.field_type, discrete_t_par = self.discrete_t_par)
+        if self.par.propagator == "quantum_trotter_suzuki":
+            pass
+#            chro.prop_psi.propagator_terms.set_qprocessor(chro.prop_psi.mol)
+#            chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
+#            if chro.prop_psi.propagator_terms.IBMParameters.provider == "statevector_simulator":
+#                pass
+#                #MRqiskit p_tgt = np.real(partial_trace(chro.prop_psi.final_state_qc, np.delete(np.arange(len(self.initial_c0)), np.arange(len(self.initial_c0))[1])).data[1,1])
+#            else:
+#                pop_target = chro.prop_psi.counts_dictionary[np.argmax(self.par.target_state)]
+#            J = pop_target - self.alpha_field_J_integral_chromosome(chro.field.field) ### devi fare proiezione su una psi generica
         else:
             chro.prop_psi.mol.wf.set_wf(self.initial_c0, 1)
             chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
-            J = np.real(af.projector_mean_value(chro.prop_psi.mol.wf.ci,
-                                                self.par.target_state)
-                        - self.alpha_field_J_integral_chromosome(chro.field.field))
+            if self.par.control_problem == "optical_excitation":
+                self.obj_fun.compute_objective_function(self, chro.prop_psi.mol.wf.ci, self.par.target_state)
+            elif self.par.control_problem == "ground_state":
+                self.obj_fun.compute_objective_function(self, chro.prop_psi.mol.wf.ci, chro.prop_psi.mol.par.hamiltonian)
+            J = np.real(self.obj_fun.J)
+#                J = np.real(af.projector_mean_value(chro.prop_psi.mol.wf.ci,
+#                                                    self.par.target_state)
+#                            - self.alpha_field_J_integral_chromosome(chro.field.field))
         success =  J - chro.J.values[0]
         if success != 0:
             self.n_mutated +=1
@@ -352,12 +400,16 @@ class OCGeneticIterator(ABCOCIterator):
                                          self.evaluate_J_DEAP_chromosome)
 
     def get_log_file_out(self):
-        integral_field = np.real(self.field_J_integral())
-        norm_proj = np.real(af.projector_mean_value(self.chromosomes[0].prop_psi.mol.wf.ci,
-                                                    self.par.target_state) /
-                            (np.dot(self.chromosomes[0].prop_psi.mol.wf.ci,
-                                    np.conj(self.chromosomes[0].prop_psi.mol.wf.ci))))
-        return np.array([self.par.convergence_t, self.par.J[0], norm_proj, integral_field])
+        if self.par.control_problem == 'optical_excitation':
+            integral_field = np.real(self.field_J_integral())
+            norm_proj = np.real(af.projector_mean_value(self.chromosomes[0].prop_psi.mol.wf.ci,
+                                                        self.par.target_state) /
+                                (np.dot(self.chromosomes[0].prop_psi.mol.wf.ci,
+                                        np.conj(self.chromosomes[0].prop_psi.mol.wf.ci))))
+            result = np.array([self.par.convergence_t, self.par.J[0], norm_proj, integral_field])
+        elif self.par.control_problem == 'ground_state':
+            result = np.array([self.par.convergence_t, self.par.J[0]])
+        return result
 
 
     def get_final_pop(self):

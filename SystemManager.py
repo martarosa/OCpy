@@ -53,7 +53,9 @@ class SystemManager():
         set_mol = SetMoleculeInput()
         set_mol.set(user_input)
         self.mol.init_molecule(set_mol.input_parameters)
-
+        if user_input.oc.section_dictionary['oc_problem'] == "ground_state":
+            self.mol.init_molecular_hamiltonian()
+            
 
     def init_starting_field(self, user_input):
         set_field = SetFieldInput()

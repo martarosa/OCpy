@@ -5,12 +5,11 @@ from abc import ABCMeta, abstractmethod
 from SystemObj import DiscreteTimePar
 from field.Field import Func_tMatrix
 from parameters.OCIteratorParameters import OCIteratorParameters
-from ObjectiveFunction import ObjectiveFunction
 
 
 class ABCOCIterator(metaclass=ABCMeta):
     def __init__(self):
-        self.obj_fun = ObjectiveFunction()
+        self.obj_fun = None
         self.par = OCIteratorParameters()
         self.discrete_t_par = DiscreteTimePar()
 

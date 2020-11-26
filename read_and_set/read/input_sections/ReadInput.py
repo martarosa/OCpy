@@ -103,18 +103,18 @@ class ReadInput(ABCReadInputFile):
     def check_field_nml_consistency(self):
         #if calculation is restarted only "name_field_file" can be present in FIELD nml
         if(self.oc.check_namelist_key_exist_and_value('restart', 'true')):
-        #number of key is max equal to 1
-            if len(self.field.section_dictionary.keys()) > 1:
-                af.exit_error("ERROR. Restarted calculation. field is read from file. "
-                                 "Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
-        #and that one must be "name_field_file"
-            elif len(self.field.section_dictionary.keys()) == 1:
-                if self.field.check_namelist_key_exist("name_field_file"):
-                    pass
-                else:
-                    af.exit_error(
-                            "Error. Restarted calculation. "
-                            "Field is read from file. Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
+#        #number of key is max equal to 1
+#            if len(self.field.section_dictionary.keys()) > 1:
+#                af.exit_error("ERROR. Restarted calculation. field is read from file. "
+#                                 "Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
+#        #and that one must be "name_field_file"
+#            elif len(self.field.section_dictionary.keys()) == 1:
+#                if self.field.check_namelist_key_exist("name_field_file"):
+#                    pass
+#                else:
+#                    af.exit_error(
+#                            "Error. Restarted calculation. "
+#                            "Field is read from file. Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
             self.check_field_restart()
         #checking consistenci with oc_algorithm
         else:
@@ -240,15 +240,15 @@ class OCvsPropagatorCombinedKeywordValues(ABCCombinedKeywordValues):
         super().__init__()
 
         self.list1 = ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg']
-        self.list2 = ['eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki']
+        self.list2 = ['eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki', 'eulero_2order_psi4']
 
-        self.matrix_allowed_couples = np.array([[True, True, False, True],
-                                                [False, False, True, False],
-                                                [False, False, True, False],
-                                                [True, True, False, True],
-                                                [True, True, False, True],
-                                                [True, True, False, True],
-                                                [True, True, False, True]
+        self.matrix_allowed_couples = np.array([[True, True, False, True, True],
+                                                [False, False, True, False, False],
+                                                [False, False, True, False, False],
+                                                [True, True, False, True, True],
+                                                [True, True, False, True, True],
+                                                [True, True, False, True, True],
+                                                [True, True, False, True, True]
                                                ])
 
 
@@ -256,14 +256,15 @@ class OCvsFieldCombinedKeywordValues(ABCCombinedKeywordValues):
     def __init__(self):
         super().__init__()
 
-        self.list1 = ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg']
-        self.list2 = ['const', 'pip', 'sin', 'gau', 'sum', 'genetic', 'read']
+        self.list1 = ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg', 'cobyla']
+        self.list2 = ['const', 'pip', 'sin', 'gau', 'sum', 'genetic', 'read', 'gaussian_sum', 'free_harmonics']
 
-        self.matrix_allowed_couples = np.array([[True, True, True, False, True, True, True],
-                                                [True, True, True, False, True, True, True],
-                                                [True, True, True, False, True, True, True],
-                                                [True, True, True, False, True, True, True],
-                                                [True, True, True, False, True, True, True],
-                                                [False, False, False, False, True, True, True],
-                                                [True, True, True, False, True, True, True]
+        self.matrix_allowed_couples = np.array([[True, True, True, False, True, True, True, True, True],
+                                                [True, True, True, False, True, True, True, True, True],
+                                                [True, True, True, False, True, True, True, True, True],
+                                                [True, True, True, False, True, True, True, True, True],
+                                                [True, True, True, False, True, True, True, True, True],
+                                                [False, False, False, False, True, True, True, True, True],
+                                                [True, True, True, False, True, True, True, True, True],
+                                                [True, True, True, False, True, True, True, True, True]
                                                 ])

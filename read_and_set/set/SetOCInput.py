@@ -11,6 +11,7 @@ class SetOCInput(ABCSetInput):
     def set(self, user_input):
         self.input_parameters.oc_iterator_name = user_input.sys.section_dictionary['oc_algorithm']
         self.input_parameters.propagator = user_input.sys.section_dictionary['propagator']
+        self.input_parameters.control_problem = user_input.oc.section_dictionary['oc_problem']
         #self.input_parameters.alpha = user_input.oc.section_dictionary['alpha']
         self.input_parameters.n_iterations = int(user_input.oc.section_dictionary['n_iterations'])
         self.input_parameters.convergence_thr = float(user_input.oc.section_dictionary['convergence_thr'])

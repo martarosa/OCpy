@@ -42,6 +42,7 @@ class SimplePropagationIterator(ABCOCIterator):
         self.discrete_t_par.dt = oc_input.dt
         self.discrete_t_par.nstep = oc_input.nstep
         self.par.target_state = oc_input.target_state
+        self.par.control_problem = oc_input.control_problem
         self.par.alpha_t = np.array(alpha_t)
         self.par.J = 99999
         self.par.convergence_t = 99999

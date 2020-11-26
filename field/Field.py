@@ -20,6 +20,7 @@ class Field():
         self.par.t0 = field_input.t0
         self.par.omega_sys = field_input.omega_sys
         self.par.restart_name = field_input.field_restart_name
+        self.par.control_parameters = field_input.control_parameters
 
         discrete_t_par = DiscreteTimePar()
         discrete_t_par.dt = field_input.dt
@@ -41,6 +42,8 @@ class Field():
             'sum': lambda: self.sum_pulse(discrete_t_par),
             'genetic' : lambda: self.genetic_pulse(discrete_t_par),
             'read': lambda : self.read_pulse(),
+            'gaussian_sum': lambda: self.gaussian_sum(discrete_t_par),
+            'free_harmonics': lambda: self.free_harmonics(discrete_t_par),
              #only internal values
             'restart_rabitz' : lambda: self.restart_rabitz(field),
             'restart_genetic' : lambda: self.restart_genetic(discrete_t_par)
@@ -113,20 +116,25 @@ class Field():
                 for j in range(self.par.omega.shape[0]):
                     self.field.f_xyz[i] = self.field.f_xyz[i] \
                                           + self.par.fi[j] * np.sin(self.par.omega[j] * i * discrete_t_par.dt)
-
-
-
-
-
-    def sin_cos_pulse(self, discrete_t_par):
+                                          
+    def gaussian_sum(self, discrete_t_par):
+        self.par.fi = np.full([int(self.par.control_parameters/3), 3], self.par.fi)
         self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
-        self.field.f_xyz = np.zeros([discrete_t_par.nstep, 3])
-        # f0+fi*sin(wi*t)
+        self.field.f_xyz = np.ones([discrete_t_par.nstep, 1])
         for i in range(discrete_t_par.nstep):
-            self.field.f_xyz[i] = self.par.fi[0]
-            for j in range(self.par.omega.shape[0]):
-                    self.field.f_xyz[i] = self.field.f_xyz[i] + self.par.fi_cos[j] * np.cos(self.par.omega[j] * i * discrete_t_par.dt) - self.par.fi[j] * np.sin(self.par.omega[j] * i * discrete_t_par.dt)
+            for k in range(int(self.par.control_parameters/3)):
+                self.field.f_xyz[i] += self.par.fi[k,0] * np.exp(-(discrete_t_par.dt * i - self.par.fi[k,1]) ** 2 / self.par.fi[k,2] ** 2)
 
+
+
+    def free_harmonics(self, discrete_t_par):
+        self.par.fi = np.full([int(self.par.control_parameters/3), 3], self.par.fi)
+        self.field.time_axis = np.linspace(0, discrete_t_par.dt * (discrete_t_par.nstep - 1), discrete_t_par.nstep)
+        self.field.f_xyz = np.zeros([discrete_t_par.nstep, 1])
+        for i in range(discrete_t_par.nstep):
+            for k in range(int(self.par.control_parameters/3)):
+               # self.field.f_xyz += self.par.fi[k, 0] * np.cos(self.par.fi[k, 1] * i * discrete_t_par.dt) + self.par.fi[k, 2] * np.cos(self.par.fi[k, 1] * i * discrete_t_par.dt)
+               self.field.f_xyz += self.par.fi[k,0] * np.cos((self.par.fi[k,1] * i * discrete_t_par.dt + self.par.fi[k,2]))
 
 
     def genetic_pulse(self, discrete_t_par):

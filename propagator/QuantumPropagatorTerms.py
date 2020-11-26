@@ -99,20 +99,24 @@ class QuantumPropagatorTerms(ABCPropagatorTerms):
             
             
 ###### Measurement_methods #######
-            
-        ### we still have to work out a generalized measurement for any state ###
-            
+                        
         def computational_basis_measurement(self):
             self.qcircuit.measure(self.qbits, self.cbits)
             
-        def expectation_value_hermitian_operator(self):
+        def pure_state_expectation_value(self):
+            """ Here, according to the chosen mapping (system --> computer), we compute 
+            the projection on an arbitrary pure state as the expectation value of the corresponding 
+            density matrix. USE AQUA METHODS """
+            pass
+            
+        def expectation_value_hamiltonian_operator(self):
             """ è verosimile che questo metodo avrà dentro l'inizializzazione di vari circuiti con questo schema:
                 CIRCUITO DI EVOLUZIONE + STRINGHE DI PAULI VARIE + MISURA BASE COMPUTAZIONALE
                 fino ad esaurimento delle stringhe di pauli.
                 Visto che execute è separato deve restituire una lista di circuiti da eseguire
                 Per ottenere il valore di aspettazione poi avremo una cosa del tipo:
                 for counts in data:
-                    expectation_value += counts*matrix_element_giusto"""
+                    expectation_value += counts*matrix_element_giusto """
             ### un'altra possibilità è ricostruire l'hamiltoniano con gli oggetti Pauli di Aqua e utilizzare
             # le funzioni qiskit di expectation_value
             pass

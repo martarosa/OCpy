@@ -40,6 +40,8 @@ class LogHeader():
             self.oc_header = ("#target state: " + log_input.target_state + "\n" +
                               "#alpha: " + log_input.alpha + "\n\n"
                               )
+        elif (log_input.oc_problem == "ground_state"):
+            self.oc_header = ("#Ground state computation in the CISD determinant space from HF reference wavefunction")
         else:
             self.oc_header="\n"
 
@@ -59,6 +61,8 @@ class LogHeader():
             'gau': lambda: self.gau_pulse(log_input),
             'sum': lambda: self.sum_pulse(log_input),
             'genetic': lambda: self.genetic_pulse(log_input),
+            'gaussian_sum': lambda: self.gaussian_sum(log_input),
+            'free_harmonics': lambda: self.free_harmonics(log_input),
             # only internal values
             'restart_rabitz': lambda: self.restart_rabitz(log_input),
             'restart_genetic': lambda: self.genetic_pulse(log_input)
@@ -71,6 +75,17 @@ class LogHeader():
     def restart_rabitz(self, log_input):
         self.field_header = ""
         pass
+    
+    def free_harmonics(self, log_input):
+        self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n"
+                             "#number of control parameters: " + log_input.num_control_parameters + "\n"
+                             "#omega: initial guess field is no perturbation active or initialized at random \n\n")     
+    
+    def gaussian_sum(self, log_input):
+        self.field_header = ("#field parameters: \n#field: " + log_input.field_type + "\n"
+                             "#number of control parameters: " + log_input.num_control_parameters + "\n" 
+                             "#omega: initial guess field is no perturbation active or initialized at random \n\n")
+                             
 
 
     def const_pulse(self, log_input):

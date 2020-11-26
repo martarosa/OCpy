@@ -16,12 +16,20 @@ def apply_projection(vector, vector_to_project):
 def projector_mean_value(vector, vector_to_project):
     mean_value = np.dot(np.conj(vector), apply_projection(vector, vector_to_project))
     return mean_value
-
+    
+    #<v|O|v>
 def compute_expectation_value(vector, operator):
     expectation_value = np.dot(np.conj(vector), np.dot(operator, vector))
     return expectation_value
-
-
+    
+    ## returns a Boolean
+def is_diagonal(matrix):
+    m = matrix.shape[0]
+    p,q = matrix.strides
+    non_diagonal_elements = np.lib.stride_tricks.as_strided(matrix[:,1:], (m-1,m), (p+q,q))
+    is_diag = (non_diagonal_elements==0).all()
+    return is_diag
+    
 def normalized_projector_mean_value(vector, vector_to_project):
     mean_value = np.dot(np.conj(vector), apply_projection(vector, vector_to_project))/np.dot(vector,vector)
     return mean_value
@@ -83,7 +91,6 @@ def population_from_counts_dictionary(counts, shots, hilb_dim_computer):
     for k in range(hilb_dim_computer):
         if '{0:03b}'.format(k) not in counts.keys():
             counts[bin(k)[2:]] = 0    
-    print(counts)
     for key1 in list(counts.keys()):
         counts[int(key1,2)] = counts.pop(key1)
     counts = dict(sorted(counts.items()))

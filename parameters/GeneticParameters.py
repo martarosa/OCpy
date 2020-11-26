@@ -4,6 +4,7 @@ class GeneticParameters():
         self.n_chromosomes = None
         self.n_selected_chr = None
         self.parallel = None
+        self.localized_guess = None
 
         self.amplitude_lim = None
         self.n_amplitudes = None
