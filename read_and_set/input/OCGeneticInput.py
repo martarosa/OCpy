@@ -5,7 +5,7 @@ class OCGeneticInput():
         self.genetic_algorithm = None
         self.amplitude_lim = None
         self.parallel = None
-        self.localized_guess = None
+        self.initial_guess = None
 
         self.mate = None
         self.mate_probability = None

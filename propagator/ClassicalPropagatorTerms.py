@@ -45,7 +45,7 @@ class ClassicalPropagatorTerms(ABCPropagatorTerms):
         
     def eulero_external_hamiltonian_term(self, mol, order, dt, perturbation, *args):
         mol.propagate_hamiltonian(perturbation)
-        mol.wf.ci += -order * 1j * dt * (np.dot(mol.par.hamiltonian_t, mol.wf.ci_prev[0]))
+        mol.wf.ci += -order * 1j * dt * (np.dot(mol.wf.ci_prev[0], mol.par.hamiltonian_t))
         
 #    def eulero_system_hamiltonian_term(self, mol, order, dt, *args):
 #        mol.wf.ci += -order * 1j * dt * (np.dot(mol.wf.ci_prev[0], mol.par.hamiltonian))

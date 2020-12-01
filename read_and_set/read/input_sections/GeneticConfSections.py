@@ -10,12 +10,12 @@ class SectionGenetic(ABCSection):
                                            'genetic_algorithm' : 'sequential',
                                            'amplitude_lim': '0.05', 
                                            'parallel': 'False',
-                                           'localized_guess': 'False'
+                                           'initial_guess': None
                                            }
         self.section_dictionary = {}
         self.allowed_val = [['genetic_algorithm', ['sequential', 'mixed']], 
                             ['parallel', ['True', 'False']],
-                            ['localized_guess', ['True', 'False']]]
+                            ['initial_guess', ['localized', 'latin_hypercube']]]
         self.case_unsensitive_keys = ['genetic_algorithm', 'parallel']
 
 

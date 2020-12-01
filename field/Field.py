@@ -133,8 +133,8 @@ class Field():
         self.field.f_xyz = np.zeros([discrete_t_par.nstep, 1])
         for i in range(discrete_t_par.nstep):
             for k in range(int(self.par.control_parameters/3)):
-               # self.field.f_xyz += self.par.fi[k, 0] * np.cos(self.par.fi[k, 1] * i * discrete_t_par.dt) + self.par.fi[k, 2] * np.cos(self.par.fi[k, 1] * i * discrete_t_par.dt)
-               self.field.f_xyz += self.par.fi[k,0] * np.cos((self.par.fi[k,1] * i * discrete_t_par.dt + self.par.fi[k,2]))
+                #self.field.f_xyz[i] += self.par.fi[k, 0] * np.cos(self.par.fi[k, 1] * i * discrete_t_par.dt) + self.par.fi[k, 2] * np.cos(self.par.fi[k, 1] * i * discrete_t_par.dt)
+               self.field.f_xyz[i] += self.par.fi[k,0] * np.cos((self.par.fi[k,1] * i * discrete_t_par.dt + self.par.fi[k,2]))
 
 
     def genetic_pulse(self, discrete_t_par):

@@ -38,7 +38,7 @@ class Molecule:
         self.par.control_operator = Psi4InterfaceMolecule.electron_nuclei_determinant_basis(self.par)
         
     def propagate_hamiltonian(self, perturbation):
-        self.par.hamiltonian_t = self.par.hamiltonian + (1-perturbation)*self.par.control_operator
+        self.par.hamiltonian_t = self.par.hamiltonian - (1-perturbation)*self.par.control_operator
 
 
 

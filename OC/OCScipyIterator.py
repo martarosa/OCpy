@@ -23,6 +23,7 @@ import dictionaries.OCDictionaries as ocdict
 import dictionaries.PropagatorDictionaries as pdict
 import pandas as pd
 import random
+import pdb
 #MRqiskit from qiskit.quantum_info import partial_trace
 
 
@@ -66,6 +67,9 @@ class OCScipyOptimizeIterator(ABCOCIterator):
             x[:,1] = np.random.uniform(0, 3, int(self.field.par.fi.size/3))
             x[:,2] = np.random.uniform(0, 3, int(self.field.par.fi.size/3))
         x = np.reshape(x, self.field.par.fi.size).tolist()
+     #   x = np.loadtxt("/Users/castd/Desktop/Risultati_OC_GS/H2_CISD_space/Genetic_optimization/6-31G/test_new_implementation_genetic_initial_guess_allzero2_gaussian_field_bkp.dat")[10:,:]
+        x = np.reshape(x, self.field.par.fi.size).tolist()
+       # x = np.load("/Users/castd/Desktop/Risultati_OC_GS/H2_CISD_space/ScipyOptimizers/BFGS/6-31G/free_sines_perturbation/test_bfgs_single_point_H2_6-31g_free_sines_15par0.74_result.npy", allow_pickle=True)[0].x.tolist()
         return x
     
     ### prendo spunto da restart_genetic (ma meglio), posso dargli
@@ -123,6 +127,7 @@ class OCScipyOptimizeIterator(ABCOCIterator):
                 self.field.par.fi = np.asarray(coefficients).reshape((-1, 1))
             else:
                 self.field.par.fi = np.asarray(coefficients).reshape((-1, 3))
+               # print(self.field.par.fi)
             self.field.chose_field(self.field.par.field_type, discrete_t_par = self.discrete_t_par)
         self.prop_psi.mol.wf.set_wf(self.initial_c0, 1)
         if self.par.propagator == 'quantum_trotter_suzuki':
@@ -142,6 +147,15 @@ class OCScipyOptimizeIterator(ABCOCIterator):
             '''
         else:
             self.prop_psi.propagate_n_step(self.discrete_t_par, self.field.field)
+#            trajectory = self.prop_psi.propagate_n_step(self.discrete_t_par, self.field.field)
+#            to_save = []
+#            to_save.append(trajectory)
+#            to_save.append(self.field.field.f_xyz)
+#            to_save.append(self.prop_psi.mol.par.hamiltonian)
+#            to_save.append(self.prop_psi.mol.par.control_operator)
+#            np.save("postprocessing_material_bfgs_45par.npy", to_save)
+#            pdb.set_trace()
+            # continua qua
             if self.par.control_problem == "optical_excitation":
                 self.obj_fun.compute_objective_function(self, self.prop_psi.mol.wf.ci, self.par.target_state)
                 J = np.real(self.obj_fun.J)
@@ -191,10 +205,12 @@ class OCScipyOptimizeIterator(ABCOCIterator):
 ### methods to save the output #####
         
     def get_field_ampl(self):
-         if self.current_iteration - self.par.n_iterations + 1 <= len(self.amplitudes_to_save):
-             return np.reshape(self.amplitudes_to_save[self.current_iteration - self.par.n_iterations + 1], ((-1,3)))
-         else:
-             return np.reshape(self.amplitudes_to_save[-1], ((-1,3)))
+        print(len(self.amplitudes_to_save))
+        print(self.current_iteration - self.par.n_iterations + 1)
+        if self.current_iteration - self.par.n_iterations + 1 < len(self.amplitudes_to_save):
+            return np.reshape(self.amplitudes_to_save[self.current_iteration - self.par.n_iterations + 1], ((-1,3)))
+        else:
+            return np.reshape(self.amplitudes_to_save[-1], ((-1,3)))
     
     
     def field_J_integral(self, amplitudes):
@@ -209,14 +225,18 @@ class OCScipyOptimizeIterator(ABCOCIterator):
 
     
     def get_log_file_out(self): 
-        if self.current_iteration - self.par.n_iterations + 1 < len(self.pop_target):
-            pop_target = self.pop_target[self.current_iteration - self.par.n_iterations + 1]
-            integral_field = self.field_J_integral(self.amplitudes_to_save[self.current_iteration - self.par.n_iterations + 1]) 
-        else:
-            pop_target = self.pop_target[-1]
-            integral_field = self.field_J_integral(self.amplitudes_to_save[-1])
-        self.check_convergence()
-        log_array = np.array([self.par.convergence_t, self.par.J[self.current_iteration - self.par.n_iterations + 1], pop_target, integral_field])
+        if self.par.control_problem == 'optical_excitation':
+            if self.current_iteration - self.par.n_iterations + 1 < len(self.pop_target):
+                pop_target = self.pop_target[self.current_iteration - self.par.n_iterations + 1]
+                integral_field = self.field_J_integral(self.amplitudes_to_save[self.current_iteration - self.par.n_iterations + 1]) 
+            else:
+                pop_target = self.pop_target[-1]
+                integral_field = self.field_J_integral(self.amplitudes_to_save[-1])
+            self.check_convergence()
+            log_array = np.array([self.par.convergence_t, self.par.J[self.current_iteration - self.par.n_iterations + 1], pop_target, integral_field])
+        elif self.par.control_problem == 'ground_state':
+            self.check_convergence()
+            log_array = np.array([self.par.convergence_t, self.par.J[self.current_iteration - self.par.n_iterations + 1]])
         self.current_iteration += 1
         return log_array
 

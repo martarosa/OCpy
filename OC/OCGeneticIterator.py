@@ -18,6 +18,7 @@ from field.Field import Field, Func_tMatrix
 from deap import base
 from deap import creator
 from deap import tools
+from smt.sampling_methods import LHS
 #MRqiskit from qiskit.quantum_info import partial_trace
 
 import random
@@ -114,7 +115,7 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.n_selected_chr = genetic_input.n_selected_chr
         self.genetic_par.amplitude_lim = genetic_input.amplitude_lim
         self.genetic_par.parallel = genetic_input.parallel
-        self.genetic_par.localized_guess = genetic_input.localized_guess
+        self.genetic_par.initial_guess = genetic_input.initial_guess
 
         self.genetic_par.mate = genetic_input.mate
         self.genetic_par.mate_probability = genetic_input.mate_probability
@@ -183,30 +184,40 @@ class OCGeneticIterator(ABCOCIterator):
     #Sono tutti uguali ma le ampiezze del mio vettore sono diverse perchè le ho fatte random prima
     # se voglio fare un guess non random ma localizzato intorno ad una soluzione approssimata metto
     # self.genetic_par.localized_guess == True
-        if self.genetic_par.localized_guess:
+        if self.genetic_par.initial_guess == 'localized':
             x = np.zeros((int(starting_field.par.control_parameters/3), 3))
             x[0,0] = 0.5
 #            x[:,1] = np.random.uniform(0, 3, int(starting_field.par.control_parameters/3))
             x[:,2] = np.random.uniform(0, 3, int(starting_field.par.control_parameters/3))
             x = np.reshape(x, starting_field.par.control_parameters).tolist()
+        elif self.genetic_par.initial_guess == 'latin_hypercube':
+            xlimits = []
+            xlimits = [[-10, 10] for k in range(self.genetic_par.n_amplitudes)]
+            xlimits = np.asarray(xlimits)
+            sampling = LHS(xlimits=xlimits, criterion = 'cm')
+            x = sampling(self.genetic_par.n_chromosomes)
         for i in range(len(self.chromosomes)):
             self.chromosomes[i].field = deepcopy(starting_field)
             self.chromosomes[i].prop_psi = deepcopy(prop_psi)
             self.chromosomes[i].J.values = [0.5]
             if (self.par.restart == 'true'):
                 self.assign_chromosome_values(self.chromosomes[i], starting_field.par.fi.reshape((1,-1)))
-            elif self.genetic_par.localized_guess:
-                self.localized_initial_guess(self.chromosomes[i], x)
+            elif self.genetic_par.initial_guess != None:
+                self.set_initial_guess(self.chromosomes[i], x)
         self.par.J = [99999]
 
-    def localized_initial_guess(self, chromosome, reshaped_initial_guess):
-        n = len(reshaped_initial_guess)
-        random_variation = int(random.randrange(0, n))
-        for j in range(n):
-            if j != random_variation:
-                chromosome[j] = reshaped_initial_guess[j] #+ random.uniform(-self.genetic_par.mutate_starting_sigma, self.genetic_par.mutate_starting_sigma)
-            else:
-                chromosome[j] = reshaped_initial_guess[j] + random.uniform(-10, 10)
+    def set_initial_guess(self, chromosome, reshaped_initial_guess):
+        if self.genetic_par.initial_guess == 'localized':
+            n = len(reshaped_initial_guess)
+            random_variation = int(random.randrange(0, n))
+            for j in range(n):
+                if j != random_variation:
+                    chromosome[j] = reshaped_initial_guess[j] #+ random.uniform(-self.genetic_par.mutate_starting_sigma, self.genetic_par.mutate_starting_sigma)
+                else:
+                    chromosome[j] = reshaped_initial_guess[j] + random.uniform(-10, 10)
+        elif self.genetic_par.initial_guess == 'latin_hypercube':
+            chromosome = reshaped_initial_guess[self.chromosomes.index(chromosome)] 
+            
                 
     def assign_chromosome_values(self, chromosome, reshaped_starting_field_fi):
         n = reshaped_starting_field_fi.size

@@ -170,3 +170,5 @@ class PropagatorEulero2OrderGeneralPerturbation(ABCPropagator):
                 self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i], order=1)
             out.append(self.mol.wf.ci)
         self.wf_matrix_out.f_xyz = np.array(out)
+        #return self.wf_matrix_out.f_xyz
+        

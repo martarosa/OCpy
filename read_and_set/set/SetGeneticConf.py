@@ -13,7 +13,7 @@ class SetGeneticOCInput(ABCSetInput):
         self.input_parameters.genetic_algorithm = user_input.genetic.section_dictionary['genetic_algorithm']
         self.input_parameters.amplitude_lim = float(user_input.genetic.section_dictionary['amplitude_lim'])
         self.input_parameters.parallel = eval(user_input.genetic.section_dictionary['parallel'])
-        self.input_parameters.localized_guess = eval(user_input.genetic.section_dictionary['localized_guess'])
+        self.input_parameters.initial_guess = user_input.genetic.section_dictionary['initial_guess']
 
         self.input_parameters.mate = user_input.mate.section_dictionary['mate']
         self.input_parameters.mate_probability = float(user_input.mate.section_dictionary['mate_probability'])
