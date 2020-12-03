@@ -9,6 +9,7 @@ SaveDict = {
     "rabitzii":SaveOCRabitz ,
     "none": SaveSimplePropagation,
     "nelder-mead": SaveOCScipyOptimize,
+    "cobyla": SaveOCScipyOptimize,
     "bfgs": SaveOCScipyOptimize,
     "cg": SaveOCScipyOptimize
 }

@@ -9,6 +9,7 @@ FieldRestartDict = {
     "rabitzii": ReadGeneralFieldRestart,
     "genetic": ReadGeneticFieldRestart,
     "nelder-mead": ReadGeneticFieldRestart,
+    "cobyla": ReadGeneticFieldRestart,
     "bfgs": ReadGeneticFieldRestart,
     "cg": ReadGeneticFieldRestart
 }

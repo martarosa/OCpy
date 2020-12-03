@@ -63,12 +63,12 @@ class OCScipyOptimizeIterator(ABCOCIterator):
             x[:,2] = np.random.uniform(-0.01, 0.01, int(self.field.par.fi.size/3))
         elif self.field.par.field_type == "free_harmonics":
             x = np.zeros((int(self.field.par.fi.size/3), 3))
-            x[0,2] = 0.5
-            x[:,1] = np.random.uniform(0, 3, int(self.field.par.fi.size/3))
-            x[:,2] = np.random.uniform(0, 3, int(self.field.par.fi.size/3))
+            x[0,2] = -0.9
+           # x[:,1] = np.random.uniform(0, 6, int(self.field.par.fi.size/3))
+            x[:,2] = np.random.uniform(0, 6, int(self.field.par.fi.size/3))
         x = np.reshape(x, self.field.par.fi.size).tolist()
      #   x = np.loadtxt("/Users/castd/Desktop/Risultati_OC_GS/H2_CISD_space/Genetic_optimization/6-31G/test_new_implementation_genetic_initial_guess_allzero2_gaussian_field_bkp.dat")[10:,:]
-        x = np.reshape(x, self.field.par.fi.size).tolist()
+        #x = np.reshape(x, self.field.par.fi.size).tolist()
        # x = np.load("/Users/castd/Desktop/Risultati_OC_GS/H2_CISD_space/ScipyOptimizers/BFGS/6-31G/free_sines_perturbation/test_bfgs_single_point_H2_6-31g_free_sines_15par0.74_result.npy", allow_pickle=True)[0].x.tolist()
         return x
     

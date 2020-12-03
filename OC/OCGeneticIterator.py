@@ -13,7 +13,7 @@ from OC.ABCOCIterator import ABCOCIterator
 from parameters.OCIteratorParameters import OCIteratorParameters
 from SystemObj import DiscreteTimePar
 from field.Field import Field, Func_tMatrix
-
+import pdb
 
 from deap import base
 from deap import creator
@@ -44,7 +44,8 @@ import random
 
 Evolutionary_Algorithm_dict = {'cxUniform': tools.cxUniform,
                                'mutGaussian': tools.mutGaussian,
-                               'selBest': tools.selBest}
+                               'selBest': tools.selBest,
+                               'selTournament': tools.selTournament}
 
 
 class OCGeneticIterator(ABCOCIterator):
@@ -192,10 +193,18 @@ class OCGeneticIterator(ABCOCIterator):
             x = np.reshape(x, starting_field.par.control_parameters).tolist()
         elif self.genetic_par.initial_guess == 'latin_hypercube':
             xlimits = []
-            xlimits = [[-10, 10] for k in range(self.genetic_par.n_amplitudes)]
+            xlimits = [[-self.genetic_par.amplitude_lim, self.genetic_par.amplitude_lim] for k in range(self.genetic_par.n_amplitudes)]
             xlimits = np.asarray(xlimits)
             sampling = LHS(xlimits=xlimits, criterion = 'cm')
             x = sampling(self.genetic_par.n_chromosomes)
+            x[0] = np.zeros(self.genetic_par.n_amplitudes)
+            x[0][0] = 1
+            x[1] = x[0]
+            print(x)
+            print(np.shape(x))
+            print(np.shape(x[0]))
+            print(x[0])
+            print(np.asarray(x[0]).reshape((-1,3)))
         for i in range(len(self.chromosomes)):
             self.chromosomes[i].field = deepcopy(starting_field)
             self.chromosomes[i].prop_psi = deepcopy(prop_psi)
@@ -232,6 +241,7 @@ class OCGeneticIterator(ABCOCIterator):
 
 
     def evaluate_J_DEAP_chromosome(self, chro):
+        print(self.chromosomes.index(chro))
         if self.par.control_problem == "optical_excitation":
             chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
             chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
@@ -259,6 +269,9 @@ class OCGeneticIterator(ABCOCIterator):
             elif self.par.control_problem == "ground_state":
                 self.obj_fun.compute_objective_function(self, chro.prop_psi.mol.wf.ci, chro.prop_psi.mol.par.hamiltonian)
             J = np.real(self.obj_fun.J)
+            print(chro.field.par.fi)
+            print(J)
+            pdb.set_trace()
 #                J = np.real(af.projector_mean_value(chro.prop_psi.mol.wf.ci,
 #                                                    self.par.target_state)
 #                            - self.alpha_field_J_integral_chromosome(chro.field.field))
@@ -286,7 +299,8 @@ class OCGeneticIterator(ABCOCIterator):
         print("evolve")
         # Select the next generation individuals
         new = []
-        selected = self.genetic_algorithms.select(self.chromosomes, fit_attr='J')
+   #     selected = self.genetic_algorithms.select(self.chromosomes, fit_attr='J')
+        selected = self.genetic_algorithms.select(self.chromosomes, fit_attr = 'J', tournsize = 4)
         selected = self.genetic_algorithms.clone(selected)
         # Apply crossover on the offspring
         for i in range(n_children_each):
@@ -304,7 +318,7 @@ class OCGeneticIterator(ABCOCIterator):
             if random.random() < self.genetic_par.mutate_probability:
                 self.genetic_algorithms.mutate(mutant)
         self.check_bounds_matrix(new)
-        if self.genetic_par.parallel == True:
+        if self.genetic_par.parallel == "True":
             with concurrent.futures.ProcessPoolExecutor() as executor: #### metti un check per non far andare parallel true su windows
                 new = list(executor.map(self.genetic_algorithms.evaluate, new))
         else:
@@ -405,7 +419,7 @@ class OCGeneticIterator(ABCOCIterator):
                                          indpb=self.genetic_par.mutate_probability)
         self.genetic_algorithms.register("select",
                                          Evolutionary_Algorithm_dict[iterator_parameters.select],
-                                         k=self.genetic_par.n_selected_chr)
+                                         k=self.genetic_par.n_selected_chr)        
         self.reset_chromosomes()
         self.genetic_algorithms.register('evaluate',
                                          self.evaluate_J_DEAP_chromosome)

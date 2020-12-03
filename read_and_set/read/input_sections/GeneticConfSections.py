@@ -16,7 +16,7 @@ class SectionGenetic(ABCSection):
         self.allowed_val = [['genetic_algorithm', ['sequential', 'mixed']], 
                             ['parallel', ['True', 'False']],
                             ['initial_guess', ['localized', 'latin_hypercube']]]
-        self.case_unsensitive_keys = ['genetic_algorithm', 'parallel']
+        self.case_unsensitive_keys = ['genetic_algorithm', "initial_guess"]
 
 
 class SectionMate(ABCSection):
@@ -52,5 +52,5 @@ class SectionSelect(ABCSection):
         self.section = "SELECT"
         self.section_default_dictionary = {'select':'selBest'}
         self.section_dictionary = {}
-        self.allowed_val = [['select',['selBest']]]
+        self.allowed_val = [['select',['selBest', 'selTournament']]]
         self.case_unsensitive_keys = []

@@ -47,7 +47,7 @@ class LogHeader():
 
 
     def init_conf_header(self, conf_input):
-        if (conf_input.oc_algorithm not in  ["none", "nelder-mead", "bfgs", "cg"] ):
+        if (conf_input.oc_algorithm not in  ["none", "nelder-mead", "bfgs", "cg", "cobyla"] ):
             self.oc_conf_header = ("#oc algorithm input: " + conf_input.string_conf_file + "\n\n")
         else:
             self.oc_conf_header = "\n"

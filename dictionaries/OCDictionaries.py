@@ -21,6 +21,7 @@ OCAlgorithmDict = { "none": SimplePropagationIterator,
                     "nelder-mead": OCScipyOptimizeIterator,
                     "bfgs": OCScipyOptimizeIterator,
                     "cg": OCScipyOptimizeIterator,
+                    "cobyla": OCScipyOptimizeIterator
 }
 
 
@@ -30,7 +31,8 @@ OCAlgorithmConfig = {"none": ReadNoConf,
                      "cg": ReadNoConf,
                     "genetic": ReadGeneticConf,
                     "rabitzi": ReadRabitzConf,
-                    "rabitzii": ReadRabitzConf
+                    "rabitzii": ReadRabitzConf,
+                    "cobyla": ReadNoConf
                      }
 OCAlgorithmSet = {  "none": SetNoConf,
                   "nelder-mead": SetNoConf,
@@ -38,7 +40,8 @@ OCAlgorithmSet = {  "none": SetNoConf,
                   "cg": SetNoConf,
                     "genetic": SetGeneticOCInput,
                     "rabitzi": SetRabitzOCInput,
-                    "rabitzii": SetRabitzOCInput
+                    "rabitzii": SetRabitzOCInput,
+                    "cobyla": SetNoConf
 }
 
 
@@ -46,6 +49,7 @@ OCConfigFileDefaultNames = {"none": None,
                             "nelder-mead": None,
                             "cg": None,
                             "bfgs": None,
+                            "cobyla": None,
                             "genetic": "genetic.conf",
                             "rabitzi": "rabitz.conf",
                             "rabitzii": "rabitz.conf"

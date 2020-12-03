@@ -239,12 +239,13 @@ class OCvsPropagatorCombinedKeywordValues(ABCCombinedKeywordValues):
     def __init__(self):
         super().__init__()
 
-        self.list1 = ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg']
+        self.list1 = ['none', 'rabitzi', 'rabitzii', 'genetic', 'nelder-mead', 'bfgs', 'cg', 'cobyla']
         self.list2 = ['eulero_1order', 'eulero_2order', 'rabitz', 'quantum_trotter_suzuki', 'eulero_2order_psi4']
 
         self.matrix_allowed_couples = np.array([[True, True, False, True, True],
                                                 [False, False, True, False, False],
                                                 [False, False, True, False, False],
+                                                [True, True, False, True, True],
                                                 [True, True, False, True, True],
                                                 [True, True, False, True, True],
                                                 [True, True, False, True, True],
