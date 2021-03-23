@@ -44,6 +44,7 @@ class Field():
             'genetic' : lambda: self.genetic_pulse(discrete_t_par),
             'sin_cos': lambda : self.sin_cos_pulse(discrete_t_par),
             'read': lambda : self.read_pulse(discrete_t_par),
+            'read_genetic': lambda : self.read_genetic_pulse(discrete_t_par),
              #only internal values
             'restart_rabitz' : lambda: self.restart_rabitz(field),
             'restart_genetic' : lambda: self.restart_genetic(discrete_t_par)
@@ -57,10 +58,17 @@ class Field():
         self.field = field
 
     def read_pulse(self, discrete_t_par):
-        self.field.time_axis = np.loadtxt(self.par.restart_name, usecols=(0))
-        self.field.f_xyz = np.loadtxt(self.par.restart_name, usecols = (0,1,2))
+        self.field.time_axis = np.loadtxt(self.par.restart_name, usecols=(2))
+        self.field.f_xyz = np.loadtxt(self.par.restart_name, usecols = (3,4,5))
 
-        #add check nstep e dt
+    def read_genetic_pulse(self, discrete_t_par):
+        load = np.loadtxt(self.par.restart_name) # w0, w1, ...wn \n a0 a1 ...an
+        n = int((load.shape[0])/2)
+        self.par.fi = load[n:]
+        print(self.par.fi)
+        self.par.omega = load[:n]
+        self.sum_pulse(discrete_t_par)
+
 
 
     def const_pulse(self, discrete_t_par):
@@ -116,8 +124,6 @@ class Field():
                 for j in range(self.par.omega.shape[0]):
                     self.field.f_xyz[i] = self.field.f_xyz[i] \
                                           + self.par.fi[j] * np.sin(self.par.omega[j] * i * discrete_t_par.dt)
-
-
 
 
 

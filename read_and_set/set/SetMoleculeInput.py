@@ -1,6 +1,6 @@
 from read_and_set.set.ABCSetInput import ABCSetInput
 from read_and_set.input.MoleculeInput import MoleculeInput
-from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
+from read_and_set.read.ReadOutputQuantumCalc import ReadOutputQuantumCalc
 
 
 class SetMoleculeInput(ABCSetInput):
@@ -10,7 +10,7 @@ class SetMoleculeInput(ABCSetInput):
 
 
     def set(self, user_input):
-        read_output = ReadOutputGaussian()
+        read_output = ReadOutputQuantumCalc()
         self.input_parameters.wf_ci = read_output.read_ci0(user_input.sys.section_dictionary['folder'] +
                                                            user_input.wf.section_dictionary['name_ci'])
 

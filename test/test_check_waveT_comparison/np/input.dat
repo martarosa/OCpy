@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = np_2order_prop 
+name = prova 
 oc_algorithm = eulero_2order_prop 
 #folder=
 

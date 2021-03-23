@@ -1,6 +1,6 @@
 from read_and_set.input.FieldInput import FieldInput
 from read_and_set.set.ABCSetInput import ABCSetInput
-from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
+from read_and_set.read.ReadOutputQuantumCalc import ReadOutputQuantumCalc
 
 
 class SetFieldInput(ABCSetInput):
@@ -16,7 +16,7 @@ class SetFieldInput(ABCSetInput):
             self.set_restart(user_input)
 
     def set_no_restart(self, user_input):
-        read_output = ReadOutputGaussian()
+        read_output = ReadOutputQuantumCalc()
         self.input_parameters.dt = float(user_input.sys.section_dictionary['dt'])
         self.input_parameters.nstep = int(user_input.sys.section_dictionary['nstep'])
         self.input_parameters.field_type = user_input.field.section_dictionary['field_type']

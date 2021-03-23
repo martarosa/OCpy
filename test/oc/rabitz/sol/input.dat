@@ -1,7 +1,7 @@
 [SYSTEM]
 dt=0.01
 nstep=25000
-name = output_ref 
+name = prova 
 oc_algorithm = rabitzi 
 #folder=
 
@@ -30,7 +30,7 @@ medium=sol
 restart=False
 alpha=sin
 alpha0=1
-n_iterations=10
+n_iterations=5
 target_state=0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0          
 
 [SAVE]

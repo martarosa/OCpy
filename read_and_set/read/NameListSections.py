@@ -32,7 +32,7 @@ class SectionField(ABCNamelistSection):
                                            't0': '0',
                                            'name_field_file': 'false'}
         self.section_dictionary = {}
-        self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'sum', 'sum_pip', 'genetic', 'test', 'read']]]
+        self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'sum', 'sum_pip', 'genetic', 'test', 'read', 'read_genetic']]]
         self.case_unsensitive_keys = ['field_type']
 
 

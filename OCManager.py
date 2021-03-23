@@ -29,6 +29,9 @@ class OCManager:
 
         self.current_iteration = 0
 
+        self.molecule = None
+        self.field = None
+        self.medium =  None
 
     def init_oc(self, oc_input, iterator_config_input, save_input, log_header_input, molecule, starting_field, pcm):
         self.par.alpha0 = oc_input.alpha0
@@ -56,7 +59,9 @@ class OCManager:
     def init_oc_iterator(self, oc_input, iterator_config_input, molecule, starting_field, medium, alpha_t):
         self.oc_iterator = dict.OCAlgorithmDict[self.par.oc_iterator_name]()
         self.oc_iterator.init(molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input)
-
+        self.molecule = molecule
+        self.medium =  medium
+        self.field = starting_field
 
     def init_save(self, save_parameters, log_header_parameters):
         self.save = dict.SaveDict[self.par.oc_iterator_name]()

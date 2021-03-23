@@ -1,6 +1,6 @@
 from read_and_set.set.ABCSetInput import ABCSetInput
 from read_and_set.input.MediumInput import MediumInput
-from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
+from read_and_set.read.ReadOutputQuantumCalc import ReadOutputQuantumCalc
 
 
 class SetMediumInput(ABCSetInput):
@@ -9,7 +9,7 @@ class SetMediumInput(ABCSetInput):
         self.input_parameters = MediumInput()
 
     def set(self, user_input):
-        read_output = ReadOutputGaussian()
+        read_output = ReadOutputQuantumCalc()
         self.input_parameters.medium = user_input.medium.section_dictionary['medium']
         if self.input_parameters.medium != 'vac':
             self.input_parameters.cavity = read_output.read_cavity_tesserae(user_input.sys.section_dictionary['folder'] +

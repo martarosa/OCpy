@@ -16,7 +16,6 @@ class DinamicMedium(ABCMedium):
 
 
     def init_medium(self, medium_input, mol, field_object):
-
         self.par.medium = medium_input.medium
         Vijn_mol_fortran_flip = af.flip_3D_py2f(mol.par.Vijn)
         self.par.q_t = np.zeros(mol.par.Vijn.shape[2])
@@ -31,8 +30,7 @@ class DinamicMedium(ABCMedium):
     def reset_medium(self, mol, field_object):
         self.par.q_t = np.zeros(mol.par.Vijn.shape[2])
         tdplas.interface_tdplas.call_init_charges(mol.wf.ci_prev[0], field_object.f_xyz[0])
-
-
+        #self.get_q_t() inserito per fare debugging di TDPLAS 
 
     def propagate(self, mol, field_dt_vector):
         af.exit_error("ERROR: Propagation without TDPLAS is not possible for the nanoparticle")
@@ -43,9 +41,6 @@ class DinamicMedium(ABCMedium):
         tdplas.interface_tdplas.call_prop_charges(mol.wf.ci_prev[0],
                                                   field_dt_vector,
                                                   self.par.q_t)
-
-
-
 
     def get_q_t(self):
         return self.par.q_t

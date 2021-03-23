@@ -19,7 +19,6 @@ module interface_tdplas
 
                 integer :: nt
                 nt = get_threads()
-                write(*,*) nt
 
                 call  quantum_init(dt, vts, n_tessere, n_states)
                 call  readio_and_init_tdplas_for_ocpy(nt)
@@ -29,7 +28,7 @@ module interface_tdplas
             function get_threads() result(nt)
                 integer :: nt
 
-                nt = 0
+                nt = 1
                 !$ nt = omp_get_max_threads()
 
             end function get_threads
@@ -41,6 +40,7 @@ module interface_tdplas
                 real*8, dimension(3), intent(in) :: field_vector
                 integer :: n_states
                 call init_charges_int(ci, field_vector, quantum_n_ci, pedra_surf_n_tessere)
+
             end subroutine
 
 
@@ -50,25 +50,24 @@ module interface_tdplas
                 real*8, allocatable  :: V_reactionf(:)
                 real*8, allocatable :: V_localf(:)
                 integer, intent(in) :: n_tessere, n_states
+                real*8  :: q_t(n_tessere)
 
                 allocate(V_reactionf(n_tessere))
                 allocate(V_localf(n_tessere))
 
-                call deallocate_BEM_public
-                call deallocate_BEM_end_propagation
+                call clean_all_marta_tdcont
+                call clean_all_marta_BEM
                 call deallocate_potential
                 call finalize_prop
-
                 call prepare_potentials(ci, field_vector, V_reactionf, V_localf, quantum_n_ci, n_tessere)
-
                 call do_BEM_prop
                 call init_potential(V_reactionf, V_localf)
                 call init_charges
                 call init_vv_propagator
+                call get_corrected_propagated_charges(q_t)
+
                 return
             end subroutine
-
-
 
 
 
@@ -89,8 +88,6 @@ module interface_tdplas
                real*8, allocatable :: V_reactionf(:)
                real*8, allocatable :: V_localf(:)
                integer, intent(in) :: n_states, n_tessere
-
-
 
                allocate(V_reactionf(n_tessere))
                allocate(V_localf(n_tessere))
@@ -117,9 +114,10 @@ module interface_tdplas
                                   field_vector(2)*pedra_surf_tessere(i)%y + &
                                   field_vector(3)*pedra_surf_tessere(i)%z)
                 enddo
+
             end subroutine
-!
-!
+
+
             subroutine doubleSum(ket, bra, M , states, tessere,prod)
                 integer :: its, j, k
                 integer :: states

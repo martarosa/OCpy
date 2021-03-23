@@ -1,23 +1,11 @@
 import argparse
 import SystemManager as ini
 import time
-from read_and_set.read.ReadOutputGaussian import ReadOutputGaussian
-#parser = argparse.ArgumentParser()
-#parser.add_argument('-f', action='store', dest='input')
-#inputline=parser.parse_args()
-#if inputline.input.find('/') == -1:
-#    folder = "./"
-#    namefile = inputline.input
-#else:
-#    split = inputline.input.rsplit('/',1)
-#    folder = split[0]+"/"
-#    namefile = split[1]
+from read_and_set.read.ReadOutputQuantumCalc import ReadOutputQuantumCalc
 
-
-
-
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/test_check_waveT_comparison/np/"
-#folder = "/home/mana/progetti/OC/paperNP/output_from_vacuum/propagation_test/"
+#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/sol/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/vac/2levels/"
+#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/reproducibility/"
 namefile = "input.dat"
 
 
