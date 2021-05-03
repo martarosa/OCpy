@@ -81,7 +81,6 @@ class SystemManager():
         self.medium.init_medium(set_medium.input_parameters, self.mol, self.starting_field.field)
 
 
-
     def init_optimal_control(self, user_input):
         set_oc = SetOCInput()
         set_oc.set(user_input)

@@ -3,9 +3,8 @@ import SystemManager as ini
 import time
 from read_and_set.read.ReadOutputQuantumCalc import ReadOutputQuantumCalc
 
-#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/sol/"
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/vac/2levels/"
-#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/reproducibility/"
+
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/sol/"
 namefile = "input.dat"
 
 

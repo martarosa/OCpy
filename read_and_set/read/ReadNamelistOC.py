@@ -84,17 +84,13 @@ class ReadNamelistOC(ABCReadNamelist):
         #if calculation is restarted only "name_field_file" can be present in FIELD nml
         if(self.oc.check_namelist_key_exist_and_value('restart', 'true')):
         #number of key is max equal to 1
-            if len(self.field.section_dictionary.keys()) > 1:
+            if (self.field.check_namelist_key_exist("fi") or 
+               self.field.check_namelist_key_exist("sigma") or
+               self.field.check_namelist_key_exist("t0") or 
+               self.field.check_namelist_key_exist("omega") or
+               self.field.check_namelist_key_exist("field_type")): 
                 af.exit_error("ERROR. Restarted calculation. field is read from file. "
-                                 "Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
-        #and that one must be "name_field_file"
-            elif len(self.field.section_dictionary.keys()) == 1:
-                if self.field.check_namelist_key_exist("name_field_file"):
-                    pass
-                else:
-                    af.exit_error(
-                            "Error. Restarted calculation. "
-                            "Field is read from file. Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
+                                 "field parameters in namelist \"FIELD\" are not used ")
             self.check_field_restart()
         #if calculaion is with genetic oc algorithm only genetic field is allowed
         elif(self.sys.check_namelist_key_exist_and_value('oc_algorithm', 'genetic')):

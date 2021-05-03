@@ -21,6 +21,7 @@ module interface_tdplas
                 nt = get_threads()
 
                 call  quantum_init(dt, vts, n_tessere, n_states)
+                write(*,*)"manaaaa"
                 call  readio_and_init_tdplas_for_ocpy(nt)
             end subroutine
 
@@ -54,9 +55,8 @@ module interface_tdplas
 
                 allocate(V_reactionf(n_tessere))
                 allocate(V_localf(n_tessere))
-
-                call clean_all_marta_tdcont
-                call clean_all_marta_BEM
+                call clean_all_ocpy_tdcont
+                call clean_all_ocpy_BEM
                 call deallocate_potential
                 call finalize_prop
                 call prepare_potentials(ci, field_vector, V_reactionf, V_localf, quantum_n_ci, n_tessere)
@@ -65,7 +65,6 @@ module interface_tdplas
                 call init_charges
                 call init_vv_propagator
                 call get_corrected_propagated_charges(q_t)
-
                 return
             end subroutine
 
@@ -96,6 +95,7 @@ module interface_tdplas
                call prop_chr
                call get_corrected_propagated_charges(q_t)
            end subroutine
+
 
 
             subroutine prepare_potentials(ci, field_vector, V_reactionf, V_localf, n_states, n_tessere)

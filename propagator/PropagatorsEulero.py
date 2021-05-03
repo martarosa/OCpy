@@ -83,17 +83,19 @@ class PropagatorEulero2Order(ABCPropagator):
         if(field.time_axis[1] - field.time_axis[0]) - discrete_time_par.dt > discrete_time_par.dt *0.001:
             af.exit_error("ERROR: Propagation time step and field time step are different")
         wf_matrix_out = Func_tMatrix()
+        #self.medium.internal_field = [] NP internal field
         wf_matrix_out.time_axis = np.linspace(0,
                                               discrete_time_par.dt * discrete_time_par.nstep,
                                               discrete_time_par.nstep + 1)
         out = list()
         out.append(self.mol.wf.ci)
         for i in range(discrete_time_par.nstep):
-
             if i != 0:
                 self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i])
             else:
                 self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i], order=1)
+            #local field NP
+            #self.medium.calc_local_field_t()
             out.append(self.mol.wf.ci)
         wf_matrix_out.f_xyz = np.array(out)
         return wf_matrix_out

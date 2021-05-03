@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "run_oc.py", line 15, in <module>
+    OC_system.init_system(folder, namefile)
+  File "/scratch/martarosa/python/ocpy_tdplas_10_2020/ocpy/SystemManager.py", line 56, in init_system
+    self.init_starting_field(user_input)
+  File "/scratch/martarosa/python/ocpy_tdplas_10_2020/ocpy/SystemManager.py", line 75, in init_starting_field
+    set_field.set(user_input)
+  File "/scratch/martarosa/python/ocpy_tdplas_10_2020/ocpy/read_and_set/set/SetFieldInput.py", line 16, in set
+    self.set_restart(user_input)
+  File "/scratch/martarosa/python/ocpy_tdplas_10_2020/ocpy/read_and_set/set/SetFieldInput.py", line 33, in set_restart
+    self.read_restart.read_file(user_input.sys.section_dictionary['folder'], user_input.field.section_dictionary['name_field_file'])
+  File "/scratch/martarosa/python/ocpy_tdplas_10_2020/ocpy/read_and_set/read/ReadFieldRestartGenetic.py", line 34, in read_file
+    load = np.loadtxt(folder + namefile) # w0, w1, ...wn \n a0 a1 ...an
+  File "/unimore/prod/anaconda3-2019.10/lib/python3.7/site-packages/numpy/lib/npyio.py", line 1146, in loadtxt
+    for x in read_data(_loadtxt_chunksize):
+  File "/unimore/prod/anaconda3-2019.10/lib/python3.7/site-packages/numpy/lib/npyio.py", line 1071, in read_data
+    % line_num)
+ValueError: Wrong number of columns at line 6

@@ -1,7 +1,6 @@
 [SYSTEM]
 dt=0.01
-nstep=25000
-name = prova 
+name = prova
 oc_algorithm = eulero_2order_prop 
 #folder=
 
@@ -12,13 +11,12 @@ name_mut=ci_mut.inp
 
 [FIELD]
 field_type=pip
+nstep=25000
+#additional_steps = 25000
 omega=0.3239892104044628 0.3239892104044628 0.3239892104044628
 sigma=125
 t0=125
 fi=0.0 0 0.5
-#f_max= 0.0 0.0038 0.0 
-#name_field_file=
-
 [MEDIUM]
 medium=nanop
 #name_Vij=pot_gamess.inp

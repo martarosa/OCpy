@@ -179,7 +179,11 @@ class OCGeneticIterator(ABCOCIterator):
         for mutant in new:
             if random.random() < self.genetic_par.mutate_probability:
                 self.genetic_algorithms.mutate(mutant)
+                for i in range(len(mutant)):
+                    if random.random() < self.genetic_par.mutate_probability:
+                        mutant[i]=0.0
         self.check_bounds_matrix(new)
+
         with concurrent.futures.ProcessPoolExecutor() as executor:
             new = list(executor.map(self.genetic_algorithms.evaluate, new))
         #new = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new))
@@ -188,7 +192,7 @@ class OCGeneticIterator(ABCOCIterator):
 
     def reset(self, chro):
         chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
-        chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
+        chro.field.chose_field('sum', dt = self.discrete_t_par.dt)
         chro.prop_psi.mol.wf.set_wf(self.initial_c0, 1)
         chro.prop_psi.medium.reset_medium(chro.prop_psi.mol, chro.field.field)
 
@@ -212,7 +216,7 @@ class OCGeneticIterator(ABCOCIterator):
 
     def chromosome_coefficients_to_field(self, chro):
         chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
-        chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
+        chro.field.chose_field('sum', dt = self.discrete_t_par.dt)
 
     #prima o poi questa può essere piena di modi diversi di inizializzare le ampiezze, per ora è solo random
     def init_chromosomes_values(self):
@@ -291,6 +295,7 @@ class OCGeneticIterator(ABCOCIterator):
 
     def get_field_ampl(self):
         return self.chromosomes[0].field.par.fi
+
 
     def get_restart(self):
         separate1 = np.array([["###","omegas","###"],["###","###","###"]])

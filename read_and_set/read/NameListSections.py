@@ -8,7 +8,6 @@ class SectionSystem(ABCNamelistSection):
         self.section = 'SYSTEM'
         self.section_default_dictionary = {'folder': '',
                                            'name': 'output',
-                                           'nstep': '10000',
                                            'dt': '0.01',
                                            'oc_algorithm': 'rabitzi'}
         self.section_dictionary = {}
@@ -30,7 +29,9 @@ class SectionField(ABCNamelistSection):
                                            'omega': '0 0 0',
                                            'sigma': '0',
                                            't0': '0',
-                                           'name_field_file': 'false'}
+                                           'name_field_file': 'false',
+                                           'nstep': '10000',
+                                           'additional_steps': '0'}
         self.section_dictionary = {}
         self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'sum', 'sum_pip', 'genetic', 'test', 'read', 'read_genetic']]]
         self.case_unsensitive_keys = ['field_type']

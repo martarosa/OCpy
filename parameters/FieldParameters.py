@@ -8,3 +8,5 @@ class FieldParameters():
         self.t0 =  None
         self.omega_sys = None
         self.restart_name = None
+        self.nstep = None
+        self.additional_steps = None
