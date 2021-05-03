@@ -21,6 +21,8 @@ else:
 #namefile = "input_genetic.dat"
 
 
+variabile = 5
+
 
 
 OC_system=ini.SystemManager()
