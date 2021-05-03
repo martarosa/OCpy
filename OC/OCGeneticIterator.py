@@ -1,16 +1,16 @@
 import time
-
+import itertools as itt
 import numpy as np
 import pandas as pd
 import multiprocessing as mp
 import concurrent.futures
+import random
 
 from parameters.GeneticParameters import GeneticParameters
 from read_and_set.read import auxiliary_functions as af
 from OC.ABCOCIterator import ABCOCIterator
 from parameters.OCIteratorParameters import OCIteratorParameters
 from SystemObj import DiscreteTimePar
-from Chromosome import Chromosome
 from field.Field import Field, Func_tMatrix
 from copy import deepcopy
 from propagator import PropagatorsEulero as prop
@@ -18,26 +18,6 @@ from propagator import PropagatorsEulero as prop
 from deap import base
 from deap import creator
 from deap import tools
-
-import random
-
-###################GENETIC ALGORITHMS#################
-#sequential: first mate with crossover, then mutate all chromosomes
-
-#mixed: mates n_tot - n_mutate chromosomes and mutate n_mutate chromosomes
-#       only if mating and mutation are separated it is possible to evaluate mutation success
-
-#restart: if stucked in local minima restart from a different point in the space
-
-#clustering:
-
-#dcrab:
-#################SIGMA##########################
-#adaptive_on_mutate_success:  depending on the muate successes, defined as eta > eta_thr, sigma changes
-#                             only compatible with mixed genetic algorithm
-
-
-
 
 
 
@@ -53,37 +33,20 @@ class OCGeneticIterator(ABCOCIterator):
         self.par = OCIteratorParameters()
         self.discrete_t_par = DiscreteTimePar()
         self.genetic_par = GeneticParameters()
-
+        self.genetic_algorithms = base.Toolbox()
 
         self.field_psi_matrix = Func_tMatrix()
         self.psi_coeff_t_matrix = Func_tMatrix()
         self.dict_out = {}
 
-        #self.prop_psi = prop.PropagatorEulero2Order()
-
         #genetic
         self.initial_c0 = None
         self.chromosomes = [] #can be a DEAP class or personal chromosome class
-        self.n_mutation_succes = 0
-        self.n_mutated = 0
-
 
     def iterate(self, current_iteration):
         print(current_iteration)
         self.evolve()
         self.check_convergence()
-
-    def check_convergence(self):
-        J_prev_tmp = np.copy(self.par.J)
-        self.calc_J()
-        self.par.convergence_t = self.par.J - J_prev_tmp
-        self.par.convergence_t = self.par.convergence_t[0]
-
-    def calc_J(self):
-        self.chromosomes.sort(key=lambda x: x.J, reverse=True)
-        self.par.J = self.chromosomes[0].J.values
-        self.field_psi_matrix = self.chromosomes[0].field.field
-
 
     def init_output_dictionary(self):
         self.dict_out['log_file'] = self.get_log_file_out
@@ -92,22 +55,21 @@ class OCGeneticIterator(ABCOCIterator):
         self.dict_out['field_t'] = self.get_field_t
         self.dict_out['field_ampl'] = self.get_field_ampl
 
-    def init(self, molecule, starting_field, pcm, alpha_t, oc_input, iterator_config_input):
+    def init(self, molecule, starting_field, starting_medium, alpha_t, oc_input, iterator_config_input):
         self.discrete_t_par.nstep = oc_input.nstep
         self.discrete_t_par.dt = oc_input.dt
         self.par.target_state = oc_input.target_state
         self.par.alpha_t = alpha_t
         self.par.convergence_t = 99999
         self.par.J = 99999
-
+        self.medium = starting_medium
+        self.molecule = molecule
+        self.start_field = starting_field
         self.field_psi_matrix = deepcopy(starting_field.field)
-
-        #self.psi_coeff_t_matrix = np.zeros([self.simulation_par.nstep + 1, molecule.wf.n_ci], dtype=complex)
         self.init_output_dictionary()
+        self.init_genetic(molecule, starting_field, starting_medium, iterator_config_input)
 
-        self.init_genetic(molecule, starting_field, pcm, iterator_config_input)
-
-    def init_genetic(self, molecule, starting_field, pcm, genetic_input):
+    def init_genetic(self, molecule, starting_field, starting_medium, genetic_input):
         self.genetic_par.genetic_algorithm = genetic_input.genetic_algorithm
         self.genetic_par.n_chromosomes = genetic_input.n_chromosomes
         self.genetic_par.n_selected_chr = genetic_input.n_selected_chr
@@ -124,27 +86,15 @@ class OCGeneticIterator(ABCOCIterator):
         self.genetic_par.eta_thr = genetic_input.eta_thr
         self.genetic_par.q = genetic_input.q
         self.genetic_par.select = genetic_input.select
-        #test purpose, fourier frequencies amplitudes comparison hard coded choice
-        #shape = "sin_cos"
-        #if shape == "sin_cos":
-        #   self.genetic_par.n_amplitudes = starting_field.par.fi.size*2
-        #else:
         self.genetic_par.n_amplitudes = starting_field.par.fi.size
         self.genetic_par.omegas_matrix = starting_field.par.omega
-
-        self.init_chromosomes(molecule, starting_field, pcm)
+        self.init_chromosomes(molecule, starting_field, starting_medium)
     #qui inizializzo l'algoritmo genetico che sto usando, che per adesso è solo uno
         self.init_evolutionary_algorithm(genetic_input)
 
-    def init_chromosomes(self, molecule, starting_field, pcm):
-        self.init_DEAP_chromosomes(molecule, starting_field, pcm)
-
-    def create_random_ampl_rounded(self):
-        number = round(random.uniform(-self.genetic_par.amplitude_lim, self.genetic_par.amplitude_lim),4)
-        #number = round(random.uniform(-0.001, 0.001),4)
-        return number
-
-    def init_DEAP_chromosomes(self, molecule, starting_field, pcm):
+    def init_chromosomes(self, molecule, starting_field, starting_medium):
+        #le ampiezze del campo sono inutili e dannose, visto che inizializzerò n_chro campi random.
+        #nel mezzo q(t) (per il mezzo dinamico) è inizializzato con le ampiezze che non userò. molto male
         print("init_chromo")
         toolbox= base.Toolbox()
     # fitness è una classe astratta.
@@ -152,189 +102,131 @@ class OCGeneticIterator(ABCOCIterator):
         creator.create("J", base.Fitness, weights=(1.0,))
     # Definisco un oggetto che chiamo Chromosome, come attributi ha J, un oggetto campo e un oggetto propagator.
     # E poi di default ha un vettore da riempire che quando chiami il cromosoma senza attributi viene fuori quello
-    #def Chromosome()
-    #    self. = []
-    #    self.field = Field()
-    #    self.prop_psi = prop.PropagatorEulero2Order()
         creator.create("Chromosome", list, J=creator.J, field = Field(), prop_psi = prop.PropagatorEulero2Order())
-        #toolbox.register("create_random_ampl", random.uniform, self.ampl_min, self.ampl_max)
-        #toolbox.register("create_random_ampl_rounded", round, toolbox.create_random_ampl, ndigits=4)
-
     #creo un'istanza cromosoma singolo, di tipo Chromosome.
-    # Creo n_amplitudes ampiezze con create_random_ampl_rounded e
-    # automaticamente finiscono nel vettore vuoto di Chromosome
+    # Creo riempo il vettore vuoto di chromosome tutto di 0.
+    # probabilmente c'è un modo migliore e automatico in deap ma pazienza
         toolbox.register("single_chromosome",
                          tools.initRepeat, creator.Chromosome,
-                         self.create_random_ampl_rounded,
+                         self.init_chromosomes_zero,
                          n=self.genetic_par.n_amplitudes)
-    #faccio una n:cromosomi e li caccio in una lista
+    #faccio una lista di cromosomi, tutti con la lista piena di 0
         toolbox.register('chromosomes_population',
                          tools.initRepeat,
                          list,
                          toolbox.single_chromosome)
+    #ho una lista di cromosomi di tuti di valore = 0, con J, prop_psi e field vuoti
         self.chromosomes = toolbox.chromosomes_population(n=self.genetic_par.n_chromosomes) #create all chromosomes
-
-    #creo un oggetto prop_psi ....
-        prop_psi = prop.PropagatorEulero2Order()
-        prop_psi.set_propagator(molecule, pcm)
-        self.initial_c0 = prop_psi.propagator_terms.mol.wf.ci
-    #... e dentro a ogni cromosoma della mia lista inizializzo il campo, il propagatore e metto J = 0.5
-    #Sono tutti uguali ma le ampiezze del mio vettore sono diverse perchè le ho fatte random prima
+        #----------------
+        #adesso la parte relativa allo specifico caso della propagazione
+        #----------------
+        self.initial_c0 = molecule.wf.ci
+        # adesso li riempio di ampiezze. Lo faccio qui in modo da averne il controllo, nell'inizializzazione deap non è del tutto in mio controllo
+        # se scelgo random posso cmq fissare i semi e rendere il conto riproducibile (per ora random è l'unica scelta
+        self.init_chromosomes_values()
         for i in range(len(self.chromosomes)):
+            #copio il campo per avere tutte le info che mi servono (le omega di fourier)
             self.chromosomes[i].field = deepcopy(starting_field)
+            #aggiorno le ampiezze del campo con i calori generati random del cromosoma
+            if (starting_field.par.field_type == "restart_genetic"):
+                self.field_amplitudes_to_chromosome(self.chromosomes[i], starting_field.par.fi.reshape((1, -1)))
+            self.chromosome_coefficients_to_field(self.chromosomes[i])
+            medium = deepcopy(starting_medium)
+            medium.reset_medium(molecule, self.chromosomes[i].field.field)
+            prop_psi = prop.PropagatorEulero2Order()
+            prop_psi.set_propagator(molecule, medium)
             self.chromosomes[i].prop_psi = deepcopy(prop_psi)
             self.chromosomes[i].J.values = [0.5]
-            if (starting_field.par.field_type == "restart_genetic"):
-                self.assign_chromosome_values(self.chromosomes[i], starting_field.par.fi.reshape((1,-1)))
         self.par.J = [99999]
 
 
-    def assign_chromosome_values(self, chromosome, reshaped_starting_field_fi):
-        n = reshaped_starting_field_fi.size
-        for j in range(n):
-            chromosome[j] = reshaped_starting_field_fi[0][j] + random.uniform(-self.genetic_par.mutate_starting_sigma/10, -self.genetic_par.mutate_starting_sigma/10)
-
-
-    def evaluate_J_DEAP_chromosome(self, chro):
-    # prende l'array di Chromosme e lo mette nel campo come ampiezze
-        #test purposes, check fourier frequencies amplitudes
-        #shape = 'sin_cos'
-        #if shape == 'sin_cos':
-        #    coeff = np.asarray(chro).reshape((-1, 3))
-        #    n_omega = chro.field.par.omega.shape[0]
-        #    chro.field.par.fi = coeff[:n_omega]
-        #    chro.field.par.fi_cos = coeff[n_omega:]
-        #    chro.field.chose_field('sin_cos', discrete_t_par=self.discrete_t_par)
-        #else:
-        chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
-    #genera il campo con forma sum
-        chro.field.chose_field('sum', discrete_t_par = self.discrete_t_par)
-    #setto il propagatore e lo propago con il campo appena generato
-        chro.prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
-        chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
-
-    #calcolo popolazione e integrale del campo, per debug
-        pop= np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
-                                             self.par.target_state))
-        field = np.real(self.alpha_field_J_integral_chromosome(chro.field.field))
-
-    #calcolo J
-        J = np.real(af.projector_mean_value(chro.prop_psi.propagator_terms.mol.wf.ci,
-                                            self.par.target_state)
-                    - self.alpha_field_J_integral_chromosome(chro.field.field))
-        success =  J - chro.J.values[0]
-        if success != 0:
-            self.n_mutated +=1
-        if success > 0:
-            self.n_mutation_succes +=1
-        chro.J.values = [J]
-        return chro
-
 
     def evolve(self):
-        if self.genetic_par.genetic_algorithm == "mixed":
-            self.evolve_mixed_DEAP()
-        elif self.genetic_par.genetic_algorithm == "sequential":
-            self.evolve_sequential_DEAP()
-
-    def evolve_sequential_DEAP(self):
+        print("evolve")
         n_children_each = self.genetic_par.n_chromosomes / self.genetic_par.n_selected_chr
         if n_children_each.is_integer() == False:
             n_children_each = int(n_children_each) + 1
         else:
             n_children_each = int(n_children_each)
-        print("evolve")
         # Select the next generation individuals
         new = []
         selected = self.genetic_algorithms.select(self.chromosomes, fit_attr='J')
         selected = self.genetic_algorithms.clone(selected)
         # Apply crossover on the offspring
-        for i in range(n_children_each):
-            for first, second in zip(selected[::2], selected[1::2]):
+        for _ in itt.repeat(None, n_children_each):
+            selected_odd = deepcopy(selected[::2])
+            selected_even = deepcopy(selected[1::2])
+            if self.genetic_par.n_selected_chr % 2 != 0:
+                selected_even.append(random.choice(selected))
+            for first, second in zip(selected_odd, selected_even):
                 if random.random() < self.genetic_par.mate_probability:
-                    a, b = self.genetic_algorithms.mate(deepcopy(first), deepcopy(second))
+                    a, b = self.genetic_algorithms.mate(first, second)
                 else:
-                    a, b = deepcopy(first), deepcopy(second)
+                    a, b = first, second
                 new.append(deepcopy(a))
                 new.append(deepcopy(b))
-            random.shuffle(selected)
+            np.random.shuffle(selected)
+        #for _ in itt.repeat(None,int(self.genetic_par.n_chromosomes/2)+1):
+        #    np.random.shuffle(selected)
+        ##    if random.random() < self.genetic_par.mate_probability:
+        #        a, b = self.genetic_algorithms.mate(deepcopy(selected[0]), selected[1])
+        #    else:
+        #        a, b = deepcopy(selected[0]), deepcopy(selected[1])
+        #    new.append(deepcopy(a))
+        #    new.append(deepcopy(b))
         new = new[:self.genetic_par.n_chromosomes]
         # Apply mutation on the offspring
         for mutant in new:
             if random.random() < self.genetic_par.mutate_probability:
                 self.genetic_algorithms.mutate(mutant)
+                for i in range(len(mutant)):
+                    if random.random() < self.genetic_par.mutate_probability:
+                        mutant[i]=0.0
         self.check_bounds_matrix(new)
+
         with concurrent.futures.ProcessPoolExecutor() as executor:
             new = list(executor.map(self.genetic_algorithms.evaluate, new))
         #new = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new))
         self.chromosomes[:] = new
 
 
-
-    #quello del paper, con parte crossover e parte mutati
-    def evolve_mixed_DEAP(self):
-    #fa la stessa cosa che nel sequential, fa crossover con tutti. La valutazione invece la fa solo nel sottoset dei mutati
-        n_mate_children_each = self.genetic_par.n_chromosomes / self.genetic_par.n_selected_chr
-        if n_mate_children_each.is_integer() == False:
-            n_mate_children_each = int(n_mate_children_each) + 1
-        else:
-            n_mate_children_each = int(n_mate_children_each)
-        print("evolve")
-        # Select the next generation individuals
-        new_crossover = []
-    #l'algoritmo è già definito. Quindi seleziono da cromosomi i migliori secondo J
-        selected = self.genetic_algorithms.select(self.chromosomes, fit_attr='J')
-        selected = self.genetic_algorithms.clone(selected)
-    # Apply crossover on the offspring
-    # li prendo tutti e ne genero quanti me ne servono mescolandoli
-        for i in range(n_mate_children_each):
-    #se tolgo questo il primo abbinamento me lo fa tra i vicini di J, se lo lascio è random
-            random.shuffle(selected)
-            for first, second in zip(selected[::2], selected[1::2]):
-                if random.random() < self.genetic_par.mate_probability:
-                    a, b = self.genetic_algorithms.mate(deepcopy(first), deepcopy(second))
-                else:
-                    a, b = deepcopy(first), deepcopy(second)
-                new_crossover.append(deepcopy(a))
-                new_crossover.append(deepcopy(b))
-
-        len_cross = self.genetic_par.n_chromosomes - self.genetic_par.n_mutate
-        new_crossover = new_crossover[:len_cross]
-
-    # Apply mutation on the offspring
-    # solo il sottoset
-
-        new_mutation = []
-        print("sigma:")
-        print(self.genetic_algorithms.mutate.keywords['sigma'])
-        for i in range(self.genetic_par.n_mutate):
-            new_mutation.append(deepcopy(selected[i]))
-            if random.random() < self.genetic_par.mutate_probability:
-                self.genetic_algorithms.mutate(new_mutation[-1])
-        self.check_bounds_matrix(new_mutation)
-        #calcolo la J del crossover e la J della mutazione. in entrambi i casi valuta il numero di successi
-        # ma resetto prima della mutazione perchè mi interessano solo quelli della mutazione
-        new_crossover = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new_crossover))
-        self.n_mutation_succes = 0
-        self.n_mutated = 0
-        new_mutation = list(self.genetic_algorithms.map(self.genetic_algorithms.evaluate, new_mutation))
-        #updato sigma della mutazione secondo il successo di questa generazione
-        self.update_sigma_mutation()
-        #lo sostituisco alla mia popolazione
-        new = new_crossover + new_mutation
-        self.chromosomes[:] = new
+    def reset(self, chro):
+        chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
+        chro.field.chose_field('sum', dt = self.discrete_t_par.dt)
+        chro.prop_psi.mol.wf.set_wf(self.initial_c0, 1)
+        chro.prop_psi.medium.reset_medium(chro.prop_psi.mol, chro.field.field)
 
 
-    def update_sigma_mutation(self):
-        print("mutation succes " + str(self.n_mutation_succes) + "n mutated " + str(self.n_mutated))
-        eta = self.n_mutation_succes/(self.n_mutated)
-        print("eta: " + str(eta))
-        if eta < self.genetic_par.eta_thr:
-            self.genetic_par.mutate_starting_sigma = self.genetic_par.mutate_starting_sigma*self.genetic_par.q
-        else:
-            self.genetic_par.mutate_starting_sigma = self.genetic_par.mutate_starting_sigma / self.genetic_par.q
-        self.genetic_algorithms.mutate.keywords['sigma'] = self.genetic_par.mutate_starting_sigma
-        self.n_mutation_succes = 0
+
+    def evaluate_J_chromosome(self, chro):
+        self.reset(chro)
+        chro.prop_psi.propagate_n_step(self.discrete_t_par, chro.field.field)
+        J = np.real(af.projector_mean_value(chro.prop_psi.mol.wf.ci,
+                                            self.par.target_state)
+                    - self.alpha_field_J_integral_chromosome(chro.field.field))
+        chro.J.values = [J]
+        return chro
+
+
+
+    def field_amplitudes_to_chromosome(self, chromosome, reshaped_starting_field_fi):
+        n = reshaped_starting_field_fi.size
+        for j in range(n):
+            chromosome[j] = reshaped_starting_field_fi[0][j] + random.uniform(-self.genetic_par.mutate_starting_sigma/10, -self.genetic_par.mutate_starting_sigma/10)
+
+    def chromosome_coefficients_to_field(self, chro):
+        chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
+        chro.field.chose_field('sum', dt = self.discrete_t_par.dt)
+
+    #prima o poi questa può essere piena di modi diversi di inizializzare le ampiezze, per ora è solo random
+    def init_chromosomes_values(self):
+        random.seed(10)
+        for i in range(self.genetic_par.n_chromosomes):
+            for j in range(self.genetic_par.n_amplitudes):
+                self.chromosomes[i][j] = round(random.uniform(-self.genetic_par.amplitude_lim, self.genetic_par.amplitude_lim),4)
+
+    def init_chromosomes_zero(self):
+        return 0.0
 
     def check_bounds_matrix(self, matrix):
         for i in range(len(matrix)):
@@ -343,8 +235,17 @@ class OCGeneticIterator(ABCOCIterator):
                     matrix[i][j] = self.genetic_par.amplitude_lim
                 elif matrix[i][j] < -self.genetic_par.amplitude_lim:
                     matrix[i][j] = -self.genetic_par.amplitude_lim
-                #elif (matrix[i][j] < 0.0005 and matrix[i][j] > -0.0005):
-                #    matrix[i][j] = 0.0
+
+    def check_convergence(self):
+        J_prev_tmp = np.copy(self.par.J)
+        self.calc_J()
+        self.par.convergence_t = self.par.J - J_prev_tmp
+        self.par.convergence_t = self.par.convergence_t[0]
+
+    def calc_J(self):
+        self.chromosomes.sort(key=lambda x: x.J, reverse=True)
+        self.par.J = self.chromosomes[0].J.values
+        self.field_psi_matrix = self.chromosomes[0].field.field
 
     def check_bounds_vector(self, vector):
         for i in range(len(vector)):
@@ -353,9 +254,7 @@ class OCGeneticIterator(ABCOCIterator):
             elif vector[i] < -self.genetic_par.amplitude_lim:
                 vector[i] = -self.genetic_par.amplitude_lim
 
-
     def init_evolutionary_algorithm(self, iterator_parameters):
-        self.genetic_algorithms = base.Toolbox()
         self.genetic_algorithms.register("mate", Evolutionary_Algorithm_dict[iterator_parameters.mate],
                                          indpb=self.genetic_par.mate_probability)
         self.genetic_algorithms.register("mutate",
@@ -367,24 +266,23 @@ class OCGeneticIterator(ABCOCIterator):
                                          Evolutionary_Algorithm_dict[iterator_parameters.select],
                                          k=self.genetic_par.n_selected_chr)
         self.genetic_algorithms.register('evaluate',
-                                         self.evaluate_J_DEAP_chromosome)
+                                         self.evaluate_J_chromosome)
 
     def get_log_file_out(self):
         integral_field = np.real(self.field_J_integral())
-        norm_proj = np.real(af.projector_mean_value(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci,
+        norm_proj = np.real(af.projector_mean_value(self.chromosomes[0].prop_psi.mol.wf.ci,
                                                     self.par.target_state) /
-                            (np.dot(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci,
-                                    np.conj(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci))))
+                            (np.dot(self.chromosomes[0].prop_psi.mol.wf.ci,
+                                    np.conj(self.chromosomes[0].prop_psi.mol.wf.ci))))
+
         return np.array([self.par.convergence_t, self.par.J[0], norm_proj, integral_field])
 
-
     def get_final_pop(self):
-        final_pop = np.real(af.population_from_wf_vector(self.chromosomes[0].prop_psi.propagator_terms.mol.wf.ci))
+        final_pop = np.real(af.population_from_wf_vector(self.chromosomes[0].prop_psi.mol.wf.ci))
         return final_pop
 
-
     def get_pop_t(self):
-        self.chromosomes[0].prop_psi.propagator_terms.mol.wf.set_wf(self.initial_c0, 1)
+        self.reset(self.chromosomes[0])
         psi_coeff_t_matrix = self.chromosomes[0].prop_psi.propagate_n_step(self.discrete_t_par,
                                                                            self.chromosomes[0].field.field)
         psi_coeff_t_matrix = np.insert(psi_coeff_t_matrix.f_xyz, 0, psi_coeff_t_matrix.time_axis, axis = 1)
@@ -395,10 +293,9 @@ class OCGeneticIterator(ABCOCIterator):
         field_t_matrix = np.insert(self.field_psi_matrix.f_xyz, 0, self.field_psi_matrix.time_axis, axis = 1)
         return field_t_matrix
 
-
     def get_field_ampl(self):
         return self.chromosomes[0].field.par.fi
-        #return np.hstack((self.chromosomes[0].field.par.fi, self.chromosomes[0].field.par.fi_cos))
+
 
     def get_restart(self):
         separate1 = np.array([["###","omegas","###"],["###","###","###"]])

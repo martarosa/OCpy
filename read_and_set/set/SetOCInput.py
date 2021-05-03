@@ -16,7 +16,7 @@ class SetOCInput(ABCSetInput):
 
         self.input_parameters.restart = user_input.oc.section_dictionary['restart']
 
-        self.input_parameters.nstep = int(user_input.sys.section_dictionary['nstep'])
+        self.input_parameters.nstep = int(user_input.field.section_dictionary['nstep']) + int(user_input.field.section_dictionary['additional_steps'])
         self.input_parameters.dt = float(user_input.sys.section_dictionary['dt'])
         self.input_parameters.target_state = af.normalize_vector([float(i) for i in user_input.oc.section_dictionary["target_state"].split(' ')])
         self.input_parameters.iterator_config_file_name = user_input.oc.section_dictionary['iterator_config_file']

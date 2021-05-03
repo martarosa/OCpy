@@ -1,24 +1,11 @@
 import argparse
 import SystemManager as ini
 import time
-
-parser = argparse.ArgumentParser()
-parser.add_argument('-f', action='store', dest='input')
-inputline=parser.parse_args()
-if inputline.input.find('/') == -1:
-    folder = "./"
-    namefile = inputline.input
-else:
-    split = inputline.input.rsplit('/',1)
-    folder = split[0]+"/"
-    namefile = split[1]
+from read_and_set.read.ReadOutputQuantumCalc import ReadOutputQuantumCalc
 
 
-
-
-#folder = "/home/mana/Desktop/OC/cianidina/test/"
-#folder = "/home/mana/programmi/python/optimal_control/OCpy/test/2order_prop/vac/"
-#namefile = "input_genetic.dat"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/sol/"
+namefile = "input.dat"
 
 
 variabile = 5
@@ -28,6 +15,10 @@ variabile = 5
 OC_system=ini.SystemManager()
 OC_system.init_system(folder, namefile)
 
+#print(OC_system.mol.par.muT[2,7])
+#print(OC_system.mol.par.muT[7,1])
+
+
 
 
 #start=time.time()
@@ -35,3 +26,6 @@ OC_system.oc.iterate()
 #end=time.time()
 #print("serial: " + str(end-start))
 
+
+#read = ReadOutputGaussian()
+#read.convertVgamess_to_VWaveT(folder + "ci_pot.inp", folder + "ci_pot_transf.inp", 11)

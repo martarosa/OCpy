@@ -38,7 +38,7 @@ class Eulero1PropagationIterator(ABCOCIterator):
     def calc_J(self):
         pass
 
-    def init(self, molecule, starting_field, env, alpha_t, oc_input, iterator_config_input = None):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input = None):
         self.discrete_t_par.dt = oc_input.dt
         self.discrete_t_par.nstep = oc_input.nstep
 
@@ -47,7 +47,7 @@ class Eulero1PropagationIterator(ABCOCIterator):
         self.par.J = 99999
         self.par.convergence_t = 99999
 
-        self.prop_psi.set_propagator(molecule, env)
+        self.prop_psi.set_propagator(molecule, medium)
         self.field_psi_matrix = deepcopy(starting_field.field)
 
         self.init_output_dictionary()
@@ -104,7 +104,7 @@ class Eulero2PropagationIterator(ABCOCIterator):
         pass
 
 
-    def init(self, molecule, starting_field, env, alpha_t, oc_input, iterator_config_input = None):
+    def init(self, molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input = None):
         self.discrete_t_par.dt = oc_input.dt
         self.discrete_t_par.nstep = oc_input.nstep
 
@@ -113,7 +113,7 @@ class Eulero2PropagationIterator(ABCOCIterator):
         self.par.J = 99999
         self.par.convergence_t = 99999
 
-        self.prop_psi.set_propagator(molecule, env)
+        self.prop_psi.set_propagator(molecule, medium)
 
         self.field_psi_matrix = deepcopy(starting_field.field)
 
@@ -122,16 +122,23 @@ class Eulero2PropagationIterator(ABCOCIterator):
 
     def init_output_dictionary(self):
         self.dict_out['pop_t'] = self.get_pop_t
+        self.dict_out['internal_field_t'] = self.get_internal_field_t
 
     def get_pop_t(self):
         psi_coeff_t_matrix = np.insert(self.psi_coeff_t_matrix.f_xyz, 0, self.psi_coeff_t_matrix.time_axis, axis = 1)
         pop_t_matrix = np.real(af.population_from_wf_matrix(psi_coeff_t_matrix))
         return pop_t_matrix
 
+    def get_internal_field_t(self):
+        internal_field_t = np.insert(np.asarray(self.prop_psi.medium.internal_field),0, self.field_psi_matrix.time_axis, axis = 1)
+        return internal_field_t
+
+
     def get_restart(self):
         field_t_matrix = np.insert(self.field_psi_matrix.f_xyz, 0, self.field_psi_matrix.time_axis, axis = 1)
         field_t_matrix = pd.DataFrame(field_t_matrix)
         return field_t_matrix
+
 
 
 

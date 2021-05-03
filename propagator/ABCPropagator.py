@@ -1,34 +1,35 @@
-from propagator.PropagatorTerms import PropagatorTerms
 from abc import ABCMeta, abstractmethod
 
-
-# in propagator_terms there are all possible propagation terms (probably we could delete this attribute and
-# temporary inlitialized in each child class.
-# Then in each child class the specific terms arre added to the propagator delegate, and the propagation is done
-#cycling through all the terms in propagate_one_step (for funct in propagator: func(..))
-
-
-
+from propagator.ABCPropagatorTerms import ABCPropagatorTerms
+from molecule.Molecule import Molecule
+from medium.ABCMedium import ABCMedium
+from dictionaries import Dictionaries as dict
 
 class ABCPropagator(metaclass=ABCMeta):
     def __init__(self):
-        self.propagator_terms = PropagatorTerms()
+        self.mol = Molecule()
+        self.medium = None #ABCMedium()
+
+        self.propagator_terms = ABCPropagatorTerms()
         self.propagator = []
 
 
+    def init(self, molecule, medium):
+        self.mol = molecule
+        #self.medium = dict.MediumDict[medium.par.medium]
+        self.medium = medium
+        self.propagator_terms = dict.PropagatorTermsDict["eulero_2order_prop"]()
+        self.propagator_terms.init()
 
-    def init_propagaror_terms(self, molecule, pcm):
-        self.propagator_terms.set_attributes(molecule, pcm)
-        self.propagator_terms.init_terms_dictionary()
 
     def add_term_to_propagator(self, term_name):
-            self.propagator.append(self.propagator_terms.dict_terms[term_name])
+        self.propagator.append(self.propagator_terms.dict_terms[term_name])
 
     def clean_propagator(self):
         self.propagator = []
 
     @abstractmethod
-    def set_propagator(self, molecule, env):
+    def set_propagator(self, molecule, medium):
         pass
 
     @abstractmethod
@@ -43,9 +44,6 @@ class ABCPropagator(metaclass=ABCMeta):
     # wf in all the states
     def propagate_n_step(self, *args):
         pass
-
-
-
 
 
 

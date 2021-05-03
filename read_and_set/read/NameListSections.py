@@ -8,7 +8,6 @@ class SectionSystem(ABCNamelistSection):
         self.section = 'SYSTEM'
         self.section_default_dictionary = {'folder': '',
                                            'name': 'output',
-                                           'nstep': '10000',
                                            'dt': '0.01',
                                            'oc_algorithm': 'rabitzi'}
         self.section_dictionary = {}
@@ -30,9 +29,11 @@ class SectionField(ABCNamelistSection):
                                            'omega': '0 0 0',
                                            'sigma': '0',
                                            't0': '0',
-                                           'name_field_file': 'false'}
+                                           'name_field_file': 'false',
+                                           'nstep': '10000',
+                                           'additional_steps': '0'}
         self.section_dictionary = {}
-        self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'sum', 'sum_pip', 'genetic', 'test', 'read']]]
+        self.allowed_val = [['field_type', ['const', 'pip', 'sin', 'gau', 'sum', 'sum_pip', 'genetic', 'test', 'read', 'read_genetic']]]
         self.case_unsensitive_keys = ['field_type']
 
 
@@ -55,21 +56,21 @@ class SectionWaveFunction(ABCNamelistSection):
 
 
 
-class SectionEnviron(ABCNamelistSection):
+class SectionMedium(ABCNamelistSection):
     def __init__(self):
         super().__init__()
-        self.section = 'ENVIRON'
-        self.section_default_dictionary ={ 'env': 'vac',
+        self.section = 'MEDIUM'
+        self.section_default_dictionary ={ 'medium': 'vac',
+                                           'polarization_charges': 'non-eq',
                                            'name_vij': 'ci_pot.inp',
-                                           'name_q_tdplas': 'np_bem.mdy',
-                                           'read_qijn': 'false',
-                                           'name_file_qijn': 'qijn.dat',
                                            'name_file_cavity': 'cavity.inp',
-                                           'name_q_local_field': 'np_bem.mld'}
+                                           'name_mat_SD':'mat_SD.inp',
+                                           'name_q_reaction_field_dyn': 'np_bem.mdy',
+                                           'name_q_local_field_dyn': 'np_bem.mld'}
 
         self.section_dictionary = {}
-        self.allowed_val = [['env', ['vac', 'sol', 'nanop']]]
-        self.case_unsensitive_keys = ['env', 'read_qijn']
+        self.allowed_val = [['medium', ['vac', 'sol', 'nanop']]]
+        self.case_unsensitive_keys = ['medium', 'read_qijn']
 
 
 

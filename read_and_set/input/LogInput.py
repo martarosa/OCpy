@@ -2,7 +2,7 @@ class LogInput():
     def __init__(self):
         self.oc_algorithm = None#sys
         self.dt = None#sys
-        self.env = None#env
+        self.medium = None#env
         self.alpha = None#oc
         self.alpha0 = None#oc
         self.field_type = None#field

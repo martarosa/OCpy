@@ -40,6 +40,7 @@ subroutine single_summation_tessere(ket, M , states, tessere,prod)
 end subroutine
 
 
+
 subroutine propagate_q_frozen(psi_prev, qijn, states, tessere, out_prop_charges)
     integer :: states
     integer :: tessere
@@ -62,9 +63,11 @@ subroutine eulero_pcm(psi_prev, qijn_t, Vijn, states, tessere, out_matmul_sum)
 
     complex*16, dimension(states,states) :: out_single_summation_tessere
 
-
     call single_summation_tessere(qijn_t, Vijn, states, tessere, out_single_summation_tessere)
     out_matmul_sum = matmul(psi_prev, out_single_summation_tessere)
+
+
+
 end subroutine
 
 
@@ -94,14 +97,6 @@ subroutine bwd_pcm(chi_prev, wf_fwd, qijn_t, Vijn, qijn, states, tessere, out_ma
     call single_summation_tessere(out_doublesum, Vijn, states, tessere, out_single_summation_tessere)
     out_matmul_sum = out_matmul_sum - matmul(wf_fwd, out_single_summation_tessere)
 end subroutine
-
-
-
-
-
-
-
-
 
 
 

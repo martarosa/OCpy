@@ -1,5 +1,5 @@
 import numpy as np
-
+from dictionaries import Dictionaries as dict
 
 from OC.OCEuleroIterator import  Eulero1PropagationIterator, Eulero2PropagationIterator
 from OC.OCRabitzIterator import OCRabitzIterator
@@ -24,12 +24,14 @@ class OCManager:
         self.oc_iterator = None
         self.save = None
 
-
         self.psi_coeff_t_matrix = Func_tMatrix()
         self.field_psi_matrix = Func_tMatrix()
 
         self.current_iteration = 0
 
+        self.molecule = None
+        self.field = None
+        self.medium =  None
 
     def init_oc(self, oc_input, iterator_config_input, save_input, log_header_input, molecule, starting_field, pcm):
         self.par.alpha0 = oc_input.alpha0
@@ -54,33 +56,16 @@ class OCManager:
 
 
 
-    def init_oc_iterator(self, oc_input, iterator_config_input, molecule, starting_field, pcm, alpha_t):
-        if self.par.oc_iterator_name == "rabitzi" or self.par.oc_iterator_name == "rabitzii":
-            self.oc_iterator = OCRabitzIterator()
-            self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input)
-        elif self.par.oc_iterator_name == "genetic":
-            self.oc_iterator = OCGeneticIterator()
-            self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input, iterator_config_input)
-        elif self.par.oc_iterator_name == "eulero_1order_prop":
-            self.oc_iterator = Eulero1PropagationIterator()
-            self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input)
-        elif self.par.oc_iterator_name == "eulero_2order_prop":
-            self.oc_iterator = Eulero2PropagationIterator()
-            self.oc_iterator.init(molecule, starting_field, pcm, alpha_t, oc_input)
-
-
+    def init_oc_iterator(self, oc_input, iterator_config_input, molecule, starting_field, medium, alpha_t):
+        self.oc_iterator = dict.OCAlgorithmDict[self.par.oc_iterator_name]()
+        self.oc_iterator.init(molecule, starting_field, medium, alpha_t, oc_input, iterator_config_input)
+        self.molecule = molecule
+        self.medium =  medium
+        self.field = starting_field
 
     def init_save(self, save_parameters, log_header_parameters):
-        if self.par.oc_iterator_name == "rabitzi" or self.par.oc_iterator_name == "rabitzii":
-            self.save = SaveOCRabitz()
-            self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
-        elif self.par.oc_iterator_name == "eulero_1order_prop" or self.par.oc_iterator_name == "eulero_2order_prop":
-            self.save = SaveEulero()
-            self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
-        elif self.par.oc_iterator_name == "genetic":
-            self.save = SaveOCGenetic()
-            self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
-
+        self.save = dict.SaveDict[self.par.oc_iterator_name]()
+        self.save.init_save(save_parameters, log_header_parameters, self.oc_iterator)
 
     def set_alpha_t(self, dt, nstep):
         alpha_t = np.zeros([nstep])
@@ -94,7 +79,6 @@ class OCManager:
                     -np.power((((i) * dt - 125) / 220), 12))  # paper quinolone
         return alpha_t
 
-
     def iterate(self):
         while (self.current_iteration <= self.par.n_iterations or self.par.convergence_thr < self.oc_iterator.par.convergence_t):
             self.oc_iterator.iterate(self.current_iteration)
@@ -103,16 +87,6 @@ class OCManager:
         self.psi_coeff_t_matrix = self.oc_iterator.psi_coeff_t_matrix
         self.field_psi_matrix = self.oc_iterator.field_psi_matrix
         self.par.convergence_t = self.oc_iterator.par.convergence_t
-
-
-
-
-
-
-
-
-
-
 
 
 

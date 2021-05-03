@@ -22,7 +22,13 @@ class SaveEulero(ABCSave):
                          restart_step,
                          'pop_t',
                          oc_iterator)
-        self.save_files = [pop_t]
+        #NP local field
+        #internal_field_t = SaveFile("_internal_field_t.dat",
+        #                 "#Internal field \n #fields: time, field components x y z  \n",
+        #                 restart_step,
+        #                 'internal_field_t',
+        #                 oc_iterator)
+        self.save_files = [pop_t] #, internal_field_t]
         self.restart_file = SaveRestart("_field_bkp.dat", restart_step, oc_iterator)
 
 

@@ -1,0 +1,3 @@
+ c'è un baco nel master per cui se 
+test_type='s-l'
+è commentato non funziona la flag che dice di fare il campo locale

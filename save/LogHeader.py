@@ -6,7 +6,6 @@ class LogHeader():
 
     def init_log_header(self, log_input):
         self.init_oc_header(log_input)
-        #self.init_field_header(log_input)
         if log_input.restart == "norestart_found":
             restart = ("#WARNING: restart asked but restart file not found. Starting from default field" + "\n")
         elif log_input.restart == "true":
@@ -26,7 +25,7 @@ class LogHeader():
         self.init_field_header(log_input)
         self.header = ( "#calculation: " + log_input.oc_algorithm + "\n" +
                         self.oc_header +
-                        "#dt: " + log_input.dt + " env: " + log_input.env + "\n" +
+                        "#dt: " + log_input.dt + " medium: " + log_input.medium + "\n" +
                         restart +
                         self.field_header)
 

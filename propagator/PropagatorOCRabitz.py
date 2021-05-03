@@ -3,7 +3,11 @@ import numpy as np
 from read_and_set.read import auxiliary_functions as af
 
 from propagator.ABCPropagator import ABCPropagator
-from propagator.PropagatorTerms import PropagatorTerms
+from propagator.ABCPropagatorTerms import ABCPropagatorTerms
+from medium.ABCMedium import ABCMedium
+
+from molecule.Molecule import Molecule
+
 
 from SystemObj import Func_tMatrix
 
@@ -12,23 +16,26 @@ from SystemObj import Func_tMatrix
 class PropagatorOCfwd(ABCPropagator):
     def __init__(self):
         super().__init__()
-        self.propagator_terms = PropagatorTerms()
+        self.mol = Molecule()
+        self.medium = None
+
+        self.propagator_terms = ABCPropagatorTerms()
         self.propagator = []
 
-    def set_propagator(self, molecule, env):
-        self.init_propagaror_terms(molecule, env)
+
+    def set_propagator(self, molecule, medium):
+        self.init(molecule, medium)
         self.clean_propagator()
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
         self.add_term_to_propagator("eulero_field")
-        if self.propagator_terms.pcm != None:
-            if self.propagator_terms.pcm.par.env == "sol":
-                self.add_term_to_propagator("eulero_pcm")
+        if self.medium.par.medium == "sol":
+            self.add_term_to_propagator("eulero_medium")
 
 
-    def propagate_one_step(self, i, dt, field_dt_vector):
+    def propagate_one_step(self, dt, field_dt_vector):
         for func in self.propagator:
-            func(i, 1, dt, field_dt_vector)
+            func(self.mol, 1, dt, field_dt_vector, self.medium)
 
 
     def propagate_n_step(self, discrete_time_par, field):
@@ -41,10 +48,10 @@ class PropagatorOCfwd(ABCPropagator):
                                               discrete_time_par.dt * discrete_time_par.nstep,
                                               discrete_time_par.nstep + 1)
         out = list()
-        out.append(self.propagator_terms.mol.wf.ci)
+        out.append(self.mol.wf.ci)
         for i in range(discrete_time_par.nstep):
-            self.propagate_one_step(i, discrete_time_par.dt, field.f_xyz[i])
-            out.append(self.propagator_terms.mol.wf.ci)
+            self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i])
+            out.append(self.mol.wf.ci)
         wf_matrix_out.f_xyz = np.array(out)
         return wf_matrix_out
 
@@ -53,23 +60,26 @@ class PropagatorOCfwd(ABCPropagator):
 class PropagatorOCbwd(ABCPropagator):
     def __init__(self):
         super().__init__()
-        self.propagator_terms = PropagatorTerms()
+        self.mol = Molecule()
+        self.medium = None
+        self.propagator_terms = ABCPropagatorTerms()
         self.propagator = []
 
-    def set_propagator(self, molecule, env):
-        self.init_propagaror_terms(molecule, env)
+
+    def set_propagator(self, molecule, medium):
+        self.init(molecule, medium)
         self.clean_propagator()
         self.add_term_to_propagator("eulero1_coeff")
         self.add_term_to_propagator("eulero_energy")
         self.add_term_to_propagator("eulero_field")
-        if self.propagator_terms.pcm != None:
-            if (self.propagator_terms.pcm.par.env == "sol"):
-                self.add_term_to_propagator("oc_pcm_bwd")
+        if self.medium != None:
+            if (self.medium.par.medium == "sol"):
+                self.add_term_to_propagator("oc_medium_bwd")
 
 
-    def propagate_one_step(self, i, dt, field_dt_vector, wf_fwd):
+    def propagate_one_step(self, dt, field_dt_vector, wf_fwd):
         for func in self.propagator:
-            func(i, 1, -dt, field_dt_vector, wf_fwd)
+            func(self.mol, 1, -dt, field_dt_vector, self.medium, wf_fwd)
 
     def propagate_n_step(self, discrete_time_par, field, wf_fwd):
         if((field.time_axis[1] - field.time_axis[0]) - discrete_time_par.dt > discrete_time_par.dt *0.001):
@@ -79,10 +89,10 @@ class PropagatorOCbwd(ABCPropagator):
                                               discrete_time_par.dt * discrete_time_par.nstep,
                                               discrete_time_par.nstep + 1)
         out = list()
-        out.append(self.propagator_terms.mol.wf.ci)
+        out.append(self.mol.wf.ci)
         for i in range(discrete_time_par.nstep):
-            self.propagate_one_step(i, discrete_time_par.dt, field.f_xyz[i], wf_fwd)
-            out.append(self.propagator_terms.mol.wf.ci)
+            self.propagate_one_step(discrete_time_par.dt, field.f_xyz[i], wf_fwd)
+            out.append(self.mol.wf.ci)
         wf_matrix_out.f_xyz = np.array(out)
         return wf_matrix_out
 

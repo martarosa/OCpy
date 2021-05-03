@@ -10,11 +10,11 @@ class ReadNamelistOC(ABCReadNamelist):
         super().__init__()
         self.n_sections = None
         self.default_dict = None
-        self.sections = ["SYSTEM" , "WAVEFUNCTION", "FIELD", "ENVIRON", "OPTIMALC", "SAVE"]
+        self.sections = ["SYSTEM" , "WAVEFUNCTION", "FIELD", "MEDIUM", "OPTIMALC", "SAVE"]
         self.sys = sec.SectionSystem()
         self.wf = sec.SectionWaveFunction()
         self.field = sec.SectionField()
-        self.env = sec.SectionEnviron()
+        self.medium = sec.SectionMedium()
         self.save = sec.SectionSave()
         self.oc = sec.SectionOptimalControl()
 
@@ -38,8 +38,8 @@ class ReadNamelistOC(ABCReadNamelist):
         self.wf.check()
         self.save.init(user_input)
         self.save.check()
-        self.env.init(user_input)
-        self.env.check()
+        self.medium.init(user_input)
+        self.medium.check()
         self.oc.init(user_input)
         self.oc.check()
 
@@ -54,8 +54,8 @@ class ReadNamelistOC(ABCReadNamelist):
         self.check_wavef_nml_consistency()
         self.wf.fill_empty_with_default()
 
-        self.check_environ_nml_consistency()
-        self.env.fill_empty_with_default()
+        self.check_medium_nml_consistency()
+        self.medium.fill_empty_with_default()
 
         self.check_optimalc_nml_consistency()
         self.set_oc_dependent_default()
@@ -68,7 +68,7 @@ class ReadNamelistOC(ABCReadNamelist):
 
         self.sys.check_keys()
         self.wf.check_keys()
-        self.env.check_keys()
+        self.medium.check_keys()
         self.field.check_keys()
         self.oc.check_keys()
         self.save.check_keys()
@@ -84,17 +84,13 @@ class ReadNamelistOC(ABCReadNamelist):
         #if calculation is restarted only "name_field_file" can be present in FIELD nml
         if(self.oc.check_namelist_key_exist_and_value('restart', 'true')):
         #number of key is max equal to 1
-            if len(self.field.section_dictionary.keys()) > 1:
+            if (self.field.check_namelist_key_exist("fi") or 
+               self.field.check_namelist_key_exist("sigma") or
+               self.field.check_namelist_key_exist("t0") or 
+               self.field.check_namelist_key_exist("omega") or
+               self.field.check_namelist_key_exist("field_type")): 
                 af.exit_error("ERROR. Restarted calculation. field is read from file. "
-                                 "Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
-        #and that one must be "name_field_file"
-            elif len(self.field.section_dictionary.keys()) == 1:
-                if self.field.check_namelist_key_exist("name_field_file"):
-                    pass
-                else:
-                    af.exit_error(
-                            "Error. Restarted calculation. "
-                            "Field is read from file. Keys in namelist \"FIELD\" are not used apart \"name_field_file\"")
+                                 "field parameters in namelist \"FIELD\" are not used ")
             self.check_field_restart()
         #if calculaion is with genetic oc algorithm only genetic field is allowed
         elif(self.sys.check_namelist_key_exist_and_value('oc_algorithm', 'genetic')):
@@ -163,12 +159,12 @@ class ReadNamelistOC(ABCReadNamelist):
             self.field.check_namelist_key_and_print('t0',
                                 "WARNING. in \"FIELD\" namelist \"t0\" keyword is not used")
 
-    def check_environ_nml_consistency(self):
-        #if vac no names for pcm files are allowed
-        if (not self.env.check_namelist_key_exist('env')
-                or self.env.check_namelist_key_exist_and_value('env', 'vac')):
-            if len(self.env.section_dictionary.keys()) > 1:
-                af.exit_error("ERROR: in \"ENVIRON\" key \"env\" is \"vac\". all other key in namelist ENVIRON are not used")
+    def check_medium_nml_consistency(self):
+        #if vac no names for medium files are allowed
+        if (not self.medium.check_namelist_key_exist('medium')
+                or self.medium.check_namelist_key_exist_and_value('medium', 'vac')):
+            if len(self.medium.section_dictionary.keys()) > 1:
+                af.exit_error("ERROR: in \"MEDIUM\" key \"medium\" is \"vac\". all other key in namelist MEDIUM are not used")
 
     def check_optimalc_nml_consistency(self):
         #if propagation OPTIMALC namelist must be empty
