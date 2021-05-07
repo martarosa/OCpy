@@ -6,9 +6,15 @@ from medium.ABCMedium import ABCMedium
 from parameters.MediumParameters import MediumParameters
 from read_and_set.read import auxiliary_functions as af
 
-# if the solvent is frozen qijn and qijn_lf are fixed, calculated once at the initialization
+#This approximation can be used only for the SOLVENT, not for the NP
+# When the solvent is approximated as frozen, qijn and qijn_lf are fixed in time, calculated once when the
+# medium is initialized (init_static_matrices).
+#the propagation is the product between the fixed charges matrices and the wf coefficients multiplied by the reaction field
 #q_t dependence on time comes only from <psi(t)|qijn|psi(t)>
+#and ny the external pulse for the local field
 #q_t_lf dependence comes from qijn_lf * field_t
+#matrices products can be done in fortran to speed up the calculations, but it is still in OCpy, TDPlas is not used
+
 class FrozenSolventMedium(ABCMedium):
     def __init__(self):
         super().__init__()
@@ -26,7 +32,7 @@ class FrozenSolventMedium(ABCMedium):
         self.par.cavity = medium_input.cavity
         self.init_static_matrices(medium_input.Qnn_reactionfield, medium_input.Qnn_localfield, mol)
         self.muLF = -af.matrix_prod_tesserae_ijn_nn(self.qijn_lf, mol.par.Vijn)
-        self.propagate(mol, field_object.f_xyz[0])
+        self.propagate_charges(mol, field_object.f_xyz[0])
         self.qijn_fortran_flip = af.flip_3D_py2f(self.qijn)
 
 
@@ -34,13 +40,13 @@ class FrozenSolventMedium(ABCMedium):
         pass
 
 
-    def propagate(self, mol, field_dt_vector):
+    def propagate_charges(self, mol, field_dt_vector):
         q_t_reactionf = af.double_summation(mol.wf.ci_prev[0], np.conj(mol.wf.ci_prev[0]), self.qijn)
         q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
         self.par.q_t = q_t_reactionf + q_t_lf
 
 
-    def propagate_fortran(self, mol, field_dt_vector):
+    def propagate_charges_fortran(self, mol, field_dt_vector):
         q_t_reactionf = mf.propagate_q_frozen(mol.wf.ci_prev[0], self.qijn_fortran_flip)
         q_t_lf = np.dot(self.qijn_lf, field_dt_vector)
         self.par.q_t = q_t_reactionf + q_t_lf

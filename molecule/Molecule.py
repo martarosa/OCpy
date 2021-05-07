@@ -2,7 +2,7 @@ from molecule.WaveFunction import WaveFunction
 from parameters.MoleculeParameters import MoleculeParameters
 from read_and_set.read import auxiliary_functions as af
 
-
+#contains the system wavefunction and the molecule parameters
 class Molecule:
     def __init__(self):
         self.wf = WaveFunction()

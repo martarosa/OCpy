@@ -7,6 +7,12 @@ from field.Field import Func_tMatrix
 from parameters.OCIteratorParameters import OCIteratorParameters
 
 
+#the children of ABCOCIterator are very different and can be studied separately
+#A common feature is the way to return data to be saved.
+#self.dict_out is a dictionary that is filled by self.init_output_dictionary with methods that return
+#the matrices which we want to save. See OCEuleroIterator (which is the simplest iterator) for an example
+#writing var =  self.dict_out("key") call the corrisponing method and return in var the desired output matrix
+
 class ABCOCIterator(metaclass=ABCMeta):
     def __init__(self):
         self.par = OCIteratorParameters()

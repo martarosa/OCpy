@@ -45,7 +45,7 @@ PropagatorDict = {
 }
 
 PropagatorTermsDict = {
-    "eulero_2order_prop": ClassicalPropagatorTerms,
-    "eulero_1order_prop": ClassicalPropagatorTerms
+    "classical": ClassicalPropagatorTerms,
+
 }
 

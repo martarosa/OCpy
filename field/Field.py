@@ -8,6 +8,10 @@ from SystemObj import DiscreteTimePar, Func_tMatrix
 from parameters.FieldParameters import FieldParameters
 
 
+
+#given the field parameters (included dt and nstep) and the field type fill self.field with the values of the field at each time step
+#can read the field from file value by value, "read" choice, or read amplitudes and comegas and create a new field "sum" type
+
 class Field():
     def __init__(self):
         self.field = Func_tMatrix()
@@ -23,6 +27,7 @@ class Field():
         self.par.omega_sys = field_input.omega_sys
         self.par.restart_name = field_input.field_restart_name
         self.par.nstep = field_input.nstep
+        #additional steps where the field is equal to 0
         self.par.additional_steps = field_input.additional_steps
 
         dt = field_input.dt
@@ -42,7 +47,6 @@ class Field():
             'gau': lambda: self.gau_pulse(dt),
             'sum': lambda: self.sum_pulse(dt),
             'genetic' : lambda: self.genetic_pulse(dt),
-            'sin_cos': lambda : self.sin_cos_pulse(dt),
             'read': lambda : self.read_pulse(dt),
             'read_genetic': lambda : self.read_genetic_pulse(dt),
              #only internal values
@@ -66,9 +70,6 @@ class Field():
         self.field = field
 
     def read_pulse(self, dt):
-        a = np.loadtxt(self.par.restart_name)
-        print(a.shape)
-        print()
         self.field.time_axis = np.loadtxt(self.par.restart_name, usecols=(2))
         print(self.field.time_axis.shape)
         self.field.f_xyz = np.loadtxt(self.par.restart_name, usecols = (3,4,5))
@@ -82,7 +83,6 @@ class Field():
         self.sum_pulse(dt)
 
 
-
     def const_pulse(self, dt):
         self.field.time_axis = np.linspace(0, dt * (self.par.nstep-1), self.par.nstep)
         self.field.f_xyz = np.zeros([self.par.nstep, 3])
@@ -91,7 +91,6 @@ class Field():
         self.field.f_xyz[:, 2] = self.par.fi[2]
         if(self.par.additional_steps!=0):
             self.add_empty_steps(dt)
-
 
 
     def pip_pulse(self, dt):
@@ -146,22 +145,10 @@ class Field():
             self.add_empty_steps(dt)
 
 
-    def sin_cos_pulse(self, dt):
-        self.field.time_axis = np.linspace(0, dt * (self.par.nstep - 1), self.par.nstep)
-        self.field.f_xyz = np.zeros([self.par.nstep, 3])
-        # f0+fi*sin(wi*t)
-        for i in range(self.par.nstep):
-            self.field.f_xyz[i] = self.par.fi[0]
-            for j in range(self.par.omega.shape[0]):
-                    self.field.f_xyz[i] = self.field.f_xyz[i] + self.par.fi_cos[j] * np.cos(self.par.omega[j] * i * dt) - self.par.fi[j] * np.sin(self.par.omega[j] * i * dt)
-        if(self.par.additional_steps!=0):
-            self.add_empty_steps(dt)
-
 
     def genetic_pulse(self, dt):
         self.chose_omega_fourier(dt)
         self.par.fi = np.full([self.par.omega.shape[0], 3], self.par.fi[0])
-        self.par.fi_cos = np.full([self.par.omega.shape[0], 3], self.par.fi[0])
         self.sum_pulse(dt)
 
 

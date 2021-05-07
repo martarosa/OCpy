@@ -80,54 +80,47 @@ class OCGeneticIterator(ABCOCIterator):
 
         self.genetic_par.mutate = genetic_input.mutate
         self.genetic_par.mutate_probability = genetic_input.mutate_probability
-        self.genetic_par.n_mutate = genetic_input.n_mutate
         self.genetic_par.mutate_mu = genetic_input.mutate_mu
         self.genetic_par.mutate_starting_sigma = genetic_input.mutate_starting_sigma
-        self.genetic_par.eta_thr = genetic_input.eta_thr
-        self.genetic_par.q = genetic_input.q
         self.genetic_par.select = genetic_input.select
         self.genetic_par.n_amplitudes = starting_field.par.fi.size
         self.genetic_par.omegas_matrix = starting_field.par.omega
         self.init_chromosomes(molecule, starting_field, starting_medium)
-    #qui inizializzo l'algoritmo genetico che sto usando, che per adesso è solo uno
         self.init_evolutionary_algorithm(genetic_input)
 
     def init_chromosomes(self, molecule, starting_field, starting_medium):
-        #le ampiezze del campo sono inutili e dannose, visto che inizializzerò n_chro campi random.
-        #nel mezzo q(t) (per il mezzo dinamico) è inizializzato con le ampiezze che non userò. molto male
         print("init_chromo")
         toolbox= base.Toolbox()
-    # fitness è una classe astratta.
-    # Creo creator.J, una classe figlia di fitness che ha pesi positivi quindi massimizza
+    # fitness is an abstract class.
+    # J is a child of fitness with positive weight, which means that whants to be maximized
         creator.create("J", base.Fitness, weights=(1.0,))
-    # Definisco un oggetto che chiamo Chromosome, come attributi ha J, un oggetto campo e un oggetto propagator.
-    # E poi di default ha un vettore da riempire che quando chiami il cromosoma senza attributi viene fuori quello
+    # here we create an object called Chromosome, which has as attributes J, a Field() object and a Propagator() object.
+    # Chromosome() objact has also an empty list associated. When you mate, mutate, select the cromosome with deap library is the list that it is worked on.
         creator.create("Chromosome", list, J=creator.J, field = Field(), prop_psi = prop.PropagatorEulero2Order())
-    #creo un'istanza cromosoma singolo, di tipo Chromosome.
-    # Creo riempo il vettore vuoto di chromosome tutto di 0.
-    # probabilmente c'è un modo migliore e automatico in deap ma pazienza
+    #here I create a single instance of Chormosome() type.
+    # All the values in the list are set to 0
         toolbox.register("single_chromosome",
                          tools.initRepeat, creator.Chromosome,
                          self.init_chromosomes_zero,
                          n=self.genetic_par.n_amplitudes)
-    #faccio una lista di cromosomi, tutti con la lista piena di 0
+    #the we create a list of chromosomes all zero valued
         toolbox.register('chromosomes_population',
                          tools.initRepeat,
                          list,
                          toolbox.single_chromosome)
-    #ho una lista di cromosomi di tuti di valore = 0, con J, prop_psi e field vuoti
         self.chromosomes = toolbox.chromosomes_population(n=self.genetic_par.n_chromosomes) #create all chromosomes
         #----------------
-        #adesso la parte relativa allo specifico caso della propagazione
+        #init the propagation part
         #----------------
         self.initial_c0 = molecule.wf.ci
-        # adesso li riempio di ampiezze. Lo faccio qui in modo da averne il controllo, nell'inizializzazione deap non è del tutto in mio controllo
-        # se scelgo random posso cmq fissare i semi e rendere il conto riproducibile (per ora random è l'unica scelta
+        # all the Field() objects in the Chromosomes are initialized copying starting_field = Field() object,
+        # which provides the omegas. amplitudes are all equal to the default value 0.01 and are then copied in the list
+        # and mutated
+        # before starting the first optimization iteration
         self.init_chromosomes_values()
         for i in range(len(self.chromosomes)):
-            #copio il campo per avere tutte le info che mi servono (le omega di fourier)
             self.chromosomes[i].field = deepcopy(starting_field)
-            #aggiorno le ampiezze del campo con i calori generati random del cromosoma
+            #ggiorno le ampiezze del campo con i calori generati random del cromosoma
             if (starting_field.par.field_type == "restart_genetic"):
                 self.field_amplitudes_to_chromosome(self.chromosomes[i], starting_field.par.fi.reshape((1, -1)))
             self.chromosome_coefficients_to_field(self.chromosomes[i])
@@ -218,7 +211,6 @@ class OCGeneticIterator(ABCOCIterator):
         chro.field.par.fi = np.asarray(chro).reshape((-1, 3))
         chro.field.chose_field('sum', dt = self.discrete_t_par.dt)
 
-    #prima o poi questa può essere piena di modi diversi di inizializzare le ampiezze, per ora è solo random
     def init_chromosomes_values(self):
         random.seed(10)
         for i in range(self.genetic_par.n_chromosomes):

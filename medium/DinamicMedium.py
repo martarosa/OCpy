@@ -3,10 +3,11 @@ from read_and_set.read import auxiliary_functions as af
 import numpy as np
 from medium import interface_tdplas as tdplas
 from parameters.MediumParameters import MediumParameters
-# if the solvent is dinamic qijn and qijn_lf depend on time = qijn_t, qijn_lf_t
-#q_t dependence on time comes from <psi(t)|qijn_t|psi(t)>
-#q_t_lf dependence comes from qijn_lf_t * field_dt_vector
-#at each timestep qijn_t and qijn_lf_t are given by tdplas
+
+#When the medium is treated as dinamicaly changing during the propagation, the charges on the solvent cavity
+#or nanoparticle tessere are propagated in TDPlas
+#OCpy gives to TDPlas the coefficients and the external field at each time step and receives back
+#the propagated charges
 
 class DinamicMedium(ABCMedium):
     def __init__(self):
@@ -34,12 +35,12 @@ class DinamicMedium(ABCMedium):
         tdplas.interface_tdplas.call_init_charges(mol.wf.ci_prev[0], field_object.f_xyz[0])
         #self.get_q_t() debugging di TDPLAS
 
-    def propagate(self, mol, field_dt_vector):
+    def propagate_charges(self, mol, field_dt_vector):
         af.exit_error("ERROR: Propagation without TDPLAS is not possible for the nanoparticle")
 
 
 
-    def propagate_fortran(self, mol, field_dt_vector):
+    def propagate_charges_fortran(self, mol, field_dt_vector):
         tdplas.interface_tdplas.call_prop_charges(mol.wf.ci_prev[0],
                                                   field_dt_vector,
                                                   self.par.q_t)

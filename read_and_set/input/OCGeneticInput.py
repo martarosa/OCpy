@@ -10,11 +10,9 @@ class OCGeneticInput():
 
         self.mutate = None
         self.mutate_probability = None
-        self.n_mutate = None
         self.mutate_mu = None
         self.mutate_starting_sigma = None
-        self.eta_thr = None
-        self.q = None
+
 
         self.select = None
 

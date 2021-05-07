@@ -1,4 +1,4 @@
-26/02/2020
-working version. reading wrog ci_pot vs ci_mut gamess output, to correct when bug will be solved.
-fortran rabitz propagation working, genetic working serial and parallel on local computer
+7/05/2020
+working version.
+Ci_pot.inp reading issues, see ReadOutputQuantumCalc.py for details
 

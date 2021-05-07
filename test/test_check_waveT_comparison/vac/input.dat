@@ -1,6 +1,5 @@
 [SYSTEM]
 dt=0.01
-nstep=25000
 name = tmp_output 
 oc_algorithm = eulero_2order_prop 
 
@@ -11,6 +10,7 @@ name_mut=ci_mut.inp
 
 [FIELD]
 field_type=pip
+nstep =25000
 omega=0.3239892104044628 0.3239892104044628 0.3239892104044628
 sigma=125
 t0=125

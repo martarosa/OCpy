@@ -17,11 +17,8 @@ class SetGeneticOCInput(ABCSetInput):
 
         self.input_parameters.mutate = user_input.mutate.section_dictionary['mutate']
         self.input_parameters.mutate_probability = float(user_input.mutate.section_dictionary['mutate_probability'])
-        self.input_parameters.n_mutate = int(user_input.mutate.section_dictionary['n_mutate'])
         self.input_parameters.mutate_mu = float(user_input.mutate.section_dictionary['mutate_mu'])
         self.input_parameters.mutate_starting_sigma = float(user_input.mutate.section_dictionary['mutate_starting_sigma'])
-        self.input_parameters.eta_thr = float(user_input.mutate.section_dictionary['eta_thr'])
-        self.input_parameters.q = float(user_input.mutate.section_dictionary['q'])
         self.input_parameters.select = user_input.select.section_dictionary['select']
 
         self.input_parameters.string_file_config = user_input.string_file_config

@@ -29,6 +29,9 @@ class ReadOutputQuantumCalc():
         n_tessere_cavity=pd.read_csv(name_file, nrows=1, header=None,engine='python')
         return n_tessere_cavity.iloc[0, 0]
 
+    #this method read ci_pot.inp files which are printed in gamess in a format different than what is expected and correcr an error on the sign.
+    #when gamess print will be debugged, read_V_wavet should become the new read_V. WaveT does not know of the bug so read the ci_pot.inp file
+    #as it shoudl be. If we want to compare ocpy results with wavet results we have to use read_V_wavet
 
     def read_V(self, name_file, n_en): #n_en is total number of states, nexcited+1
         print(n_en)
@@ -52,7 +55,7 @@ class ReadOutputQuantumCalc():
         return V_tot
 
 
-    #read compare wavet gamess format
+    #used to compare ocpy and wavet results. see comment on read_V method
     def read_V_wavet(self, name_file, n_en): #n_en is total number of states, nexcited+1
         print(n_en)
         n_tessere_cavity = self.read_N_tessere_cavity(name_file)

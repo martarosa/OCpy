@@ -47,7 +47,7 @@ class ClassicalPropagatorTerms(ABCPropagatorTerms):
 
     def eulero_medium_term(self, mol, order, dt, field_dt_vector, medium, *args):
         if medium.par.medium != "vac":
-            medium.propagate(mol, field_dt_vector)
+            medium.propagate_charges(mol, field_dt_vector)
             mol.wf.ci += -order * 1j * dt \
                           * (np.dot(mol.wf.ci_prev[0],
                                     af.single_summation_tessere(medium.get_q_t(), mol.par.Vijn)))
@@ -74,7 +74,7 @@ class ClassicalPropagatorTerms(ABCPropagatorTerms):
 
     def eulero_medium_term_fortran(self, mol, order, dt, field_dt_vector, medium, *args):
         if medium.par.medium != "vac":
-            medium.propagate_fortran(mol, field_dt_vector)
+            medium.propagate_charges_fortran(mol, field_dt_vector)
             q_t = medium.get_q_t()
             mol.wf.ci += -order * 1j * dt \
                       *(mf.eulero_pcm(np.asfortranarray(mol.wf.ci_prev[0], dtype=np.complex128),

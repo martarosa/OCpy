@@ -1,6 +1,8 @@
 import numpy as np
 
 
+#contains the wavefunction coefficients at the present time and two staps back
+#it is meant to be every time step
 class WaveFunction:
     def __init__(self):
         self.ci = None  # wavefunction coefficients at a given time

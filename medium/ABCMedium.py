@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-
 from parameters.MediumParameters import MediumParameters
 
 
@@ -16,7 +15,7 @@ class ABCMedium(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def propagate(self, mol, field_dt_vector):
+    def propagate_charges(self, mol, field_dt_vector):
         pass
 
     @abstractmethod

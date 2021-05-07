@@ -11,7 +11,9 @@ from molecule.Molecule import Molecule
 
 from SystemObj import Func_tMatrix
 
-#import math_functions as mf
+#See abstract ABCPropagator class for details on using "delegates" programming element
+#here set_propagator fill self.propagator with the elements suitable for
+# the forward and backward Rabitz propagation
 
 class PropagatorOCfwd(ABCPropagator):
     def __init__(self):

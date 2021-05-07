@@ -11,6 +11,7 @@ name_ei=ci_energy.inp
 name_mut=ci_mut.inp
 
 [FIELD]
+nstep=25000
 #field_type=
 #omega=0.32140573 0.32140573 0.32140573
 #sigma=125

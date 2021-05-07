@@ -57,7 +57,6 @@ class Eulero1PropagationIterator(ABCOCIterator):
         self.dict_out['pop_t'] = self.get_pop_t
 
 
-
     def get_pop_t(self):
         psi_coeff_t_matrix = np.insert(self.psi_coeff_t_matrix.f_xyz, 0, self.psi_coeff_t_matrix.time_axis, axis = 1)
         pop_t = np.real(af.population_from_wf_matrix(psi_coeff_t_matrix))
@@ -66,7 +65,6 @@ class Eulero1PropagationIterator(ABCOCIterator):
 
     def get_restart(self):
         field_t_matrix = np.insert(self.field_psi_matrix.f_xyz, 0, self.field_psi_matrix.time_axis, axis = 1)
-
         return field_t_matrix
 
 

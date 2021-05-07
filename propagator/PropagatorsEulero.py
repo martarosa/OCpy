@@ -9,6 +9,10 @@ from molecule.Molecule import Molecule
 from SystemObj import Func_tMatrix
 
 
+#See abstract ABCPropagator class for details on using "delegates" programming element
+#here set_propagator fill self.propagator with the elements suitable for
+# the 1order and 2order Eulero propagation
+
 
 class PropagatorEulero1Order(ABCPropagator):
     def __init__(self):

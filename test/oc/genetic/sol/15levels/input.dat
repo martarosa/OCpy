@@ -1,6 +1,5 @@
 [SYSTEM]
 dt=0.1
-nstep=2500
 name = prova 
 oc_algorithm = genetic 
 #folder=
@@ -12,6 +11,7 @@ name_mut=ci_mut.inp
 
 [FIELD]
 field_type=genetic
+nstep=2500
 #omega=0.32140573 0.32140573 0.32140573
 #sigma=125
 #t0=125

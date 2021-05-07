@@ -58,9 +58,6 @@ class ReadNamelistGenetic(ABCReadNamelist):
         self.string_file_config.update(self.mate.section_dictionary)
         self.string_file_config.update(self.mutate.section_dictionary)
         self.string_file_config.update(self.select.section_dictionary)
-        if self.string_file_config['genetic_algorithm'] != 'mixed':
-            del self.string_file_config['eta_thr']
-            del self.string_file_config['q']
         self.string_file_config = str(self.string_file_config)
 
 
@@ -72,12 +69,7 @@ class ReadNamelistGenetic(ABCReadNamelist):
         pass
 
     def check_mutate_nml_consistency(self):
-        if(not self.genetic.check_namelist_key_exist("genetic_algorithm") or
-                self.genetic.check_namelist_key_exist_and_value("genetic_algorithm", "sequential")):
-            if(self.mutate.check_namelist_key_exist('eta_thr') or
-                    self.mutate.check_namelist_key_exist('q')):
-                print("WARNING: \"genetic_algorithm\" value equal \"sequential\""
-                      "\"etha_thr\" and \"q\" keywords are not used")
+        pass
 
 
     def check_select_nml_consistency(self):

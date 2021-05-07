@@ -12,6 +12,7 @@ name_mut=ci_mut.inp
 
 [FIELD]
 field_type=genetic
+nstep=250
 #omega=0.32140573 0.32140573 0.32140573
 #sigma=125
 #t0=125

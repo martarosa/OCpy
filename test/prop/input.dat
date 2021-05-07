@@ -1,6 +1,5 @@
 [SYSTEM]
 dt=0.01
-nstep=25000
 name = prova_01 
 oc_algorithm = eulero_2order 
 #folder=
@@ -12,6 +11,7 @@ name_mut=ci_mut.inp
 
 [FIELD]
 field_type=restart_genetic
+nstep=25000
 #omega=0.32140573 0.32140573 0.32140573
 #sigma=125
 #t0=125

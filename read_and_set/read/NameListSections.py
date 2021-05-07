@@ -135,11 +135,8 @@ class SectionMutate(ABCNamelistSection):
         self.section = "MUTATE"
         self.section_default_dictionary = {'mutate':'mutGaussian',
                                            'mutate_probability': '0.2',
-                                           'n_mutate': '20',
                                            'mutate_mu':'0',
-                                           'mutate_starting_sigma': '0.01',
-                                           'eta_thr': '0.6',
-                                           'q': '0.9'}
+                                           'mutate_starting_sigma': '0.01'}
         self.section_dictionary = {}
         self.allowed_val = [['mutate',['mutGaussian']]]
         self.case_unsensitive_keys = []

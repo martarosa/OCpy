@@ -4,7 +4,7 @@ import time
 from read_and_set.read.ReadOutputQuantumCalc import ReadOutputQuantumCalc
 
 
-folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/rabitz/sol/"
+folder = "/home/mana/programmi/python/optimal_control/OCpy/test/oc/genetic/vac/2levels/"
 namefile = "input.dat"
 
 
